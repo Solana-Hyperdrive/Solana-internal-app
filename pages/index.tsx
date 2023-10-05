@@ -70,11 +70,11 @@ function Overview() {
         <Typography textAlign="center" variant="subtitle1">
           Crafted by{' '}
           <Link
-            href="https://bloomui.com"
+            href="https://flitchcoin.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            BloomUI.com
+            Team FlitchCoin
           </Link>
         </Typography>
       </Container>

@@ -29,11 +29,11 @@ function Footer() {
         >
           Crafted by{' '}
           <Link
-            href="https://bloomui.com"
+            href="https://flitchcoin.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            BloomUI.com
+            Team FlitchCoin
           </Link>
         </Typography>
       </Box>
