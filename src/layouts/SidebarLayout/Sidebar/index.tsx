@@ -78,9 +78,9 @@ function Sidebar() {
             background: theme.colors.alpha.trueWhite[10]
           }}
         />
-        <Box p={2}>
+        {/* <Box p={2}>
           <Button
-            href="https://bloomui.com"
+            href="https://flitchcoin.com"
             target="_blank"
             rel="noopener noreferrer"
             variant="contained"
@@ -88,9 +88,9 @@ function Sidebar() {
             size="small"
             fullWidth
           >
-            Upgrade to PRO
+            Upgrade to Enterprise
           </Button>
-        </Box>
+        </Box> */}
       </SidebarWrapper>
       <Drawer
         sx={{
