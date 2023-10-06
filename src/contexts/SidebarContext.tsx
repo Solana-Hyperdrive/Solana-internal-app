@@ -1,4 +1,7 @@
 import { useState, ReactNode, createContext } from 'react';
+// import { useWallet } from '@solana/wallet-adapter-react';
+// import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+
 type SidebarContext = {
   sidebarToggle: any;
   toggleSidebar: () => void;
@@ -20,10 +23,14 @@ export function SidebarProvider({ children }: Props) {
     setSidebarToggle(!sidebarToggle);
   };
 
+  // const wallet = useWallet();
+  // console.log({ wallet })
+
   const closeSidebar = () => {
     setSidebarToggle(false);
   };
 
+  // need to add WalletMultiButton on topbar
   return (
     <SidebarContext.Provider
       value={{ sidebarToggle, toggleSidebar, closeSidebar }}
