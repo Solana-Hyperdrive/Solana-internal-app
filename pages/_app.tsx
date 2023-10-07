@@ -24,7 +24,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets';
-
+require("@solana/wallet-adapter-react-ui/styles.css");
 
 const clientSideEmotionCache = createEmotionCache();
 
