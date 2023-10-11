@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import PageHeader from '@/content/Dashboards/Tasks/PageHeader';
 import Footer from '@/components/Footer';
 import {
@@ -108,7 +108,7 @@ const TabsContainerWrapper = styled(Box)(
 );
 
 function DashboardTasks() {
-  const { isLoggedIn } = useIsLoggedIn();
+  const { isLoading } = useIsLoggedIn();
 
   const theme = useTheme();
 
@@ -123,9 +123,7 @@ function DashboardTasks() {
     setCurrentTab(value);
   };
 
-  useEffect(() => {
-    isLoggedIn();
-  }, []);
+  if (isLoading) return <div>Loading</div>;
 
   return (
     <>
