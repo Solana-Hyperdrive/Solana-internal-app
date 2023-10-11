@@ -3,12 +3,12 @@ import BaseLayout from 'src/layouts/BaseLayout';
 
 import Link from 'src/components/Link';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 import axios from 'axios';
 import { Box, Card, Container, Typography, styled } from '@mui/material';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -37,6 +37,8 @@ export async function getServerSideProps({ query: { code } }) {
       `https://ledger.flitchcoin.com/user?code=${code}`
     );
 
+    console.log({ response });
+
     return {
       props: {
         accessToken: response.data.access_token,
@@ -50,24 +52,12 @@ export async function getServerSideProps({ query: { code } }) {
 }
 
 function Overview({ accessToken, refreshToken }) {
-  console.log({ accessToken, refreshToken });
+  useIsLoggedIn();
 
   useEffect(() => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
-  });
-
-  async function isUser() {
-    try {
-      await axios.get(`https://ledger.flitchcoin.com/user/me`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
-      });
-    } catch (e) {
-      console.log('unauth user');
-    }
-  }
+  }, []);
 
   return (
     <OverviewWrapper>
@@ -94,7 +84,6 @@ function Overview({ accessToken, refreshToken }) {
                 {/*>*/}
                 {/*  Sign In*/}
                 {/*</Button>*/}
-                <button onClick={isUser}>Sign In</button>
               </Box>
             </Box>
           </Box>
