@@ -1,4 +1,4 @@
-import type { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useMemo } from 'react';
 
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
@@ -15,6 +15,18 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+
+// wallet connnecitvity imports
+import { clusterApiUrl } from '@solana/web3.js';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
+require("@solana/wallet-adapter-react-ui/styles.css");
+
 const clientSideEmotionCache = createEmotionCache();
 
 type NextPageWithLayout = NextPage & {
@@ -26,7 +38,7 @@ interface TokyoAppProps extends AppProps {
   Component: NextPageWithLayout;
 }
 
-function TokyoApp(props: TokyoAppProps) {
+function TokyoAppContent({ props }: { props: TokyoAppProps }) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
 
@@ -56,6 +68,29 @@ function TokyoApp(props: TokyoAppProps) {
         </SidebarProvider>
       </QueryClientProvider>
     </CacheProvider>
+  );
+}
+
+function TokyoApp(props: TokyoAppProps) {
+  const solNetwork = WalletAdapterNetwork.Devnet;
+  const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
+
+  const wallets = useMemo(
+    () => [
+      new SolflareWalletAdapter(),
+      new PhantomWalletAdapter(),
+    ],
+    [solNetwork]
+  );
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect={true}>
+        <WalletModalProvider>
+          <TokyoAppContent props={props} />
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
   );
 }
 

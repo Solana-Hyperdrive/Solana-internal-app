@@ -6,9 +6,15 @@ import Head from 'next/head';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
+
 import axios from 'axios';
 import { Box, Card, Container, Typography, styled } from '@mui/material';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { Connectivity } from '@/web3/connectivity';
+import { useAnchorWallet } from '@solana/wallet-adapter-react';
+
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -61,6 +67,10 @@ function Overview({ accessToken, refreshToken }) {
     }
   }, []);
 
+  // for testing
+  const wallet = useAnchorWallet();
+  const connectivity = new Connectivity(wallet);
+
   return (
     <OverviewWrapper>
       <Head>
@@ -86,6 +96,12 @@ function Overview({ accessToken, refreshToken }) {
                 {/*>*/}
                 {/*  Sign In*/}
                 {/*</Button>*/}
+              </Box>
+              <Box>
+                <WalletMultiButton />
+                <button onClick={() => console.log(wallet?.publicKey?.toBase58())}>WalletId</button>
+                <button onClick={() => connectivity.getTokenListInfo()}>TokenList</button>
+                <button onClick={() => connectivity.getAllUserTokens()}>UserTokens</button>
               </Box>
             </Box>
           </Box>
