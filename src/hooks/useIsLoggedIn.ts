@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 
 export default function useIsLoggedIn() {
   const router = useRouter();
@@ -18,10 +17,9 @@ export default function useIsLoggedIn() {
       console.log('unauth user');
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      router.push('/');
     }
   };
 
-  useEffect(() => {
-    isLoggedIn();
-  });
+  return { isLoggedIn };
 }

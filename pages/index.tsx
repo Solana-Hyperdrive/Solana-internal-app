@@ -52,11 +52,13 @@ export async function getServerSideProps({ query: { code } }) {
 }
 
 function Overview({ accessToken, refreshToken }) {
-  useIsLoggedIn();
+  const { isLoggedIn } = useIsLoggedIn();
 
   useEffect(() => {
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
+
+    isLoggedIn();
   }, []);
 
   return (
