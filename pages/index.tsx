@@ -1,12 +1,4 @@
-import {
-  Typography,
-  Box,
-  Card,
-  Container,
-  Button,
-  styled
-} from '@mui/material';
-import type { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 
 import Link from 'src/components/Link';
@@ -14,9 +6,15 @@ import Head from 'next/head';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
+
+import axios from 'axios';
+import { Box, Card, Container, Typography, styled } from '@mui/material';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Connectivity } from '@/web3/connectivity';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
+
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -37,7 +35,38 @@ const OverviewWrapper = styled(Box)(
 `
 );
 
-function Overview() {
+export async function getServerSideProps({ query: { code } }) {
+  if (!code) return { props: {} };
+
+  try {
+    const response = await axios.get(
+      `https://ledger.flitchcoin.com/user?code=${code}`
+    );
+
+    console.log({ response });
+
+    return {
+      props: {
+        accessToken: response.data.access_token,
+        refreshToken: response.data.refresh_token
+      }
+    };
+  } catch (error) {
+    console.log(error);
+    return { props: {} };
+  }
+}
+
+function Overview({ accessToken, refreshToken }) {
+  useIsLoggedIn('dashboards/tasks');
+
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+  }, []);
+
   // for testing
   const wallet = useAnchorWallet();
   const connectivity = new Connectivity(wallet);
@@ -59,14 +88,14 @@ function Overview() {
             >
               <Box />
               <Box>
-                <Button
-                  component={Link}
-                  href="/dashboards/tasks"
-                  variant="contained"
-                  sx={{ ml: 2 }}
-                >
-                  Live Preview
-                </Button>
+                {/*<Button*/}
+                {/*  component={Link}*/}
+                {/*  // href="https://test-ledger.flitchcoin.com/login"*/}
+                {/*  variant="contained"*/}
+                {/*  sx={{ ml: 2 }}*/}
+                {/*>*/}
+                {/*  Sign In*/}
+                {/*</Button>*/}
               </Box>
               <Box>
                 <WalletMultiButton />

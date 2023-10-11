@@ -23,6 +23,7 @@ import Projects from '@/content/Dashboards/Tasks/Projects';
 import Checklist from '@/content/Dashboards/Tasks/Checklist';
 import Profile from '@/content/Dashboards/Tasks/Profile';
 import TaskSearch from '@/content/Dashboards/Tasks/TaskSearch';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -107,6 +108,8 @@ const TabsContainerWrapper = styled(Box)(
 );
 
 function DashboardTasks() {
+  const { isLoading } = useIsLoggedIn();
+
   const theme = useTheme();
 
   const [currentTab, setCurrentTab] = useState<string>('analytics');
@@ -119,6 +122,8 @@ function DashboardTasks() {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
+
+  if (isLoading) return <div>Loading</div>;
 
   return (
     <>
