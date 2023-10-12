@@ -1,5 +1,6 @@
 export const web3Config = {
   rpcEndpoint: "https://api.devnet.solana.com", // devnet
+  programId: "6GrfrMykKD4mcFgVzdnW2ySEgpqiYVEDHxms9Kj2ubfo",
 
   tokensList: [
     "J4XBLb7VRAWghtzrCCrdgGTPmanNv4eqYaArgt5pwxRp", //eth
