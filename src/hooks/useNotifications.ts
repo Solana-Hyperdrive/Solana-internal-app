@@ -15,7 +15,17 @@ export default function useNotifications() {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       }),
-    enabled: !!userId
+    enabled: !!userId,
+    onSuccess: () => {
+      console.log({ data });
+      if (localStorage.getItem('notifications')) {
+        const oldData = JSON.parse(localStorage.getItem('notifications'));
+        const newData = [...oldData, ...data.data];
+        localStorage.setItem('notifications', JSON.stringify(newData));
+      } else {
+        localStorage.setItem('notifications', JSON.stringify(data.data));
+      }
+    }
   });
 
   return { data, isError, isLoading };

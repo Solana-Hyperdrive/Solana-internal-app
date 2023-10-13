@@ -83,6 +83,7 @@ function BottomBarContent() {
           autoFocus
           placeholder="Write your message here..."
           fullWidth
+          value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
       </Box>
