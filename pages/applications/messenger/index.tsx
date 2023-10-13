@@ -1,16 +1,12 @@
 import { useState } from 'react';
-
 import Head from 'next/head';
 import SidebarLayout from '@/layouts/SidebarLayout';
-
 import TopBarContent from '@/content/Applications/Messenger/TopBarContent';
 import BottomBarContent from '@/content/Applications/Messenger/BottomBarContent';
 import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
 import ChatContent from '@/content/Applications/Messenger/ChatContent';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
-
 import Scrollbar from '@/components/Scrollbar';
-
 import {
   Box,
   styled,
