@@ -14,7 +14,7 @@ import { useRef, useState } from 'react';
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import { styled } from '@mui/material/styles';
 
-import { formatDistance, subDays } from 'date-fns';
+import useNotifications from '@/hooks/useNotifications';
 
 const NotificationsBadge = styled(Badge)(
   ({ theme }) => `
@@ -42,7 +42,12 @@ const NotificationsBadge = styled(Badge)(
 
 function HeaderNotifications() {
   const ref = useRef<any>(null);
+
   const [isOpen, setOpen] = useState<boolean>(false);
+
+  const { data, isLoading } = useNotifications();
+
+  console.log({ data });
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -52,12 +57,16 @@ function HeaderNotifications() {
     setOpen(false);
   };
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <>
       <Tooltip arrow title="Notifications">
         <IconButton color="primary" ref={ref} onClick={handleOpen}>
           <NotificationsBadge
-            badgeContent={1}
+            badgeContent={data?.data?.length}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right'
@@ -94,23 +103,15 @@ function HeaderNotifications() {
             sx={{ p: 2, minWidth: 350, display: { xs: 'block', sm: 'flex' } }}
           >
             <Box flex="1">
-              <Box display="flex" justifyContent="space-between">
-                <Typography sx={{ fontWeight: 'bold' }}>
-                  Messaging Platform
-                </Typography>
-                <Typography variant="caption" sx={{ textTransform: 'none' }}>
-                  {formatDistance(subDays(new Date(), 3), new Date(), {
-                    addSuffix: true
-                  })}
-                </Typography>
-              </Box>
+              <Box display="flex" justifyContent="space-between"></Box>
               <Typography
                 component="span"
                 variant="body2"
                 color="text.secondary"
               >
-                {' '}
-                new messages in your inbox
+                {data?.data?.length > 0
+                  ? 'Show messages'
+                  : 'No new messages in your inbox'}
               </Typography>
             </Box>
           </ListItem>

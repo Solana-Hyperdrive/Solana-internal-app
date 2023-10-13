@@ -12,7 +12,7 @@ import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import axios from 'axios';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 const MessageInputWrapper = styled(InputBase)(
   ({ theme }) => `
