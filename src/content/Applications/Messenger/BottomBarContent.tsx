@@ -28,6 +28,7 @@ const Input = styled('input')({
 
 function BottomBarContent() {
   const [message, setMessage] = useState('');
+
   const { data, isLoading } = useIsLoggedIn();
   const theme = useTheme();
 
@@ -77,7 +78,7 @@ function BottomBarContent() {
         <Avatar
           sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}
           alt={user.name}
-          src={user.avatar}
+          src={data.data.img}
         />
         <MessageInputWrapper
           autoFocus

@@ -8,7 +8,6 @@ import {
   Button,
   Divider,
   Hidden,
-  lighten,
   List,
   ListItem,
   ListItemText,
@@ -22,6 +21,7 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import { useRouter } from 'next/router';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -52,20 +52,9 @@ const UserBoxLabel = styled(Typography)(
 `
 );
 
-const UserBoxDescription = styled(Typography)(
-  ({ theme }) => `
-        color: ${lighten(theme.palette.secondary.main, 0.5)}
-`
-);
-
 function HeaderUserbox() {
   const router = useRouter();
-
-  const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg',
-    jobtitle: 'Project Manager'
-  };
+  const { data, isLoading } = useIsLoggedIn();
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -78,6 +67,15 @@ function HeaderUserbox() {
     setOpen(false);
   };
 
+  if (isLoading) {
+    return null;
+  }
+
+  const user = {
+    name: data?.data?.name,
+    avatar: data?.data?.img
+  };
+
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
@@ -85,9 +83,6 @@ function HeaderUserbox() {
         <Hidden mdDown>
           <UserBoxText>
             <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.jobtitle}
-            </UserBoxDescription>
           </UserBoxText>
         </Hidden>
         <Hidden smDown>
@@ -111,9 +106,6 @@ function HeaderUserbox() {
           <Avatar variant="rounded" alt={user.name} src={user.avatar} />
           <UserBoxText>
             <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-            <UserBoxDescription variant="body2">
-              {user.jobtitle}
-            </UserBoxDescription>
           </UserBoxText>
         </MenuUserBox>
         <Divider sx={{ mb: 0 }} />

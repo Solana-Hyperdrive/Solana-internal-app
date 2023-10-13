@@ -18,12 +18,15 @@ export default function useNotifications() {
     enabled: !!userId,
     onSuccess: () => {
       console.log({ data });
-      if (localStorage.getItem('notifications')) {
+      if (localStorage.getItem('notifications') && data?.data) {
         const oldData = JSON.parse(localStorage.getItem('notifications'));
-        const newData = [...oldData, ...data.data];
+        const newData = [...oldData, ...data?.data];
         localStorage.setItem('notifications', JSON.stringify(newData));
       } else {
-        localStorage.setItem('notifications', JSON.stringify(data.data));
+        localStorage.setItem(
+          'notifications',
+          JSON.stringify(data?.data ? data?.data : [])
+        );
       }
     }
   });
