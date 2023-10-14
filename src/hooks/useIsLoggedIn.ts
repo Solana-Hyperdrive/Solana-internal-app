@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 export default function useIsLoggedIn(redirect?: string) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { isLoading, isError, data } = useQuery(
     ['me'],
@@ -29,6 +30,8 @@ export default function useIsLoggedIn(redirect?: string) {
 
           localStorage.setItem('accessToken', access_token);
           localStorage.setItem('refreshToken', refresh_token);
+
+          queryClient.invalidateQueries({ queryKey: ['me'] });
         } catch (error) {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
