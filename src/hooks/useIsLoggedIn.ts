@@ -17,10 +17,23 @@ export default function useIsLoggedIn(redirect?: string) {
       onSuccess: () => {
         if (redirect) router.push(redirect);
       },
-      onError: () => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        router.push('/');
+      onError: async () => {
+        try {
+          const response = await axios.get(
+            `https://ledger.flitchcoin.com/re-auth?refresh_token=${localStorage.getItem(
+              'refreshToken'
+            )}`
+          );
+
+          const { access_token, refresh_token } = response.data;
+
+          localStorage.setItem('accessToken', access_token);
+          localStorage.setItem('refreshToken', refresh_token);
+        } catch (error) {
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          router.push('/');
+        }
       }
     }
   );
