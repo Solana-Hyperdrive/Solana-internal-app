@@ -14,11 +14,13 @@ import Text from '@/components/Text';
 import Label from '@/components/Label';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Check } from '@mui/icons-material';
 import TextField from '@mui/material/TextField';
+import { useQueryClient } from 'react-query';
 
 function EditProfileTab() {
+  const queryClient = useQueryClient();
   const { data, isLoading } = useIsLoggedIn();
 
   const [editMode, setEditMode] = useState({
@@ -28,17 +30,23 @@ function EditProfileTab() {
     email: false
   });
 
-  const [form, setForm] = useState({ name: '' });
-
-  useEffect(() => {
-    setForm({ name: data?.data?.name || '' });
-  }, [isLoading]);
+  const nameRef = useRef(null);
 
   if (isLoading || !data) {
     return 'Loading...';
   }
 
   async function handleEdit(tab: string) {
+    console.log(nameRef.current?.value);
+
+    let form = {};
+
+    if (tab === 'personal') {
+      form = {
+        name: nameRef.current?.value
+      };
+    }
+
     await axios('https://ledger.flitchcoin.com/user', {
       method: 'PUT',
       data: form,
@@ -47,11 +55,23 @@ function EditProfileTab() {
       }
     });
 
-    setEditMode({ ...editMode, [tab]: !editMode[tab] });
+    setEditMode({
+      personal: false,
+      development: false,
+      account: false,
+      email: false
+    });
+
+    queryClient.invalidateQueries({ queryKey: ['me'] });
   }
 
   function enableEditMode(tab: string) {
-    setEditMode({ ...editMode, [tab]: !editMode[tab] });
+    setEditMode({
+      personal: tab === 'personal',
+      development: tab === 'development',
+      account: tab === 'account',
+      email: tab === 'email'
+    });
   }
 
   return (
@@ -107,14 +127,8 @@ function EditProfileTab() {
                     <TextField
                       id="outlined-basic"
                       variant="outlined"
-                      value={form.name}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        console.log(e.target.value);
-                        setForm((prevState) => ({
-                          ...prevState,
-                          name: e.target.value
-                        }));
-                      }}
+                      inputRef={nameRef}
+                      defaultValue={data.data.name}
                     />
                   ) : (
                     <Text color="black">

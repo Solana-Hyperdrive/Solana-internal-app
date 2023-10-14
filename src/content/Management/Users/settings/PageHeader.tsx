@@ -1,10 +1,16 @@
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { Typography } from '@mui/material';
 
 function PageHeader() {
+  const { data, isLoading } = useIsLoggedIn();
+
   const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
+    name: data?.data?.name
   };
+
+  if (isLoading) {
+    return 'Loading';
+  }
 
   return (
     <>
