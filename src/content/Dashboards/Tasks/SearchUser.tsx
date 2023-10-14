@@ -35,7 +35,7 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 `
 );
 
-function TaskSearch() {
+function SearchUser() {
   const theme = useTheme();
 
   const handleDelete = () => {};
@@ -266,7 +266,7 @@ function TaskSearch() {
               <Rating value={4} defaultValue={5} precision={1} readOnly />
             </Box>
             <Link href="#" variant="h3" color="text.primary">
-              Improve conversion rated by integrating new analytics tools
+              Improve conversion rated by integrating new alias tools
             </Link>
             <Box
               sx={{
@@ -518,4 +518,4 @@ function TaskSearch() {
   );
 }
 
-export default TaskSearch;
+export default SearchUser;

@@ -3,26 +3,10 @@ import SidebarLayout from '@/layouts/SidebarLayout';
 import { ChangeEvent, useState } from 'react';
 import PageHeader from '@/content/Dashboards/Tasks/PageHeader';
 import Footer from '@/components/Footer';
-import {
-  Grid,
-  Tab,
-  Tabs,
-  Divider,
-  Container,
-  Card,
-  Box,
-  useTheme,
-  styled
-} from '@mui/material';
+import { Grid, Tab, Tabs, Container, Card, Box, styled } from '@mui/material';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
-
-import TeamOverview from '@/content/Dashboards/Tasks/TeamOverview';
-import TasksAnalytics from '@/content/Dashboards/Tasks/TasksAnalytics';
-import Performance from '@/content/Dashboards/Tasks/Performance';
-import Projects from '@/content/Dashboards/Tasks/Projects';
-import Checklist from '@/content/Dashboards/Tasks/Checklist';
-import Profile from '@/content/Dashboards/Tasks/Profile';
-import TaskSearch from '@/content/Dashboards/Tasks/TaskSearch';
+import AliasOverview from '@/content/Dashboards/Tasks/AliasOverview';
+import SearchUser from '@/content/Dashboards/Tasks/SearchUser';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 
 const TabsContainerWrapper = styled(Box)(
@@ -110,13 +94,11 @@ const TabsContainerWrapper = styled(Box)(
 function DashboardTasks() {
   const { isLoading } = useIsLoggedIn();
 
-  const theme = useTheme();
-
-  const [currentTab, setCurrentTab] = useState<string>('analytics');
+  const [currentTab, setCurrentTab] = useState<string>('alias');
 
   const tabs = [
-    { value: 'analytics', label: 'Analytics Overview' },
-    { value: 'taskSearch', label: 'Task Search' }
+    { value: 'alias', label: 'Alias' },
+    { value: 'search', label: 'Search User' }
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -156,69 +138,17 @@ function DashboardTasks() {
             alignItems="stretch"
             spacing={0}
           >
-            {currentTab === 'analytics' && (
-              <>
-                <Grid item xs={12}>
-                  <Box p={4}>
-                    <TeamOverview />
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Divider />
-                  <Box
-                    p={4}
-                    sx={{
-                      background: `${theme.colors.alpha.black[5]}`
-                    }}
-                  >
-                    <Grid container spacing={4}>
-                      <Grid item xs={12} sm={6} md={8}>
-                        <TasksAnalytics />
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={4}>
-                        <Performance />
-                      </Grid>
-                    </Grid>
-                  </Box>
-                  <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                  <Box p={4}>
-                    <Projects />
-                  </Box>
-                  <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                  <Box
-                    sx={{
-                      background: `${theme.colors.alpha.black[5]}`
-                    }}
-                  >
-                    <Grid container spacing={0}>
-                      <Grid item xs={12} md={6}>
-                        <Box
-                          p={4}
-                          sx={{
-                            background: `${theme.colors.alpha.white[70]}`
-                          }}
-                        >
-                          <Checklist />
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Box p={4}>
-                          <Profile />
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
-              </>
-            )}
-            {currentTab === 'taskSearch' && (
+            {currentTab === 'alias' && (
               <Grid item xs={12}>
                 <Box p={4}>
-                  <TaskSearch />
+                  <AliasOverview />
+                </Box>
+              </Grid>
+            )}
+            {currentTab === 'search' && (
+              <Grid item xs={12}>
+                <Box p={4}>
+                  <SearchUser />
                 </Box>
               </Grid>
             )}
