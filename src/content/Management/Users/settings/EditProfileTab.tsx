@@ -31,19 +31,19 @@ function EditProfileTab() {
   });
 
   const nameRef = useRef(null);
+  const addressRef = useRef(null);
 
   if (isLoading || !data) {
     return 'Loading...';
   }
 
   async function handleEdit(tab: string) {
-    console.log(nameRef.current?.value);
-
     let form = {};
 
     if (tab === 'personal') {
       form = {
-        name: nameRef.current?.value
+        name: nameRef.current?.value,
+        address: addressRef.current?.value
       };
     }
 
@@ -93,16 +93,14 @@ function EditProfileTab() {
               </Typography>
             </Box>
             {editMode.personal ? (
-              <>
-                <Button
-                  variant="text"
-                  color="success"
-                  startIcon={<Check />}
-                  onClick={() => handleEdit('personal')}
-                >
-                  Done
-                </Button>
-              </>
+              <Button
+                variant="text"
+                color="success"
+                startIcon={<Check />}
+                onClick={() => handleEdit('personal')}
+              >
+                Done
+              </Button>
             ) : (
               <Button
                 variant="text"
@@ -137,6 +135,28 @@ function EditProfileTab() {
                   )}
                 </Grid>
               </Grid>
+
+              <Grid container spacing={0}>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2}>
+                    Address:
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={9}>
+                  {editMode.personal ? (
+                    <TextField
+                      id="outlined-basic"
+                      variant="outlined"
+                      inputRef={addressRef}
+                      defaultValue={data.data.address || ''}
+                    />
+                  ) : (
+                    <Text color="black">
+                      <b>{data.data.address || ''}</b>
+                    </Text>
+                  )}
+                </Grid>
+              </Grid>
             </Typography>
           </CardContent>
         </Card>
@@ -158,9 +178,6 @@ function EditProfileTab() {
                 Manage information related to your development details
               </Typography>
             </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
@@ -168,7 +185,20 @@ function EditProfileTab() {
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    WebHook URL:
+                    API Key:
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={9}>
+                  <Text color="black">
+                    <b>{data.data.name}</b>
+                  </Text>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0}>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2}>
+                    Secret Key:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
