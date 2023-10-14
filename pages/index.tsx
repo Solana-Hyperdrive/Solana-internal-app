@@ -15,7 +15,6 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Connectivity } from '@/web3/connectivity';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 
-
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
   width: 100%;
@@ -42,8 +41,6 @@ export async function getServerSideProps({ query: { code } }) {
     const response = await axios.get(
       `https://ledger.flitchcoin.com/user?code=${code}`
     );
-
-    console.log({ response });
 
     return {
       props: {
@@ -99,9 +96,17 @@ function Overview({ accessToken, refreshToken }) {
               </Box>
               <Box>
                 <WalletMultiButton />
-                <button onClick={() => console.log(wallet?.publicKey?.toBase58())}>WalletId</button>
-                <button onClick={() => connectivity.getTokenListInfo()}>TokenList</button>
-                <button onClick={() => connectivity.getAllUserTokens()}>UserTokens</button>
+                <button
+                  onClick={() => console.log(wallet?.publicKey?.toBase58())}
+                >
+                  WalletId
+                </button>
+                <button onClick={() => connectivity.getTokenListInfo()}>
+                  TokenList
+                </button>
+                <button onClick={() => connectivity.getAllUserTokens()}>
+                  UserTokens
+                </button>
               </Box>
             </Box>
           </Box>

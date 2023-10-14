@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import DocumentScannerTwoToneIcon from '@mui/icons-material/DocumentScannerTwoTone';
 import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 
 const AvatarPageTitle = styled(Avatar)(
   ({ theme }) => `
@@ -35,9 +36,11 @@ const AvatarPageTitle = styled(Avatar)(
 );
 
 function PageHeader() {
+  const { data } = useIsLoggedIn();
+
   const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
+    name: data?.data?.name,
+    avatar: data?.data?.img
   };
 
   return (

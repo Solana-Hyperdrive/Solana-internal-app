@@ -10,6 +10,9 @@ import {
 } from '@mui/material';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import axios from 'axios';
+import { useState } from 'react';
 
 const MessageInputWrapper = styled(InputBase)(
   ({ theme }) => `
@@ -24,12 +27,43 @@ const Input = styled('input')({
 });
 
 function BottomBarContent() {
+  const [message, setMessage] = useState('');
+
+  const { data, isLoading } = useIsLoggedIn();
   const theme = useTheme();
 
   const user = {
     name: 'Catherine Pike',
     avatar: '/static/images/avatars/1.jpg'
   };
+
+  async function handleSendMessage(currentUID: string) {
+    if (!message) return;
+
+    await axios.post(
+      'https://ledger.flitchcoin.com/send/msg',
+      {
+        sender_uid: currentUID,
+        rec_uid:
+          '8d20d427269f4f5ab4b5dcf5a5ad64997f2bea8dd7ba52018506f1196ae651c0',
+        message
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      }
+    );
+
+    setMessage('');
+  }
+
+  if (isLoading || !data) {
+    return 'Loading...';
+  }
+
+  console.log({ data: data?.data?.uid });
+  // uid of other - 8d20d427269f4f5ab4b5dcf5a5ad64997f2bea8dd7ba52018506f1196ae651c0
 
   return (
     <Box
@@ -44,12 +78,14 @@ function BottomBarContent() {
         <Avatar
           sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}
           alt={user.name}
-          src={user.avatar}
+          src={data.data.img}
         />
         <MessageInputWrapper
           autoFocus
           placeholder="Write your message here..."
           fullWidth
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
         />
       </Box>
       <Box>
@@ -69,7 +105,11 @@ function BottomBarContent() {
             </IconButton>
           </label>
         </Tooltip>
-        <Button startIcon={<SendTwoToneIcon />} variant="contained">
+        <Button
+          startIcon={<SendTwoToneIcon />}
+          variant="contained"
+          onClick={() => handleSendMessage(data?.data?.uid)}
+        >
           Send
         </Button>
       </Box>
