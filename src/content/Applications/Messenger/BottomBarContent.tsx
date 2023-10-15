@@ -1,16 +1,16 @@
-import {
-  Avatar,
-  Tooltip,
-  IconButton,
-  Box,
-  Button,
-  styled,
-  InputBase,
-  useTheme
-} from '@mui/material';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
-import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import {
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  Tooltip,
+  styled,
+  useTheme
+} from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
 

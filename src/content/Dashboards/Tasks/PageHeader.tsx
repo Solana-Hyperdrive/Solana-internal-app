@@ -1,15 +1,15 @@
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
+import DocumentScannerTwoToneIcon from '@mui/icons-material/DocumentScannerTwoTone';
 import {
-  Typography,
-  Button,
+  Avatar,
   Box,
+  Button,
+  Typography,
   alpha,
   lighten,
-  Avatar,
   styled
 } from '@mui/material';
-import DocumentScannerTwoToneIcon from '@mui/icons-material/DocumentScannerTwoTone';
-import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
-import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 
 const AvatarPageTitle = styled(Avatar)(
   ({ theme }) => `

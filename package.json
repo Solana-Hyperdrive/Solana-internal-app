@@ -25,6 +25,7 @@
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.34",
     "@solana/wallet-adapter-wallets": "^0.19.22",
+    "@tanstack/react-query-devtools": "^4.36.1",
     "@types/node": "17.0.39",
     "@types/nprogress": "0.2.0",
     "@types/numeral": "2.0.2",

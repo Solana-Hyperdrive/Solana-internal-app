@@ -1,19 +1,19 @@
 import { ReactElement, useEffect } from 'react';
 import BaseLayout from 'src/layouts/BaseLayout';
 
-import Link from 'src/components/Link';
 import Head from 'next/head';
+import Link from 'src/components/Link';
 
 import Logo from 'src/components/LogoSign';
 import Hero from 'src/content/Overview/Hero';
 
-import axios from 'axios';
-import { Box, Card, Container, Typography, styled } from '@mui/material';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import { Box, Card, Container, Typography, styled } from '@mui/material';
+import axios from 'axios';
 
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Connectivity } from '@/web3/connectivity';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 const HeaderWrapper = styled(Card)(
   ({ theme }) => `
@@ -54,7 +54,13 @@ export async function getServerSideProps({ query: { code } }) {
   }
 }
 
-function Overview({ accessToken, refreshToken }) {
+function Overview({
+  accessToken,
+  refreshToken
+}: {
+  accessToken: string | undefined;
+  refreshToken: string | undefined;
+}) {
   useIsLoggedIn('dashboards/tasks');
 
   useEffect(() => {

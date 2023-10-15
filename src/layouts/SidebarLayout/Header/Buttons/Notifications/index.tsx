@@ -1,3 +1,4 @@
+import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import {
   alpha,
   Badge,
@@ -10,9 +11,8 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import { useRef, useState } from 'react';
-import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import { styled } from '@mui/material/styles';
+import { useRef, useState } from 'react';
 
 import useNotifications from '@/hooks/useNotifications';
 

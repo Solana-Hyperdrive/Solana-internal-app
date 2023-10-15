@@ -1,22 +1,22 @@
 import {
-  Grid,
-  Typography,
-  CardContent,
-  Card,
   Box,
+  Button,
+  Card,
+  CardContent,
   Divider,
-  Button
+  Grid,
+  Typography
 } from '@mui/material';
 
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
-import Text from '@/components/Text';
 import Label from '@/components/Label';
+import Text from '@/components/Text';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import { Check } from '@mui/icons-material';
+import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
+import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useRef, useState } from 'react';
-import { Check } from '@mui/icons-material';
-import TextField from '@mui/material/TextField';
 import { useQueryClient } from 'react-query';
 
 function EditProfileTab() {

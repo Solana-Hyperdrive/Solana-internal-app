@@ -15,17 +15,20 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-
 // wallet connnecitvity imports
 import { clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import {
+  ConnectionProvider,
+  WalletProvider
+} from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import {
   PhantomWalletAdapter,
-  SolflareWalletAdapter,
+  SolflareWalletAdapter
 } from '@solana/wallet-adapter-wallets';
-require("@solana/wallet-adapter-react-ui/styles.css");
+import React from 'react';
+require('@solana/wallet-adapter-react-ui/styles.css');
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -42,7 +45,7 @@ function TokyoAppContent({ props }: { props: TokyoAppProps }) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const queryClient = new QueryClient();
+  const [queryClient] = React.useState(() => new QueryClient());
 
   Router.events.on('routeChangeStart', nProgress.start);
   Router.events.on('routeChangeError', nProgress.done);
@@ -76,10 +79,7 @@ function TokyoApp(props: TokyoAppProps) {
   const endpoint = useMemo(() => clusterApiUrl(solNetwork), [solNetwork]);
 
   const wallets = useMemo(
-    () => [
-      new SolflareWalletAdapter(),
-      new PhantomWalletAdapter(),
-    ],
+    () => [new SolflareWalletAdapter(), new PhantomWalletAdapter()],
     [solNetwork]
   );
 
