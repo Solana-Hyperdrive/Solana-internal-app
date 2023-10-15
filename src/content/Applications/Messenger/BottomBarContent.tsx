@@ -59,7 +59,7 @@ function BottomBarContent() {
   }
 
   if (isLoading || !data) {
-    return 'Loading...';
+    return <p>Loading...</p>;
   }
 
   console.log({ data: data?.data?.uid });

@@ -1,22 +1,21 @@
 import { ReactElement, ReactNode, useMemo } from 'react';
 
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import CssBaseline from '@mui/material/CssBaseline';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import Router from 'next/router';
 import nProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import ThemeProvider from 'src/theme/ThemeProvider';
-import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider, EmotionCache } from '@emotion/react';
-import createEmotionCache from 'src/createEmotionCache';
-import { SidebarProvider } from 'src/contexts/SidebarContext';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { SidebarProvider } from 'src/contexts/SidebarContext';
+import createEmotionCache from 'src/createEmotionCache';
+import ThemeProvider from 'src/theme/ThemeProvider';
 
 // wallet connnecitvity imports
-import { clusterApiUrl } from '@solana/web3.js';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
   ConnectionProvider,
@@ -27,6 +26,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter
 } from '@solana/wallet-adapter-wallets';
+import { clusterApiUrl } from '@solana/web3.js';
 import React from 'react';
 require('@solana/wallet-adapter-react-ui/styles.css');
 

@@ -34,7 +34,7 @@ function EditProfileTab() {
   const addressRef = useRef(null);
 
   if (isLoading || !data) {
-    return 'Loading...';
+    return <p>Loading...</p>;
   }
 
   async function handleEdit(tab: string) {

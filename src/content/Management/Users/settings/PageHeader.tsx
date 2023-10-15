@@ -9,7 +9,7 @@ function PageHeader() {
   };
 
   if (isLoading) {
-    return 'Loading';
+    return <p>Loading</p>;
   }
 
   return (

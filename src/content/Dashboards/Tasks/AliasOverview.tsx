@@ -3,9 +3,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import AddAlias from '@/content/Dashboards/AddAlias';
 
 function AliasOverview() {
-  const { data, isLoading, isFetching } = useAlias();
-
-  console.log({ data, isLoading, isFetching });
+  const { data, isLoading } = useAlias();
 
   if (isLoading && !data) {
     return <p>Loading</p>;

@@ -1,32 +1,20 @@
-import { useRef, useState } from 'react';
+import { Add } from '@mui/icons-material';
+import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
+import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import {
-  Button,
-  Card,
-  Grid,
   Box,
+  Button,
   FormControl,
-  CardActions,
-  Typography,
-  Avatar,
-  Divider,
-  Rating,
-  OutlinedInput,
-  Chip,
-  Tooltip,
-  AvatarGroup,
-  Pagination,
   InputAdornment,
   Menu,
   MenuItem,
-  styled,
-  useTheme
+  OutlinedInput,
+  Typography,
+  styled
 } from '@mui/material';
-import { formatDistance, subMonths, subDays } from 'date-fns';
-import TodayTwoToneIcon from '@mui/icons-material/TodayTwoTone';
-import Link from 'src/components/Link';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
-import Text from 'src/components/Text';
-import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
+import axios from 'axios';
+import { useRef, useState } from 'react';
+import { useQuery } from 'react-query';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
   ({ theme }) => `
@@ -36,34 +24,54 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 );
 
 function SearchUser() {
-  const theme = useTheme();
-
-  const handleDelete = () => {};
-
-  const handleClick = () => {};
-
-  const periods = [
+  const searchTypes = [
     {
-      value: 'popular',
-      text: 'Most popular'
+      value: 'relevant',
+      text: 'Most relevant'
     },
     {
-      value: 'recent',
-      text: 'Recent tasks'
-    },
-    {
-      value: 'updated',
-      text: 'Latest updated tasks'
-    },
-    {
-      value: 'oldest',
-      text: 'Oldest tasks first'
+      value: 'exact',
+      text: 'Exact match'
     }
   ];
 
   const actionRef1 = useRef<any>(null);
   const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
-  const [period, setPeriod] = useState<string>(periods[0].text);
+  const [period, setPeriod] = useState<string>(searchTypes[0].text);
+
+  const [searchText, setSearchText] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
+  const { data, isLoading } = useQuery(
+    ['user', searchText],
+    async () => {
+      const response = await axios.post(
+        `https://ledger.flitchcoin.com/api/strict/search
+`,
+        {
+          data: {
+            email: searchText,
+            alias: searchText,
+            label: searchText,
+            sol_wallet: searchText
+          }
+        }
+      );
+
+      setIsSearching(false);
+
+      return response;
+    },
+    { enabled: isSearching && !!searchText }
+  );
+
+  async function handleSearch() {
+    setIsSearching(true);
+  }
+
+  async function handleAddContact(contact) {
+    console.log(contact);
+  }
 
   return (
     <>
@@ -71,9 +79,11 @@ function SearchUser() {
         <OutlinedInputWrapper
           type="text"
           placeholder="Search terms here..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
-              <Button variant="contained" size="small">
+              <Button variant="contained" size="small" onClick={handleSearch}>
                 Search
               </Button>
             </InputAdornment>
@@ -85,20 +95,13 @@ function SearchUser() {
           }
         />
       </FormControl>
+
       <Box
         py={3}
         display="flex"
         alignItems="center"
         justifyContent="space-between"
       >
-        <Box>
-          <Typography variant="subtitle2">
-            Showing{' '}
-            <Text color="black">
-              <b>57 tasks</b>
-            </Text>
-          </Typography>
-        </Box>
         <Box display="flex" alignItems="center">
           <Typography
             variant="subtitle2"
@@ -106,7 +109,7 @@ function SearchUser() {
               pr: 1
             }}
           >
-            Sort by:
+            Search by:
           </Typography>
           <Button
             size="small"
@@ -131,7 +134,7 @@ function SearchUser() {
               horizontal: 'right'
             }}
           >
-            {periods.map((_period) => (
+            {searchTypes.map((_period) => (
               <MenuItem
                 key={_period.value}
                 onClick={() => {
@@ -145,375 +148,20 @@ function SearchUser() {
           </Menu>
         </Box>
       </Box>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              p: 3,
-              background: `${theme.colors.alpha.black[5]}`
+
+      {isLoading ? <Typography variant="body2">Loading...</Typography> : null}
+      {data ? (
+        <Box>
+          {data.data.email}
+          <Button
+            onClick={() => {
+              handleAddContact(data.data);
             }}
           >
-            <Box>
-              <Rating value={4} defaultValue={5} precision={1} readOnly />
-            </Box>
-            <Link href="#" variant="h3" color="text.primary">
-              Migrate hosting to a more performant web server datacenter
-            </Link>
-            <Box
-              sx={{
-                py: 2
-              }}
-            >
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Website"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Integrations"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-            </Box>
-            <Typography
-              sx={{
-                pb: 2
-              }}
-              color="text.secondary"
-            >
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout beatae
-              vitae dicta sunt explicabo.
-            </Typography>
-            <Button size="small" variant="contained">
-              View task
-            </Button>
-            <Divider
-              sx={{
-                my: 2
-              }}
-            />
-            <CardActions
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                <TodayTwoToneIcon
-                  sx={{
-                    mr: 1
-                  }}
-                />
-                {formatDistance(subDays(new Date(), 24), new Date(), {
-                  addSuffix: true
-                })}
-              </Typography>
-              <AvatarGroup>
-                <Tooltip arrow title={`$"View profile for')} Remy Sharp`}>
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/3.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/4.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              p: 3,
-              background: `${theme.colors.alpha.black[5]}`
-            }}
-          >
-            <Box>
-              <Rating value={4} defaultValue={5} precision={1} readOnly />
-            </Box>
-            <Link href="#" variant="h3" color="text.primary">
-              Improve conversion rated by integrating new alias tools
-            </Link>
-            <Box
-              sx={{
-                py: 2
-              }}
-            >
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Website"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Integrations"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-            </Box>
-            <Typography
-              sx={{
-                pb: 2
-              }}
-              color="text.secondary"
-            >
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-              quae ab illo.
-            </Typography>
-            <Button size="small" variant="contained">
-              View task
-            </Button>
-            <Divider
-              sx={{
-                my: 2
-              }}
-            />
-            <CardActions
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                <TodayTwoToneIcon
-                  sx={{
-                    mr: 1
-                  }}
-                />
-                {formatDistance(subMonths(new Date(), 2), new Date(), {
-                  addSuffix: true
-                })}
-              </Typography>
-              <AvatarGroup>
-                <Tooltip arrow title="View profile for Remy Sharp">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/2.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Travis Howard">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Travis Howard"
-                    src="/static/images/avatars/3.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/4.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
-            </CardActions>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card
-            variant="outlined"
-            sx={{
-              p: 3,
-              background: `${theme.colors.alpha.black[5]}`
-            }}
-          >
-            <Box>
-              <Rating value={4} defaultValue={5} precision={1} readOnly />
-            </Box>
-            <Link href="#" variant="h3" color="text.primary">
-              Increase the website speed on mobile and tablet devices
-            </Link>
-            <Box
-              sx={{
-                py: 2
-              }}
-            >
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Website"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-              <Chip
-                sx={{
-                  mr: 0.5
-                }}
-                size="small"
-                label="Integrations"
-                color="secondary"
-                onClick={handleClick}
-                onDelete={handleDelete}
-              />
-            </Box>
-            <Typography
-              sx={{
-                pb: 2
-              }}
-              color="text.secondary"
-            >
-              Nemo enim ipsam voluptatem quia accusantium doloremque laudantium
-              voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur
-              magni dolores eos qui ratione.
-            </Typography>
-            <Button size="small" variant="contained">
-              View task
-            </Button>
-            <Divider
-              sx={{
-                my: 2
-              }}
-            />
-            <CardActions
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <Typography
-                display="flex"
-                alignItems="center"
-                variant="subtitle2"
-              >
-                <TodayTwoToneIcon
-                  sx={{
-                    mr: 1
-                  }}
-                />
-                {formatDistance(subDays(new Date(), 31), new Date(), {
-                  addSuffix: true
-                })}
-              </Typography>
-              <AvatarGroup>
-                <Tooltip arrow title="View profile for Remy Sharp">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Remy Sharp"
-                    src="/static/images/avatars/1.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Travis Howard">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Travis Howard"
-                    src="/static/images/avatars/2.jpg"
-                  />
-                </Tooltip>
-                <Tooltip arrow title="View profile for Trevor Henderson">
-                  <Avatar
-                    sx={{
-                      width: 30,
-                      height: 30
-                    }}
-                    component={Link}
-                    href="#"
-                    alt="Trevor Henderson"
-                    src="/static/images/avatars/5.jpg"
-                  />
-                </Tooltip>
-              </AvatarGroup>
-            </CardActions>
-          </Card>
-        </Grid>
-      </Grid>
-      <Box
-        sx={{
-          pt: 4
-        }}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Pagination
-          showFirstButton
-          showLastButton
-          count={15}
-          defaultPage={6}
-          siblingCount={0}
-          size="large"
-          shape="rounded"
-          color="primary"
-        />
-      </Box>
+            <Add color="success" />
+          </Button>
+        </Box>
+      ) : null}
     </>
   );
 }
