@@ -32,11 +32,6 @@ function BottomBarContent() {
   const { data, isLoading } = useIsLoggedIn();
   const theme = useTheme();
 
-  const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
-  };
-
   async function handleSendMessage(currentUID: string) {
     if (!message) return;
 
@@ -58,11 +53,16 @@ function BottomBarContent() {
     setMessage('');
   }
 
-  if (isLoading || !data) {
+  if (isLoading) {
     return <p>Loading...</p>;
   }
 
-  console.log({ data: data?.data?.uid });
+  const user = {
+    name: data?.data?.name,
+    avatar: data?.data?.img
+  };
+
+  // console.log({ data: data?.data?.uid });
   // uid of other - 8d20d427269f4f5ab4b5dcf5a5ad64997f2bea8dd7ba52018506f1196ae651c0
 
   return (
@@ -78,7 +78,7 @@ function BottomBarContent() {
         <Avatar
           sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}
           alt={user.name}
-          src={data.data.img}
+          src={user.avatar}
         />
         <MessageInputWrapper
           autoFocus

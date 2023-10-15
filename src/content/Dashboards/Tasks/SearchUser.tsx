@@ -1,3 +1,4 @@
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { Add } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
@@ -26,12 +27,12 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 function SearchUser() {
   const searchTypes = [
     {
-      value: 'relevant',
-      text: 'Most relevant'
-    },
-    {
       value: 'exact',
       text: 'Exact match'
+    },
+    {
+      value: 'relevant',
+      text: 'Most relevant'
     }
   ];
 
@@ -42,6 +43,7 @@ function SearchUser() {
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
+  const { data: user } = useIsLoggedIn();
   const { data, isLoading } = useQuery(
     ['user', searchText],
     async () => {
@@ -65,12 +67,24 @@ function SearchUser() {
     { enabled: isSearching && !!searchText }
   );
 
-  async function handleSearch() {
+  function handleSearch() {
     setIsSearching(true);
   }
 
   async function handleAddContact(contact) {
-    console.log(contact);
+    await axios.post(
+      'https://ledger.flitchcoin.com/contact',
+      {
+        my_uid: user.data.uid,
+        uid: contact.uid[0],
+        email: contact.email
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      }
+    );
   }
 
   return (
@@ -155,7 +169,7 @@ function SearchUser() {
           {data.data.email}
           <Button
             onClick={() => {
-              handleAddContact(data.data);
+              handleAddContact(data?.data);
             }}
           >
             <Add color="success" />

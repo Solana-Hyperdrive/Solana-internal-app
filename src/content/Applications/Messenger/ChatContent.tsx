@@ -1,13 +1,14 @@
-import { Box, Avatar, Typography, Card, styled, Divider } from '@mui/material';
+import { Avatar, Box, Card, Divider, Typography, styled } from '@mui/material';
 
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
 import {
-  formatDistance,
   format,
+  formatDistance,
   subDays,
   subHours,
   subMinutes
 } from 'date-fns';
-import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
 
 const DividerWrapper = styled(Divider)(
   ({ theme }) => `
@@ -46,9 +47,15 @@ const CardWrapperSecondary = styled(Card)(
 );
 
 function ChatContent() {
+  const { data, isLoading } = useIsLoggedIn();
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
+    name: data?.data?.name,
+    avatar: data?.data?.img
   };
 
   return (
@@ -63,6 +70,7 @@ function ChatContent() {
         justifyContent="flex-start"
         py={3}
       >
+        l
         <Avatar
           variant="rounded"
           sx={{
