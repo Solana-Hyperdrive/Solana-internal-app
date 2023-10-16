@@ -109,11 +109,11 @@ function TopBarContent({ recUser }) {
           />
           <Box ml={1}>
             <Typography variant="h4">{recUser?.name}</Typography>
-            <Typography variant="subtitle1">
+            {/* <Typography variant="subtitle1">
               {formatDistance(subMinutes(new Date(), 8), new Date(), {
                 addSuffix: true
               })}
-            </Typography>
+            </Typography> */}
           </Box>
         </Box>
       </RootWrapper>
@@ -128,6 +128,7 @@ function TopBarContent({ recUser }) {
         onClose={handleDrawerToggle}
         elevation={9}
       >
+        l
         <Box
           sx={{
             minWidth: 360

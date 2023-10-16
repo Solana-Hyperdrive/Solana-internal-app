@@ -38,14 +38,6 @@ const DrawerWrapperMobile = styled(Drawer)(
 `
 );
 
-const Sidebar = styled(Box)(
-  ({ theme }) => `
-        width: 300px;
-        background: ${theme.colors.alpha.white[100]};
-        border-right: ${theme.colors.alpha.black[10]} solid 1px;
-`
-);
-
 const ChatWindow = styled(Box)(
   () => `
         width: 100%;
@@ -77,7 +69,7 @@ function ChatBox() {
   const router = useRouter();
   const theme = useTheme();
 
-  const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
+  const { data: contacts } = useGetContacts();
 
   const [contactsMenu, setContactsMenu] = useState(false);
 
@@ -87,18 +79,14 @@ function ChatBox() {
     setContactsMenu(!contactsMenu);
   };
 
-  const { data, isLoading } = useQuery(
+  const { data } = useQuery(
     ['recUser', router?.query?.uuid],
     async () => {
-      console.log({ contacts });
-
       const recUser = contacts?.data?.find(
         (contact) => contact?.uuid === router?.query?.uuid
       );
 
       setRecUser(recUser);
-
-      console.log({ recUser });
 
       return axios.get(
         `https://ledger.flitchcoin.com/prev/msg?rec_uid=${recUser?.uid}&start=0&limit=100`,
@@ -111,8 +99,6 @@ function ChatBox() {
     },
     { enabled: contacts?.data?.length > 0 }
   );
-
-  console.log({ data });
 
   return (
     <RootWrapper>
@@ -148,11 +134,11 @@ function ChatBox() {
         </ChatTopBar>
         <Box flex={1}>
           <Scrollbar>
-            <ChatContent recUser={recUser} />
+            <ChatContent recUser={recUser} chats={data} />
           </Scrollbar>
         </Box>
         <Divider />
-        <BottomBarContent />
+        <BottomBarContent recUser={recUser} />
       </ChatWindow>
     </RootWrapper>
   );
