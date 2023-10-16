@@ -9,14 +9,16 @@ import {
 import React from 'react';
 
 function Modal({
+  buttonText,
   modalHeader,
   dialogContentHeader,
   dialogContent,
   handleAction
 }: {
-  modalHeader: string;
-  dialogContentHeader: string;
-  dialogContent: React.ReactNode;
+  buttonText: React.ReactNode | string;
+  modalHeader: React.ReactNode | string;
+  dialogContentHeader: React.ReactNode | string;
+  dialogContent: React.ReactNode | string;
   handleAction: () => void;
 }) {
   const [open, setOpen] = React.useState(false);
@@ -32,7 +34,7 @@ function Modal({
   return (
     <>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Add Alias
+        {buttonText}
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{modalHeader}</DialogTitle>

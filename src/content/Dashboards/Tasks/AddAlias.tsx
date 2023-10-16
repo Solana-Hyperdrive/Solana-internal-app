@@ -41,9 +41,7 @@ export default function AddAlias() {
     <>
       <Modal
         modalHeader="Add Alias"
-        dialogContentHeader={
-          'Please add the wallet address you would like to add as an alias.'
-        }
+        dialogContentHeader="Please add the wallet address you would like to add as an alias."
         dialogContent={
           <>
             <TextField
@@ -73,6 +71,7 @@ export default function AddAlias() {
           </>
         }
         handleAction={handleAddAlias}
+        buttonText="Add Alias"
       />
     </>
   );

@@ -1,3 +1,4 @@
+import Modal from '@/components/Modal';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { Add } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
@@ -10,6 +11,7 @@ import {
   Menu,
   MenuItem,
   OutlinedInput,
+  TextField,
   Typography,
   styled
 } from '@mui/material';
@@ -42,6 +44,7 @@ function SearchUser() {
 
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [name, setName] = useState('');
 
   const { data: user } = useIsLoggedIn();
   const { data, isLoading } = useQuery(
@@ -72,12 +75,15 @@ function SearchUser() {
   }
 
   async function handleAddContact(contact) {
+    if (!name) return;
+
     await axios.post(
       'https://ledger.flitchcoin.com/contact',
       {
         my_uid: user.data.uid,
         uid: contact.uid[0],
-        email: contact.email
+        email: contact.email,
+        name
       },
       {
         headers: {
@@ -85,6 +91,8 @@ function SearchUser() {
         }
       }
     );
+
+    setName('');
   }
 
   return (
@@ -167,13 +175,25 @@ function SearchUser() {
       {data ? (
         <Box>
           {data.data.email}
-          <Button
-            onClick={() => {
-              handleAddContact(data?.data);
-            }}
-          >
-            <Add color="success" />
-          </Button>
+          <Modal
+            buttonText={<Add color="success" />}
+            modalHeader={'Name of contact'}
+            dialogContentHeader={'Please add the name of the contact.'}
+            dialogContent={
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={name}
+                required
+                onChange={(e) => setName(e.target.value)}
+              />
+            }
+            handleAction={() => handleAddContact(data?.data)}
+          />
         </Box>
       ) : null}
     </>
