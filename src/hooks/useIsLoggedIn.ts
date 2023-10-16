@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 export default function useIsLoggedIn(redirect?: string) {
+  const [enableReAuth, setEnableReAuth] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -28,29 +30,41 @@ export default function useIsLoggedIn(redirect?: string) {
       if (redirect) router.push(redirect);
     },
     onError: async () => {
-      try {
-        if (!localStorage.getItem('refreshToken')) throw new Error();
+      setEnableReAuth(true);
+    }
+  });
 
-        const response = await axios.get(
-          `https://ledger.flitchcoin.com/re-auth?refresh_token=${localStorage.getItem(
-            'refreshToken'
-          )}`
-        );
+  useQuery(
+    ['re-auth'],
+    async () => {
+      if (!localStorage.getItem('refreshToken')) throw new Error();
 
-        const { access_token, refresh_token } = response.data;
+      const response = await axios.get(
+        `https://ledger.flitchcoin.com/re-auth?refresh_token=${localStorage.getItem(
+          'refreshToken'
+        )}`
+      );
 
-        localStorage.setItem('accessToken', access_token);
-        localStorage.setItem('refreshToken', refresh_token);
+      const { access_token, refresh_token } = response.data;
 
-        queryClient.invalidateQueries({ queryKey: ['me'] });
-      } catch (error) {
+      localStorage.setItem('accessToken', access_token);
+      localStorage.setItem('refreshToken', refresh_token);
+
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+      setEnableReAuth(false);
+
+      return response;
+    },
+    {
+      enabled: enableReAuth,
+      onError: () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
 
         if (router.asPath !== '/') router.push('/');
       }
     }
-  });
+  );
 
   return { data, isError, isLoading };
 }
