@@ -15,6 +15,8 @@ import {
   styled
 } from '@mui/material';
 import axios from 'axios';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import Label from 'src/components/Label';
 
@@ -33,6 +35,7 @@ const ListItemWrapper = styled(ListItemButton)(
 );
 
 function SidebarContent() {
+  const router = useRouter();
   const { data: me, isLoading } = useIsLoggedIn();
 
   const { data: contacts, isLoading: isLoadingContacts } = useQuery(
@@ -53,7 +56,7 @@ function SidebarContent() {
 
   console.log({ contacts });
 
-  if (isLoading && isLoadingContacts) {
+  if (isLoading || isLoadingContacts) {
     return <p>Loading...</p>;
   }
 
@@ -125,30 +128,37 @@ function SidebarContent() {
       <Box mt={2}>
         <List disablePadding component="div">
           {contacts?.data?.map((contact) => (
-            <ListItemWrapper selected key={contact?.uuid}>
-              <ListItemAvatar>
-                <Avatar src="/static/images/avatars/1.jpg" />
-              </ListItemAvatar>
-              <ListItemText
-                sx={{
-                  mr: 1
-                }}
-                primaryTypographyProps={{
-                  color: 'textPrimary',
-                  variant: 'h5',
-                  noWrap: true
-                }}
-                secondaryTypographyProps={{
-                  color: 'textSecondary',
-                  noWrap: true
-                }}
-                primary={contact?.name}
-                secondary="Hey there, how are you today? Is it ok if I call you?"
-              />
-              <Label color="primary">
-                <b>0</b>
-              </Label>
-            </ListItemWrapper>
+            <Link
+              href={`/applications/messenger/${contact?.uuid}`}
+              key={contact?.uuid}
+            >
+              <ListItemWrapper
+                selected={contact?.uuid === router.asPath.split('/')[3]}
+              >
+                <ListItemAvatar>
+                  <Avatar src="/static/images/avatars/1.jpg" />
+                </ListItemAvatar>
+                <ListItemText
+                  sx={{
+                    mr: 1
+                  }}
+                  primaryTypographyProps={{
+                    color: 'textPrimary',
+                    variant: 'h5',
+                    noWrap: true
+                  }}
+                  secondaryTypographyProps={{
+                    color: 'textSecondary',
+                    noWrap: true
+                  }}
+                  primary={contact?.name}
+                  secondary="Hey there, how are you today? Is it ok if I call you?"
+                />
+                <Label color="primary">
+                  <b>0</b>
+                </Label>
+              </ListItemWrapper>
+            </Link>
           ))}
         </List>
       </Box>

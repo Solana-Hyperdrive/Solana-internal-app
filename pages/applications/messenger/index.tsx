@@ -1,9 +1,8 @@
 import Scrollbar from '@/components/Scrollbar';
 import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Box, Drawer, IconButton, styled, useTheme } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import Head from 'next/head';
-import { useState } from 'react';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -20,104 +19,18 @@ const Sidebar = styled(Box)(
 `
 );
 
-const ChatWindow = styled(Box)(
-  () => `
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-`
-);
-
-const ChatTopBar = styled(Box)(
-  ({ theme }) => `
-        background: ${theme.colors.alpha.white[100]};
-        border-bottom: ${theme.colors.alpha.black[10]} solid 1px;
-        padding: ${theme.spacing(2)};
-        align-items: center;
-`
-);
-
-const IconButtonToggle = styled(IconButton)(
-  ({ theme }) => `
-  width: ${theme.spacing(4)};
-  height: ${theme.spacing(4)};
-  background: ${theme.colors.alpha.white[100]};
-`
-);
-
-const DrawerWrapperMobile = styled(Drawer)(
-  () => `
-    width: 340px;
-    flex-shrink: 0;
-
-  & > .MuiPaper-root {
-        width: 340px;
-        z-index: 3;
-  }
-`
-);
-
 function ApplicationsMessenger() {
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
   return (
     <>
       <Head>
         <title>Messenger - Applications</title>
       </Head>
       <RootWrapper className="Mui-FixedWrapper">
-        {/* <DrawerWrapperMobile
-          sx={{
-            display: { lg: 'none', xs: 'inline-block' }
-          }}
-          variant="temporary"
-          anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-        >
-          <Scrollbar>
-            <SidebarContent />
-          </Scrollbar>
-        </DrawerWrapperMobile> */}
         <Sidebar>
           <Scrollbar>
             <SidebarContent />
           </Scrollbar>
         </Sidebar>
-        {/* <ChatWindow>
-          <ChatTopBar
-            sx={{
-              display: { xs: 'flex', lg: 'inline-block' }
-            }}
-          >
-            <IconButtonToggle
-              sx={{
-                display: { lg: 'none', xs: 'flex' },
-                mr: 2
-              }}
-              color="primary"
-              onClick={handleDrawerToggle}
-              size="small"
-            >
-              <MenuTwoToneIcon />
-            </IconButtonToggle>
-            <TopBarContent />
-          </ChatTopBar>
-          <Box flex={1}>
-            <Scrollbar>
-              <ChatContent />
-            </Scrollbar>
-          </Box>
-          <Divider />
-          <BottomBarContent />
-        </ChatWindow> */}
       </RootWrapper>
     </>
   );

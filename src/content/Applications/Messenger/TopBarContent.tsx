@@ -35,6 +35,7 @@ const RootWrapper = styled(Box)(
   ({ theme }) => `
         @media (min-width: ${theme.breakpoints.values.md}px) {
           display: flex;
+          gap: ${theme.spacing(2)};
           align-items: center;
           justify-content: space-between;
       }
