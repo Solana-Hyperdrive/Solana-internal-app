@@ -1,35 +1,35 @@
-import { useState, SyntheticEvent } from 'react';
+import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
+import CallTwoToneIcon from '@mui/icons-material/CallTwoTone';
+import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
+import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
+import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
+import EmojiEmotionsTwoToneIcon from '@mui/icons-material/EmojiEmotionsTwoTone';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import NotificationsOffTwoToneIcon from '@mui/icons-material/NotificationsOffTwoTone';
+import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
+import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
+import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 import {
-  Box,
-  IconButton,
-  Tooltip,
-  Avatar,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
-  Drawer,
+  AccordionSummary,
+  Avatar,
+  Box,
   Divider,
-  Typography,
+  Drawer,
+  IconButton,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
+  ListItemText,
+  Tooltip,
+  Typography,
   styled,
   useTheme
 } from '@mui/material';
 import { formatDistance, subMinutes } from 'date-fns';
-import CallTwoToneIcon from '@mui/icons-material/CallTwoTone';
-import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
-import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
-import NotificationsOffTwoToneIcon from '@mui/icons-material/NotificationsOffTwoTone';
-import EmojiEmotionsTwoToneIcon from '@mui/icons-material/EmojiEmotionsTwoTone';
-import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
-import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
-import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
-import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
+import { SyntheticEvent, useState } from 'react';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `

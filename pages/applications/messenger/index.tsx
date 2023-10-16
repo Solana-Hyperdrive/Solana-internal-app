@@ -1,20 +1,9 @@
-import { useState } from 'react';
-import Head from 'next/head';
-import SidebarLayout from '@/layouts/SidebarLayout';
-import TopBarContent from '@/content/Applications/Messenger/TopBarContent';
-import BottomBarContent from '@/content/Applications/Messenger/BottomBarContent';
-import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
-import ChatContent from '@/content/Applications/Messenger/ChatContent';
-import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import Scrollbar from '@/components/Scrollbar';
-import {
-  Box,
-  styled,
-  Divider,
-  Drawer,
-  IconButton,
-  useTheme
-} from '@mui/material';
+import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
+import SidebarLayout from '@/layouts/SidebarLayout';
+import { Box, Drawer, IconButton, styled, useTheme } from '@mui/material';
+import Head from 'next/head';
+import { useState } from 'react';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -25,7 +14,7 @@ const RootWrapper = styled(Box)(
 
 const Sidebar = styled(Box)(
   ({ theme }) => `
-        width: 300px;
+        width: 100%;
         background: ${theme.colors.alpha.white[100]};
         border-right: ${theme.colors.alpha.black[10]} solid 1px;
 `
@@ -84,7 +73,7 @@ function ApplicationsMessenger() {
         <title>Messenger - Applications</title>
       </Head>
       <RootWrapper className="Mui-FixedWrapper">
-        <DrawerWrapperMobile
+        {/* <DrawerWrapperMobile
           sx={{
             display: { lg: 'none', xs: 'inline-block' }
           }}
@@ -96,17 +85,13 @@ function ApplicationsMessenger() {
           <Scrollbar>
             <SidebarContent />
           </Scrollbar>
-        </DrawerWrapperMobile>
-        <Sidebar
-          sx={{
-            display: { xs: 'none', lg: 'inline-block' }
-          }}
-        >
+        </DrawerWrapperMobile> */}
+        <Sidebar>
           <Scrollbar>
             <SidebarContent />
           </Scrollbar>
         </Sidebar>
-        <ChatWindow>
+        {/* <ChatWindow>
           <ChatTopBar
             sx={{
               display: { xs: 'flex', lg: 'inline-block' }
@@ -132,7 +117,7 @@ function ApplicationsMessenger() {
           </Box>
           <Divider />
           <BottomBarContent />
-        </ChatWindow>
+        </ChatWindow> */}
       </RootWrapper>
     </>
   );

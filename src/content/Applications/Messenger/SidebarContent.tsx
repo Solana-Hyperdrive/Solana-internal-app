@@ -14,6 +14,8 @@ import {
   Typography,
   styled
 } from '@mui/material';
+import axios from 'axios';
+import { useQuery } from 'react-query';
 import Label from 'src/components/Label';
 
 const RootWrapper = styled(Box)(
@@ -31,15 +33,33 @@ const ListItemWrapper = styled(ListItemButton)(
 );
 
 function SidebarContent() {
-  const { data, isLoading } = useIsLoggedIn();
+  const { data: me, isLoading } = useIsLoggedIn();
 
-  if (isLoading) {
+  const { data: contacts, isLoading: isLoadingContacts } = useQuery(
+    ['contacts'],
+    async () =>
+      axios.get(
+        `https://ledger.flitchcoin.com/contact?my_uid=${me?.data?.uid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }
+      ),
+    {
+      enabled: !!me?.data?.uid
+    }
+  );
+
+  console.log({ contacts });
+
+  if (isLoading && isLoadingContacts) {
     return <p>Loading...</p>;
   }
 
   const user = {
-    name: data?.data?.name,
-    avatar: data?.data?.img
+    name: me?.data?.name,
+    avatar: me?.data?.img
   };
 
   return (
@@ -54,7 +74,7 @@ function SidebarContent() {
         >
           <Box
             display="flex"
-            alignItems="flex-start"
+            alignItems="center"
             justifyContent="space-between"
           >
             <Box>
@@ -104,30 +124,32 @@ function SidebarContent() {
 
       <Box mt={2}>
         <List disablePadding component="div">
-          <ListItemWrapper selected>
-            <ListItemAvatar>
-              <Avatar src="/static/images/avatars/1.jpg" />
-            </ListItemAvatar>
-            <ListItemText
-              sx={{
-                mr: 1
-              }}
-              primaryTypographyProps={{
-                color: 'textPrimary',
-                variant: 'h5',
-                noWrap: true
-              }}
-              secondaryTypographyProps={{
-                color: 'textSecondary',
-                noWrap: true
-              }}
-              primary="Zain Baptista"
-              secondary="Hey there, how are you today? Is it ok if I call you?"
-            />
-            <Label color="primary">
-              <b>2</b>
-            </Label>
-          </ListItemWrapper>
+          {contacts?.data?.map((contact) => (
+            <ListItemWrapper selected key={contact?.uuid}>
+              <ListItemAvatar>
+                <Avatar src="/static/images/avatars/1.jpg" />
+              </ListItemAvatar>
+              <ListItemText
+                sx={{
+                  mr: 1
+                }}
+                primaryTypographyProps={{
+                  color: 'textPrimary',
+                  variant: 'h5',
+                  noWrap: true
+                }}
+                secondaryTypographyProps={{
+                  color: 'textSecondary',
+                  noWrap: true
+                }}
+                primary={contact?.name}
+                secondary="Hey there, how are you today? Is it ok if I call you?"
+              />
+              <Label color="primary">
+                <b>0</b>
+              </Label>
+            </ListItemWrapper>
+          ))}
         </List>
       </Box>
     </RootWrapper>
