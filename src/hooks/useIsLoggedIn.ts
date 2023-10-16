@@ -6,6 +6,15 @@ export default function useIsLoggedIn(redirect?: string) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const isAccessToken =
+    typeof window !== 'undefined'
+      ? !!localStorage.getItem('accessToken')
+      : false;
+
+  // query is enabled only if there is an accessToken.
+  // to enable the query on all other pages (without an access token) we do not pass a redirect param.
+  const enabled = !redirect || isAccessToken;
+
   const { isLoading, isError, data } = useQuery({
     queryKey: ['me'],
     queryFn: async () =>
@@ -14,11 +23,14 @@ export default function useIsLoggedIn(redirect?: string) {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       }),
+    enabled,
     onSuccess: () => {
       if (redirect) router.push(redirect);
     },
     onError: async () => {
       try {
+        if (!localStorage.getItem('refreshToken')) throw new Error();
+
         const response = await axios.get(
           `https://ledger.flitchcoin.com/re-auth?refresh_token=${localStorage.getItem(
             'refreshToken'
@@ -34,7 +46,8 @@ export default function useIsLoggedIn(redirect?: string) {
       } catch (error) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        router.push('/');
+
+        if (router.asPath !== '/') router.push('/');
       }
     }
   });

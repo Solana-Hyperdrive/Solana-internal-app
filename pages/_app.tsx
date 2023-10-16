@@ -45,7 +45,12 @@ function TokyoAppContent({ props }: { props: TokyoAppProps }) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const [queryClient] = React.useState(() => new QueryClient());
+  const [queryClient] = React.useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { queries: { refetchOnWindowFocus: false } }
+      })
+  );
 
   Router.events.on('routeChangeStart', nProgress.start);
   Router.events.on('routeChangeError', nProgress.done);
