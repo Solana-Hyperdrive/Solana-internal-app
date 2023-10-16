@@ -1,14 +1,11 @@
 import BlockTwoToneIcon from '@mui/icons-material/BlockTwoTone';
-import CallTwoToneIcon from '@mui/icons-material/CallTwoTone';
 import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
 import ColorLensTwoToneIcon from '@mui/icons-material/ColorLensTwoTone';
 import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
 import EmojiEmotionsTwoToneIcon from '@mui/icons-material/EmojiEmotionsTwoTone';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import NotificationsOffTwoToneIcon from '@mui/icons-material/NotificationsOffTwoTone';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
-import VideoCameraFrontTwoToneIcon from '@mui/icons-material/VideoCameraFrontTwoTone';
 import WarningTwoToneIcon from '@mui/icons-material/WarningTwoTone';
 import {
   Accordion,
@@ -18,12 +15,10 @@ import {
   Box,
   Divider,
   Drawer,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Tooltip,
   Typography,
   styled,
   useTheme
@@ -83,7 +78,7 @@ const AccordionSummaryWrapper = styled(AccordionSummary)(
 `
 );
 
-function TopBarContent() {
+function TopBarContent({ recUser }) {
   const theme = useTheme();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -109,11 +104,11 @@ function TopBarContent() {
               width: 48,
               height: 48
             }}
-            alt="Zain Baptista"
-            src="/static/images/avatars/1.jpg"
+            alt={recUser?.name}
+            src={recUser?.img}
           />
           <Box ml={1}>
-            <Typography variant="h4">Zain Baptista</Typography>
+            <Typography variant="h4">{recUser?.name}</Typography>
             <Typography variant="subtitle1">
               {formatDistance(subMinutes(new Date(), 8), new Date(), {
                 addSuffix: true
@@ -121,28 +116,8 @@ function TopBarContent() {
             </Typography>
           </Box>
         </Box>
-        <Box
-          sx={{
-            display: { xs: 'none', lg: 'flex' }
-          }}
-        >
-          <Tooltip placement="bottom" title="Start a voice call">
-            <IconButton color="primary">
-              <CallTwoToneIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip placement="bottom" title="Start a video call">
-            <IconButton color="primary">
-              <VideoCameraFrontTwoToneIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip placement="bottom" title="Conversation information">
-            <IconButton color="primary" onClick={handleDrawerToggle}>
-              <InfoTwoToneIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
       </RootWrapper>
+
       <Drawer
         sx={{
           display: { xs: 'none', md: 'flex' }
@@ -183,6 +158,7 @@ function TopBarContent() {
               })}
             </Typography>
           </Box>
+
           <Divider
             sx={{
               my: 3
@@ -232,6 +208,7 @@ function TopBarContent() {
               </List>
             </AccordionDetails>
           </Accordion>
+
           <Accordion
             expanded={expanded === 'section2'}
             onChange={handleChange('section2')}
@@ -286,6 +263,7 @@ function TopBarContent() {
               </List>
             </AccordionDetails>
           </Accordion>
+
           <Accordion
             expanded={expanded === 'section3'}
             onChange={handleChange('section3')}

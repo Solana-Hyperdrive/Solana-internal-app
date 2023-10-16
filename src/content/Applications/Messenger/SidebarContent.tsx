@@ -1,3 +1,4 @@
+import useGetContacts from '@/hooks/useGetContacts';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import SettingsTwoToneIcon from '@mui/icons-material/SettingsTwoTone';
@@ -14,10 +15,8 @@ import {
   Typography,
   styled
 } from '@mui/material';
-import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useQuery } from 'react-query';
 import Label from 'src/components/Label';
 
 const RootWrapper = styled(Box)(
@@ -38,23 +37,7 @@ function SidebarContent() {
   const router = useRouter();
   const { data: me, isLoading } = useIsLoggedIn();
 
-  const { data: contacts, isLoading: isLoadingContacts } = useQuery(
-    ['contacts'],
-    async () =>
-      axios.get(
-        `https://ledger.flitchcoin.com/contact?my_uid=${me?.data?.uid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-          }
-        }
-      ),
-    {
-      enabled: !!me?.data?.uid
-    }
-  );
-
-  console.log({ contacts });
+  const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
 
   if (isLoading || isLoadingContacts) {
     return <p>Loading...</p>;
@@ -136,7 +119,7 @@ function SidebarContent() {
                 selected={contact?.uuid === router.asPath.split('/')[3]}
               >
                 <ListItemAvatar>
-                  <Avatar src="/static/images/avatars/1.jpg" />
+                  <Avatar src={contact?.img} />
                 </ListItemAvatar>
                 <ListItemText
                   sx={{

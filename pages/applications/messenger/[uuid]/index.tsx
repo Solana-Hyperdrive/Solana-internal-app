@@ -3,6 +3,7 @@ import BottomBarContent from '@/content/Applications/Messenger/BottomBarContent'
 import ChatContent from '@/content/Applications/Messenger/ChatContent';
 import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
 import TopBarContent from '@/content/Applications/Messenger/TopBarContent';
+import useGetContacts from '@/hooks/useGetContacts';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import {
@@ -13,7 +14,10 @@ import {
   styled,
   useTheme
 } from '@mui/material';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useQuery } from 'react-query';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -70,17 +74,49 @@ const IconButtonToggle = styled(IconButton)(
 );
 
 function ChatBox() {
+  const router = useRouter();
   const theme = useTheme();
 
+  const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
+
   const [contactsMenu, setContactsMenu] = useState(false);
+
+  const [recUser, setRecUser] = useState({});
 
   const handleDrawerToggle = () => {
     setContactsMenu(!contactsMenu);
   };
+
+  const { data, isLoading } = useQuery(
+    ['recUser', router?.query?.uuid],
+    async () => {
+      console.log({ contacts });
+
+      const recUser = contacts?.data?.find(
+        (contact) => contact?.uuid === router?.query?.uuid
+      );
+
+      setRecUser(recUser);
+
+      console.log({ recUser });
+
+      return axios.get(
+        `https://ledger.flitchcoin.com/prev/msg?rec_uid=${recUser?.uid}&start=0&limit=100`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }
+      );
+    },
+    { enabled: contacts?.data?.length > 0 }
+  );
+
+  console.log({ data });
+
   return (
     <RootWrapper>
       <DrawerWrapperMobile
-        sx={{}}
         variant="temporary"
         anchor={theme.direction === 'rtl' ? 'right' : 'left'}
         open={contactsMenu}
@@ -108,11 +144,11 @@ function ChatBox() {
           >
             <MenuTwoToneIcon />
           </IconButtonToggle>
-          <TopBarContent />
+          <TopBarContent recUser={recUser} />
         </ChatTopBar>
         <Box flex={1}>
           <Scrollbar>
-            <ChatContent />
+            <ChatContent recUser={recUser} />
           </Scrollbar>
         </Box>
         <Divider />

@@ -46,7 +46,7 @@ const CardWrapperSecondary = styled(Card)(
 `
 );
 
-function ChatContent() {
+function ChatContent({ recUser }) {
   const { data, isLoading } = useIsLoggedIn();
 
   if (isLoading) {
@@ -70,7 +70,6 @@ function ChatContent() {
         justifyContent="flex-start"
         py={3}
       >
-        l
         <Avatar
           variant="rounded"
           sx={{
@@ -78,7 +77,7 @@ function ChatContent() {
             height: 50
           }}
           alt="Zain Baptista"
-          src="/static/images/avatars/2.jpg"
+          src={recUser?.img}
         />
         <Box
           display="flex"
