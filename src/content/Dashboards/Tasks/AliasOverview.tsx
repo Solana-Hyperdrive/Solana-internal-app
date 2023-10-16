@@ -1,18 +1,18 @@
+import AddAlias from '@/content/Dashboards/Tasks/AddAlias';
 import useAlias from '@/hooks/useAlias';
 import { Box, Grid, Typography } from '@mui/material';
-import AddAlias from '@/content/Dashboards/AddAlias';
 
 function AliasOverview() {
   const { data, isLoading } = useAlias();
 
-  if (isLoading && !data) {
+  if (isLoading) {
     return <p>Loading</p>;
   }
 
   return (
     <Grid container spacing={4}>
       <Grid item xs={12} md={4}>
-        {data.data.map((alias) => (
+        {data?.data?.map((alias) => (
           <Box key={alias.uuid}>
             <Box display="flex" alignItems="center" pb={3}>
               <Box

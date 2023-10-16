@@ -6,11 +6,6 @@ export default function useIsLoggedIn(redirect?: string) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const enabled =
-    typeof window !== 'undefined'
-      ? !!localStorage?.getItem('accessToken')
-      : false;
-
   const { isLoading, isError, data } = useQuery({
     queryKey: ['me'],
     queryFn: async () =>
@@ -19,7 +14,6 @@ export default function useIsLoggedIn(redirect?: string) {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       }),
-    enabled,
     onSuccess: () => {
       if (redirect) router.push(redirect);
     },
