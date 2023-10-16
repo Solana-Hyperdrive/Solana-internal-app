@@ -1,31 +1,17 @@
+import Modal from '@/components/Modal';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import * as React from 'react';
+import React from 'react';
 import { useQueryClient } from 'react-query';
 
 export default function AddAlias() {
-  const [open, setOpen] = React.useState(false);
   const [alias, setAlias] = React.useState('');
   const [wallet, setWallet] = React.useState('');
 
   const queryClient = useQueryClient();
 
   const { data } = useIsLoggedIn();
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   async function handleAddAlias() {
     if (!alias || !wallet) return;
@@ -45,51 +31,49 @@ export default function AddAlias() {
       }
     );
 
+    setAlias('');
+    setWallet('');
+
     queryClient.invalidateQueries({ queryKey: ['alias'] });
-    handleClose();
   }
 
   return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Add Alias
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Alias</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please add the wallet address you would like to add as an alias.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Alias"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={alias}
-            required
-            onChange={(e) => setAlias(e.target.value)}
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Wallet Address"
-            type="text"
-            fullWidth
-            variant="standard"
-            required
-            value={wallet}
-            onChange={(e) => setWallet(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddAlias}>Add</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <>
+      <Modal
+        modalHeader="Add Alias"
+        dialogContentHeader={
+          'Please add the wallet address you would like to add as an alias.'
+        }
+        dialogContent={
+          <>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Alias"
+              type="text"
+              fullWidth
+              variant="standard"
+              value={alias}
+              required
+              onChange={(e) => setAlias(e.target.value)}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Wallet Address"
+              type="text"
+              fullWidth
+              variant="standard"
+              required
+              value={wallet}
+              onChange={(e) => setWallet(e.target.value)}
+            />
+          </>
+        }
+        handleAction={handleAddAlias}
+      />
+    </>
   );
 }
