@@ -79,6 +79,7 @@ function HeaderNotifications() {
           </NotificationsBadge>
         </IconButton>
       </Tooltip>
+
       <Popover
         anchorEl={ref.current}
         onClose={handleClose}
@@ -100,7 +101,9 @@ function HeaderNotifications() {
         >
           <Typography variant="h5">Notifications</Typography>
         </Box>
+
         <Divider />
+
         <List sx={{ p: 0 }}>
           <ListItem
             sx={{ p: 2, minWidth: 350, display: { xs: 'block', sm: 'flex' } }}
@@ -138,28 +141,5 @@ function HeaderNotifications() {
     </>
   );
 }
-
-// [
-//   {
-//     uuid: '7e7a566e-2771-40b7-adc7-ee7dea183e98',
-//     sender_uid:
-//       '2266a962f5fd4a9dadcd5de322b228fbaada652f834f5aeb9705c31ba83fd4d9',
-//     rec_uid: '8d20d427269f4f5ab4b5dcf5a5ad64997f2bea8dd7ba52018506f1196ae651c0',
-//     message: 'hello',
-//     act: null,
-//     seen: false,
-//     ts: 1697211331.965007
-//   },
-//   {
-//     uuid: '98b6ee67-ad9a-4d19-b9f2-2f0119754241',
-//     sender_uid:
-//       '2266a962f5fd4a9dadcd5de322b228fbaada652f834f5aeb9705c31ba83fd4d9',
-//     rec_uid: '8d20d427269f4f5ab4b5dcf5a5ad64997f2bea8dd7ba52018506f1196ae651c0',
-//     message: 'nope',
-//     act: null,
-//     seen: false,
-//     ts: 1697211379.5494144
-//   }
-// ];
 
 export default HeaderNotifications;

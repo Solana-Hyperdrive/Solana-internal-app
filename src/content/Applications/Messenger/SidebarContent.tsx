@@ -48,6 +48,8 @@ function SidebarContent() {
     avatar: me?.data?.img
   };
 
+  console.log({ contacts });
+
   return (
     <RootWrapper>
       <Box display="flex" alignItems="flex-start">

@@ -29,18 +29,22 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 function SearchUser() {
   const searchTypes = [
     {
-      value: 'exact',
-      text: 'Exact match'
+      value: 'email',
+      text: 'Email ID'
     },
     {
-      value: 'relevant',
-      text: 'Most relevant'
+      value: 'alias',
+      text: 'Alias'
+    },
+    {
+      value: 'sol_wallet',
+      text: 'Wallet ID'
     }
   ];
 
   const actionRef1 = useRef<any>(null);
   const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
-  const [period, setPeriod] = useState<string>(searchTypes[0].text);
+  const [searchBy, setSearchBy] = useState<string>(searchTypes[0].text);
 
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -54,12 +58,7 @@ function SearchUser() {
         `https://ledger.flitchcoin.com/api/strict/search
 `,
         {
-          data: {
-            email: searchText,
-            alias: searchText,
-            label: searchText,
-            sol_wallet: searchText
-          }
+          [searchBy]: searchText
         }
       );
 
@@ -94,6 +93,8 @@ function SearchUser() {
 
     setName('');
   }
+
+  console.log({ data });
 
   return (
     <>
@@ -140,7 +141,7 @@ function SearchUser() {
             onClick={() => setOpenMenuPeriod(true)}
             endIcon={<ExpandMoreTwoToneIcon fontSize="small" />}
           >
-            {period}
+            {searchBy}
           </Button>
           <Menu
             disableScrollLock
@@ -160,7 +161,7 @@ function SearchUser() {
               <MenuItem
                 key={_period.value}
                 onClick={() => {
-                  setPeriod(_period.text);
+                  setSearchBy(_period.text);
                   setOpenMenuPeriod(false);
                 }}
               >
@@ -172,9 +173,9 @@ function SearchUser() {
       </Box>
 
       {isLoading ? <Typography variant="body2">Loading...</Typography> : null}
-      {data ? (
+      {data?.data ? (
         <Box>
-          {data.data.email}
+          {data?.data?.email}
           <Modal
             buttonText={<Add color="success" />}
             modalHeader={'Name of contact'}

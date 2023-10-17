@@ -1,20 +1,20 @@
-import { Avatar, Box, Card, Divider, Typography, styled } from '@mui/material';
+import { Avatar, Box, Card, Typography, styled } from '@mui/material';
 
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import ScheduleTwoToneIcon from '@mui/icons-material/ScheduleTwoTone';
 import { formatDistance, subMinutes } from 'date-fns';
 
-const DividerWrapper = styled(Divider)(
-  ({ theme }) => `
-      .MuiDivider-wrapper {
-        border-radius: ${theme.general.borderRadiusSm};
-        text-transform: none;
-        background: ${theme.palette.background.default};
-        font-size: ${theme.typography.pxToRem(13)};
-        color: ${theme.colors.alpha.black[50]};
-      }
-`
-);
+// const DividerWrapper = styled(Divider)(
+//   ({ theme }) => `
+//       .MuiDivider-wrapper {
+//         border-radius: ${theme.general.borderRadiusSm};
+//         text-transform: none;
+//         background: ${theme.palette.background.default};
+//         font-size: ${theme.typography.pxToRem(13)};
+//         color: ${theme.colors.alpha.black[50]};
+//       }
+// `
+// );
 
 const CardWrapperPrimary = styled(Card)(
   ({ theme }) => `
