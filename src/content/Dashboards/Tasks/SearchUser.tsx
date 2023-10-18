@@ -4,6 +4,7 @@ import { Add } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import {
+  Avatar,
   Box,
   Button,
   FormControl,
@@ -11,11 +12,13 @@ import {
   Menu,
   MenuItem,
   OutlinedInput,
+  Stack,
   TextField,
   Typography,
   styled
 } from '@mui/material';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 
@@ -27,6 +30,7 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 );
 
 function SearchUser() {
+  const router = useRouter();
   const searchTypes = [
     {
       value: 'email',
@@ -44,21 +48,21 @@ function SearchUser() {
 
   const actionRef1 = useRef<any>(null);
   const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
-  const [searchBy, setSearchBy] = useState<string>(searchTypes[0].text);
+  const [searchBy, setSearchBy] = useState(searchTypes[0]);
 
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [name, setName] = useState('');
 
   const { data: user } = useIsLoggedIn();
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isFetched } = useQuery(
     ['user', searchText],
     async () => {
       const response = await axios.post(
         `https://ledger.flitchcoin.com/api/strict/search
 `,
         {
-          [searchBy]: searchText
+          [searchBy.value]: searchText
         }
       );
 
@@ -76,25 +80,30 @@ function SearchUser() {
   async function handleAddContact(contact) {
     if (!name) return;
 
-    await axios.post(
-      'https://ledger.flitchcoin.com/contact',
-      {
-        my_uid: user.data.uid,
-        uid: contact.uid[0],
-        email: contact.email,
-        name
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+    try {
+      const response = await axios.post(
+        'https://ledger.flitchcoin.com/contact',
+        {
+          my_uid: user.data.uid,
+          uid: contact.uid,
+          email: contact.email,
+          name
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
         }
-      }
-    );
+      );
 
-    setName('');
+      const route = response.data?.uuid;
+      router.push(`/applications/messenger/${route}`);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  console.log({ data });
+  console.log({ data, searchBy });
 
   return (
     <>
@@ -118,7 +127,6 @@ function SearchUser() {
           }
         />
       </FormControl>
-
       <Box
         py={3}
         display="flex"
@@ -141,7 +149,7 @@ function SearchUser() {
             onClick={() => setOpenMenuPeriod(true)}
             endIcon={<ExpandMoreTwoToneIcon fontSize="small" />}
           >
-            {searchBy}
+            {searchBy.text}
           </Button>
           <Menu
             disableScrollLock
@@ -157,45 +165,51 @@ function SearchUser() {
               horizontal: 'right'
             }}
           >
-            {searchTypes.map((_period) => (
+            {searchTypes.map((period) => (
               <MenuItem
-                key={_period.value}
+                key={period.value}
                 onClick={() => {
-                  setSearchBy(_period.text);
+                  setSearchBy(period);
                   setOpenMenuPeriod(false);
                 }}
               >
-                {_period.text}
+                {period.text}
               </MenuItem>
             ))}
           </Menu>
         </Box>
       </Box>
-
       {isLoading ? <Typography variant="body2">Loading...</Typography> : null}
-      {data?.data ? (
-        <Box>
-          {data?.data?.email}
-          <Modal
-            buttonText={<Add color="success" />}
-            modalHeader={'Name of contact'}
-            dialogContentHeader={'Please add the name of the contact.'}
-            dialogContent={
-              <TextField
-                autoFocus
-                margin="dense"
-                label="Name"
-                type="text"
-                fullWidth
-                variant="standard"
-                value={name}
-                required
-                onChange={(e) => setName(e.target.value)}
-              />
-            }
-            handleAction={() => handleAddContact(data?.data)}
-          />
-        </Box>
+      {isFetched ? (
+        data?.data ? (
+          <Stack direction="row" alignItems="center" spacing={2}>
+            <Avatar alt={data?.data?.email} src={data?.data?.img} />
+
+            <p>{data?.data?.email}</p>
+
+            <Modal
+              buttonText={<Add color="success" />}
+              modalHeader={'Name of contact'}
+              dialogContentHeader={'Please add the name of the contact.'}
+              dialogContent={
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Name"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={name}
+                  required
+                  onChange={(e) => setName(e.target.value)}
+                />
+              }
+              handleAction={() => handleAddContact(data?.data)}
+            />
+          </Stack>
+        ) : (
+          <p>No contact found! Please recheck details.</p>
+        )
       ) : null}
     </>
   );

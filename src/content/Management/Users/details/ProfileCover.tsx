@@ -1,20 +1,18 @@
-import PropTypes from 'prop-types';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import {
-  Box,
-  Typography,
-  Card,
-  Tooltip,
   Avatar,
-  CardMedia,
+  Box,
   Button,
-  IconButton
+  Card,
+  CardMedia,
+  IconButton,
+  Stack,
+  TextField
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
-import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
-import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
-import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
+import axios from 'axios';
+import { useState } from 'react';
 
 const Input = styled('input')({
   display: 'none'
@@ -26,6 +24,7 @@ const AvatarWrapper = styled(Card)(
     position: relative;
     overflow: visible;
     display: inline-block;
+    align-self: start;
     margin-top: -${theme.spacing(9)};
     margin-left: ${theme.spacing(2)};
 
@@ -78,96 +77,138 @@ const CardCoverAction = styled(Box)(
 `
 );
 
-const ProfileCover = ({ user }) => {
-  return (
-    <>
-      <Box display="flex" mb={3}>
-        <Tooltip arrow placement="top" title="Go back">
-          <IconButton color="primary" sx={{ p: 2, mr: 2 }}>
-            <ArrowBackTwoToneIcon />
-          </IconButton>
-        </Tooltip>
-        <Box>
-          <Typography variant="h3" component="h3" gutterBottom>
-            Profile for {user.name}
-          </Typography>
-          <Typography variant="subtitle2">
-            This is a profile page. Easy to modify, always blazing fast
-          </Typography>
-        </Box>
-      </Box>
-      <CardCover>
-        <CardMedia image={user.coverImg} />
-        <CardCoverAction>
-          <Input accept="image/*" id="change-cover" multiple type="file" />
-          <label htmlFor="change-cover">
-            <Button
-              startIcon={<UploadTwoToneIcon />}
-              variant="contained"
-              component="span"
-            >
-              Change cover
-            </Button>
-          </label>
-        </CardCoverAction>
-      </CardCover>
-      <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
-        <ButtonUploadWrapper>
-          <Input
-            accept="image/*"
-            id="icon-button-file"
-            name="icon-button-file"
-            type="file"
-          />
-          <label htmlFor="icon-button-file">
-            <IconButton component="span" color="primary">
-              <UploadTwoToneIcon />
-            </IconButton>
-          </label>
-        </ButtonUploadWrapper>
-      </AvatarWrapper>
-      <Box py={2} pl={2} mb={3}>
-        <Typography gutterBottom variant="h4">
-          {user.name}
-        </Typography>
-        <Typography variant="subtitle2">{user.description}</Typography>
-        <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
-          {user.jobtitle} | {user.location} | {user.followers} followers
-        </Typography>
-        <Box
-          display={{ xs: 'block', md: 'flex' }}
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Box>
-            <Button size="small" variant="contained">
-              Follow
-            </Button>
-            <Button size="small" sx={{ mx: 1 }} variant="outlined">
-              View website
-            </Button>
-            <IconButton color="primary" sx={{ p: 0.5 }}>
-              <MoreHorizTwoToneIcon />
-            </IconButton>
-          </Box>
-          <Button
-            sx={{ mt: { xs: 2, md: 0 } }}
-            size="small"
-            variant="text"
-            endIcon={<ArrowForwardTwoToneIcon />}
-          >
-            See all {user.followers} connections
-          </Button>
-        </Box>
-      </Box>
-    </>
-  );
-};
+const ProfileCover = () => {
+  const { data: me, isLoading } = useIsLoggedIn();
 
-ProfileCover.propTypes = {
-  // @ts-ignore
-  user: PropTypes.object.isRequired
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState(0);
+  const [coverImage, setCoverImage] = useState(null);
+  const [coverImageObjectURL, setCoverImageObjectURL] = useState(null);
+
+  // async function handleImageUploadToS3(file) {
+  //   try {
+  //     if (!file) throw new Error();
+  //     console.log({ name: file.name, type: file.type });
+  //     // Fetch Upload url
+  //     const response = await fetch(`/api/preSignedUrl?fileName=${file.name}`);
+
+  //     if (!response) throw new Error();
+
+  //     const data = await response?.json();
+  //     const { url } = data as { url: string };
+
+  //     // PUT file to s3 bucket
+  //     const res = await fetch(url, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': file.type ? file.type : 'image/jpeg'
+  //       },
+  //       body: file
+  //     });
+  //     if (res?.status === 200) {
+  //       const imageUrl = url.split('?')[0];
+  //       console.log({ imageUrl });
+  //       return imageUrl;
+  //     } else {
+  //       throw new Error();
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+
+    await axios.post(
+      'https://ledger.flitchcoin.com/product',
+      {
+        uid: me?.data?.uid,
+        name,
+        price
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      }
+    );
+  }
+
+  // console.log({ name });
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <form onSubmit={handleFormSubmit}>
+      <Stack gap={3}>
+        <TextField
+          label="Name"
+          fullWidth
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <CardCover>
+          <CardMedia image={coverImageObjectURL} />
+          <CardCoverAction>
+            <Input
+              accept="image/*"
+              id="change-cover"
+              type="file"
+              onChange={(event) => {
+                if (event.target.files && event.target.files[0]) {
+                  const i = event.target.files[0];
+
+                  setCoverImage(i);
+                  setCoverImageObjectURL(URL.createObjectURL(i));
+                }
+              }}
+            />
+            <label htmlFor="change-cover">
+              <Button
+                startIcon={<UploadTwoToneIcon />}
+                variant="contained"
+                component="span"
+              >
+                Change cover
+              </Button>
+            </label>
+          </CardCoverAction>
+        </CardCover>
+        <AvatarWrapper>
+          <Avatar variant="rounded" alt="" src="" />
+          <ButtonUploadWrapper>
+            <Input
+              accept="image/*"
+              id="icon-button-file"
+              name="icon-button-file"
+              type="file"
+            />
+            <label htmlFor="icon-button-file">
+              <IconButton component="span" color="primary">
+                <UploadTwoToneIcon />
+              </IconButton>
+            </label>
+          </ButtonUploadWrapper>
+        </AvatarWrapper>
+        <TextField
+          type="number"
+          label="Price (USD)"
+          variant="standard"
+          required
+          fullWidth
+          value={price}
+          onChange={(e) => setPrice(Number(e.target.value))}
+        />
+        <Button variant="contained" type="submit">
+          Submit
+        </Button>
+      </Stack>
+    </form>
+  );
 };
 
 export default ProfileCover;

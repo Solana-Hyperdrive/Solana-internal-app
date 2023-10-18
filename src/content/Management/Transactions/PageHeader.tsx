@@ -1,17 +1,26 @@
-import { Typography, Button, Grid } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
+import Link from 'next/link';
 
 function PageHeader() {
+  const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
+
   const user = {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
+    name: me?.data?.name,
+    avatar: me?.data?.img
   };
+
+  if (isMeLoading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Transactions
+          Products
         </Typography>
         <Typography variant="subtitle2">
           {user.name}, these are your recent transactions
@@ -23,7 +32,7 @@ function PageHeader() {
           variant="contained"
           startIcon={<AddTwoToneIcon fontSize="small" />}
         >
-          Create transaction
+          <Link href="/management/profile">Create product</Link>
         </Button>
       </Grid>
     </Grid>
