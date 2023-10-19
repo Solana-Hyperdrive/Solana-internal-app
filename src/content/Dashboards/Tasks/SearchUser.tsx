@@ -96,14 +96,15 @@ function SearchUser() {
         }
       );
 
-      const route = response.data?.uuid;
+      console.log({ response });
+      let route: string;
+      if (response.status === 208) route = response.data?.detail?.uuid;
+      else route = response.data?.uuid;
       router.push(`/applications/messenger/${route}`);
     } catch (e) {
       console.log(e);
     }
   }
-
-  console.log({ data, searchBy });
 
   return (
     <>
