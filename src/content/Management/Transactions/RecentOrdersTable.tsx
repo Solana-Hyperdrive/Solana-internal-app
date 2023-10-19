@@ -80,6 +80,7 @@ const RecentOrdersTable = () => {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Product ID</TableCell>
+              <TableCell>Description</TableCell>
               <TableCell align="right">Price (USD)</TableCell>
             </TableRow>
           </TableHead>
@@ -107,6 +108,18 @@ const RecentOrdersTable = () => {
                     noWrap
                   >
                     {product.product_id}
+                  </Typography>
+                </TableCell>
+
+                <TableCell>
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    color="text.primary"
+                    gutterBottom
+                    noWrap
+                  >
+                    {product.description}
                   </Typography>
                 </TableCell>
 

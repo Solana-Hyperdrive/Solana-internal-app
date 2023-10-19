@@ -1,12 +1,7 @@
-import { Card } from '@mui/material';
 import RecentOrdersTable from './RecentOrdersTable';
 
 function RecentOrders() {
-  return (
-    <Card>
-      <RecentOrdersTable />
-    </Card>
-  );
+  return <RecentOrdersTable />;
 }
 
 export default RecentOrders;

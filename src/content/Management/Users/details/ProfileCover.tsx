@@ -6,12 +6,18 @@ import {
   Button,
   Card,
   CardMedia,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 const Input = styled('input')({
@@ -78,11 +84,15 @@ const CardCoverAction = styled(Box)(
 );
 
 const ProfileCover = () => {
+  const router = useRouter();
+
   const { data: me, isLoading } = useIsLoggedIn();
 
   const [name, setName] = useState('');
-  const [price, setPrice] = useState(0);
-  const [coverImage, setCoverImage] = useState(null);
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [currency, setCurrency] = useState('USD');
+  // const [coverImage, setCoverImage] = useState(null);
   const [coverImageObjectURL, setCoverImageObjectURL] = useState(null);
 
   // async function handleImageUploadToS3(file) {
@@ -120,12 +130,16 @@ const ProfileCover = () => {
   async function handleFormSubmit(e) {
     e.preventDefault();
 
+    if (isNaN(Number(price)) || !name || !description) return;
+
     await axios.post(
       'https://ledger.flitchcoin.com/product',
       {
         uid: me?.data?.uid,
         name,
-        price
+        price: Number(price),
+        currency,
+        description
       },
       {
         headers: {
@@ -133,6 +147,8 @@ const ProfileCover = () => {
         }
       }
     );
+
+    router.push('/products');
   }
 
   // console.log({ name });
@@ -144,6 +160,10 @@ const ProfileCover = () => {
   return (
     <form onSubmit={handleFormSubmit}>
       <Stack gap={3}>
+        <Typography variant="h3">
+          {me?.data?.name}, create a new product to sell
+        </Typography>
+
         <TextField
           label="Name"
           fullWidth
@@ -151,6 +171,15 @@ const ProfileCover = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+
+        <TextField
+          label="Description"
+          fullWidth
+          required
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+
         <CardCover>
           <CardMedia image={coverImageObjectURL} />
           <CardCoverAction>
@@ -162,7 +191,7 @@ const ProfileCover = () => {
                 if (event.target.files && event.target.files[0]) {
                   const i = event.target.files[0];
 
-                  setCoverImage(i);
+                  // setCoverImage(i);
                   setCoverImageObjectURL(URL.createObjectURL(i));
                 }
               }}
@@ -195,14 +224,26 @@ const ProfileCover = () => {
           </ButtonUploadWrapper>
         </AvatarWrapper>
         <TextField
-          type="number"
           label="Price (USD)"
-          variant="standard"
+          variant="outlined"
           required
           fullWidth
           value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
+          onChange={(e) => setPrice(e.target.value)}
         />
+
+        <FormControl fullWidth>
+          <InputLabel id="currency">Currency</InputLabel>
+          <Select
+            labelId="currency"
+            value={currency}
+            label="Currency"
+            onChange={(e) => setCurrency(e.target.value)}
+          >
+            <MenuItem value="USD">USD ($)</MenuItem>
+          </Select>
+        </FormControl>
+
         <Button variant="contained" type="submit">
           Submit
         </Button>
