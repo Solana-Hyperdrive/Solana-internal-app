@@ -9,19 +9,21 @@ import {
 import React from 'react';
 
 function Modal({
+  defaultOpen = false,
   buttonText,
   modalHeader,
   dialogContentHeader,
   dialogContent,
   handleAction
 }: {
+  defaultOpen?: boolean;
   buttonText: React.ReactNode | string;
   modalHeader: React.ReactNode | string;
   dialogContentHeader: React.ReactNode | string;
   dialogContent: React.ReactNode | string;
   handleAction: () => void;
 }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(defaultOpen);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -33,20 +35,23 @@ function Modal({
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        {buttonText}
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+      {!defaultOpen ? (
+        <Button variant="outlined" onClick={handleClickOpen}>
+          {buttonText}
+        </Button>
+      ) : null}
+      <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>{modalHeader}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogContentHeader}</DialogContentText>
           {dialogContent}
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ padding: '2rem' }}>
           <Button onClick={handleClose}>Cancel</Button>
           <Button
-            onClick={async () => {
-              await handleAction();
+            variant="contained"
+            onClick={() => {
+              handleAction();
               handleClose();
             }}
           >

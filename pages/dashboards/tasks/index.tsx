@@ -105,13 +105,14 @@ function DashboardTasks() {
     setCurrentTab(value);
   };
 
-  if (isLoading) return <div>Loading</div>;
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
       <Head>
         <title>Tasks Dashboard</title>
       </Head>
+
       <PageTitleWrapper>
         <PageHeader />
       </PageTitleWrapper>

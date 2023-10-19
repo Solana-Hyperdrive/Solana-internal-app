@@ -37,8 +37,6 @@ const RecentOrdersTable = () => {
     })
   );
 
-  console.log({ products });
-
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
 
@@ -117,7 +115,6 @@ const RecentOrdersTable = () => {
                     fontWeight="bold"
                     color="text.primary"
                     gutterBottom
-                    noWrap
                   >
                     {product.description}
                   </Typography>
