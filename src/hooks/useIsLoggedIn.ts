@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
-export default function useIsLoggedIn(redirect?: string, doRedirect?: boolean) {
+export default function useIsLoggedIn(redirect?: string) {
   const [enableReAuth, setEnableReAuth] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -27,7 +27,7 @@ export default function useIsLoggedIn(redirect?: string, doRedirect?: boolean) {
       }),
     enabled,
     onSuccess: () => {
-      if (redirect && doRedirect) router.push(redirect);
+      if (redirect) router.push(redirect);
     },
     onError: async () => {
       setEnableReAuth(true);
