@@ -55,45 +55,45 @@ const LabelWrapper = styled(Box)(
 // `
 // );
 
-const TsAvatar = styled(Box)(
-  ({ theme }) => `
-    width: ${theme.spacing(8)};
-    height: ${theme.spacing(8)};
-    border-radius: ${theme.general.borderRadius};
-    background-color: #dfebf6;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto ${theme.spacing(2)};
+// const TsAvatar = styled(Box)(
+//   ({ theme }) => `
+//     width: ${theme.spacing(8)};
+//     height: ${theme.spacing(8)};
+//     border-radius: ${theme.general.borderRadius};
+//     background-color: #dfebf6;
+//     flex-shrink: 0;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     margin: 0 auto ${theme.spacing(2)};
 
-    img {
-      width: 60%;
-      height: 60%;
-      display: block;
-    }
-`
-);
+//     img {
+//       width: 60%;
+//       height: 60%;
+//       display: block;
+//     }
+// `
+// );
 
-const NextJsAvatar = styled(Box)(
-  ({ theme }) => `
-  width: ${theme.spacing(8)};
-  height: ${theme.spacing(8)};
-  border-radius: ${theme.general.borderRadius};
-  background-color: #dfebf6;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto ${theme.spacing(2)};
+// const NextJsAvatar = styled(Box)(
+//   ({ theme }) => `
+//   width: ${theme.spacing(8)};
+//   height: ${theme.spacing(8)};
+//   border-radius: ${theme.general.borderRadius};
+//   background-color: #dfebf6;
+//   flex-shrink: 0;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   margin: 0 auto ${theme.spacing(2)};
 
-    img {
-      width: 60%;
-      height: 60%;
-      display: block;
-    }
-`
-);
+//     img {
+//       width: 60%;
+//       height: 60%;
+//       display: block;
+//     }
+// `
+// );
 
 function Hero() {
   return (
