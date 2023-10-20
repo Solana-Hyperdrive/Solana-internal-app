@@ -35,25 +35,25 @@ const LabelWrapper = styled(Box)(
 `
 );
 
-const MuiAvatar = styled(Box)(
-  ({ theme }) => `
-    width: ${theme.spacing(8)};
-    height: ${theme.spacing(8)};
-    border-radius: ${theme.general.borderRadius};
-    background-color: #e5f7ff;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto ${theme.spacing(2)};
+// const MuiAvatar = styled(Box)(
+//   ({ theme }) => `
+//     width: ${theme.spacing(8)};
+//     height: ${theme.spacing(8)};
+//     border-radius: ${theme.general.borderRadius};
+//     background-color: #e5f7ff;
+//     flex-shrink: 0;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     margin: 0 auto ${theme.spacing(2)};
 
-    img {
-      width: 60%;
-      height: 60%;
-      display: block;
-    }
-`
-);
+//     img {
+//       width: 60%;
+//       height: 60%;
+//       display: block;
+//     }
+// `
+// );
 
 const TsAvatar = styled(Box)(
   ({ theme }) => `
