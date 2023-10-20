@@ -43,7 +43,9 @@ function Overview({
   accessToken: string | undefined;
   refreshToken: string | undefined;
 }) {
-  useIsLoggedIn('dashboards/tasks', false);
+  // const router = useRouter();router.query?.code;
+
+  useIsLoggedIn('dashboards/tasks', true);
 
   useEffect(() => {
     if (accessToken && refreshToken) {
