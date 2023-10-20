@@ -96,7 +96,6 @@ function SearchUser() {
         }
       );
 
-      console.log({ response });
       let route: string;
       if (response.status === 208) route = response.data?.detail?.uuid;
       else route = response.data?.uuid;
