@@ -97,7 +97,7 @@ const LabelWrapper = styled(Box)(
 
 function Hero() {
   return (
-    <Container maxWidth="lg" sx={{ textAlign: 'center' }}>
+    <Container maxWidth="lg" sx={{ textAlign: 'center', marginTop: '10rem' }}>
       <Grid
         spacing={{ xs: 6, md: 10 }}
         justifyContent="center"
@@ -115,8 +115,9 @@ function Hero() {
             color="text.secondary"
             fontWeight="normal"
           >
-            We use Solana’s & SPL to build a crypto payment interface that is fast, unique & Reliable.
-            You can call us maybe Stripe* of crypto. We enjoy developing this project and will keep improving it.
+            We use Solana’s & SPL to build a crypto payment interface that is
+            fast, unique & Reliable. You can call us maybe Stripe* of crypto. We
+            enjoy developing this project and will keep improving it.
           </TypographyH2>
           <Button
             component={Link}
@@ -137,8 +138,7 @@ function Hero() {
           >
             Docs
           </Button>
-          <Grid container spacing={3} mt={5}>
-          </Grid>
+          <Grid container spacing={3} mt={5}></Grid>
         </Grid>
       </Grid>
     </Container>
