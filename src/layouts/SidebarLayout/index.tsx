@@ -136,7 +136,6 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
           handleAction={handleCreatePins}
         />
       ) : null}
-
       <Box
         sx={{
           flex: 1,
