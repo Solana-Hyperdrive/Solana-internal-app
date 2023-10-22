@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 export default function useIsLoggedIn(redirect?: string) {
-  const [enableReAuth, setEnableReAuth] = useState(false);
+  const [isEnableReAuth, setIsEnableReAuth] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -15,7 +15,7 @@ export default function useIsLoggedIn(redirect?: string) {
 
   // query is enabled only if there is an accessToken.
   // to enable the query on all other pages (without an access token) we do not pass a redirect param.
-  const enabled = !redirect || isAccessToken;
+  const isEnableMe = !redirect || isAccessToken;
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ['me'],
@@ -25,16 +25,16 @@ export default function useIsLoggedIn(redirect?: string) {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }
       }),
-    enabled,
+    enabled: isEnableMe,
     onSuccess: () => {
       if (redirect) router.push(redirect);
     },
     onError: async () => {
-      setEnableReAuth(true);
+      setIsEnableReAuth(true);
     }
   });
 
-  useQuery(
+  const { isLoading: isReAuthLoading } = useQuery(
     ['re-auth'],
     async () => {
       if (!localStorage.getItem('refreshToken')) throw new Error();
@@ -51,12 +51,13 @@ export default function useIsLoggedIn(redirect?: string) {
       localStorage.setItem('refreshToken', refresh_token);
 
       queryClient.invalidateQueries({ queryKey: ['me'] });
-      setEnableReAuth(false);
+      queryClient.invalidateQueries({ queryKey: ['pins'] });
+      setIsEnableReAuth(false);
 
       return response;
     },
     {
-      enabled: enableReAuth,
+      enabled: isEnableReAuth,
       onError: () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
@@ -66,5 +67,5 @@ export default function useIsLoggedIn(redirect?: string) {
     }
   );
 
-  return { data, isError, isLoading };
+  return { data, isError, isLoading, isReAuthLoading };
 }

@@ -119,6 +119,7 @@ function Hero() {
             fast, unique & Reliable. You can call us maybe Stripe* of crypto. We
             enjoy developing this project and will keep improving it.
           </TypographyH2>
+
           <Button
             component={Link}
             href="/dashboards/tasks"
@@ -127,6 +128,7 @@ function Hero() {
           >
             Go to App
           </Button>
+
           <Button
             sx={{ ml: 2 }}
             component="a"

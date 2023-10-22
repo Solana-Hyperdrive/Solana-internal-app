@@ -22,6 +22,7 @@ import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
+import { useQueryClient } from 'react-query';
 
 const UserBoxButton = styled(Button)(
   ({ theme }) => `
@@ -53,6 +54,7 @@ const UserBoxLabel = styled(Typography)(
 );
 
 function HeaderUserbox() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { data, isLoading } = useIsLoggedIn();
 
@@ -131,6 +133,9 @@ function HeaderUserbox() {
             onClick={() => {
               localStorage.removeItem('accessToken');
               localStorage.removeItem('refreshToken');
+
+              queryClient.invalidateQueries({ queryKey: ['me'] });
+
               router.push('/');
             }}
           >
