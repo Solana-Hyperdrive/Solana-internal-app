@@ -5,7 +5,7 @@ import { BaseSpl } from './baseSpl';
 import { utf8 } from '@project-serum/anchor/dist/cjs/utils/bytes';
 import { ASSOCIATED_PROGRAM_ID } from '@project-serum/anchor/dist/cjs/utils/token';
 import { Metadata } from '@metaplex-foundation/mpl-token-metadata'
-import { TOKEN_PROGRAM_ID, MintLayout, RawMint, AccountLayout as TokenAccountLayout, getAssociatedTokenAddressSync } from '@solana/spl-token'
+import { TOKEN_PROGRAM_ID, MintLayout, RawMint, AccountLayout as TokenAccountLayout, getAssociatedTokenAddressSync, getMint, createTransferInstruction } from '@solana/spl-token'
 import { web3Config } from './web3Configs'
 
 // solana pay
@@ -33,11 +33,11 @@ class BaseMpl {
   }
 }
 
-export function getNonDecimalVaule(value: number, decimal): number {
-  return Math.trunc((10 ** decimal) * value);
+export function getNonDecimalAmount(amount: number, decimal): number {
+  return Math.trunc((10 ** decimal) * amount);
 }
-export function getFloatingVaule(value: number, decimal): number {
-  return value / (10 ** decimal)
+export function getDecimalAmount(amount: number, decimal): number {
+  return amount / (10 ** decimal)
 }
 
 export type Result<T, E> = {
@@ -83,6 +83,62 @@ export class Connectivity {
   reInit() {
     this.txis = []
   }
+
+  //EX 
+  async transferToken(args: { token: web3.PublicKey | string, receiver: web3.PublicKey | string, amount: number }): Promise<Result<TxPassType<any>, any>> {
+    try {
+      this.reInit();
+      const user = this.provider.publicKey;
+      if (!user) throw 'Wallet not found!'
+      let {
+        token,
+        receiver,
+        amount,
+      } = args;
+
+      if (typeof token == 'string') token = new web3.PublicKey(token)
+      if (typeof receiver == 'string') receiver = new web3.PublicKey(receiver)
+      const tokenInfo = await getMint(this.connection, token);
+      const _amount = getNonDecimalAmount(amount, tokenInfo.decimals)
+      const { ata: senderAta } = await this.baseSpl.__getOrCreateTokenAccountInstruction({ mint: token, owner: user, payer: user }, this.ixCallBack);
+      const { ata: receiverAta } = await this.baseSpl.__getOrCreateTokenAccountInstruction({ mint: token, owner: receiver, payer: user }, this.ixCallBack);
+      const transferIx = createTransferInstruction(senderAta, receiverAta, user, _amount);
+      this.txis.push(transferIx)
+
+      const tx = new web3.Transaction().add(...this.txis)
+      const signature = await this.provider.sendAndConfirm(tx);
+      return { Ok: { signature } }
+    } catch (error) {
+      return { Err: error }
+    }
+  }
+
+  async transferSol(args: { receiver: web3.PublicKey | string, amount: number }): Promise<Result<TxPassType<any>, any>> {
+    try {
+      this.reInit();
+      const user = this.provider.publicKey;
+      if (!user) throw 'Wallet not found!'
+      let {
+        receiver,
+        amount,
+      } = args;
+
+      if (typeof receiver == 'string') receiver = new web3.PublicKey(receiver)
+      const _amount = getNonDecimalAmount(amount, 9)
+      const transferIx = web3.SystemProgram.transfer({
+        fromPubkey: user,
+        toPubkey: receiver,
+        lamports: _amount
+      });
+
+      const tx = new web3.Transaction().add(transferIx)
+      const signature = await this.provider.sendAndConfirm(tx);
+      return { Ok: { signature } }
+    } catch (error) {
+      return { Err: error }
+    }
+  }
+
 
   getVaultAccount(sender: web3.PublicKey, id: number) {
     log({ be: new BN(id).toBuffer('le', 8) })
@@ -156,7 +212,7 @@ export class Connectivity {
       const { ata: senderAta } = await this.baseSpl.__getOrCreateTokenAccountInstruction({ owner: sender, mint: token, payer: sender }, this.ixCallBack);
       log(3)
       const tokenDecimal = (MintLayout.decode((await this.connection.getAccountInfo(token)).data)).decimals
-      const _amount = getNonDecimalVaule(amount, tokenDecimal);
+      const _amount = getNonDecimalAmount(amount, tokenDecimal);
 
       const ix = await this.program.methods.createVault({ amount: new BN(_amount), receiver, id: new BN(id) }).accounts({
         token,
