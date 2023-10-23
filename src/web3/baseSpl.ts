@@ -1,3 +1,5 @@
+// @ts-ignore
+
 import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
