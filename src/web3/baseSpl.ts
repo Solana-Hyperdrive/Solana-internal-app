@@ -1,5 +1,3 @@
-// @ts-ignore
-
 import {
   MINT_SIZE,
   TOKEN_PROGRAM_ID,
@@ -7,9 +5,13 @@ import {
   createInitializeMintInstruction,
   createAssociatedTokenAccountInstruction,
   createMintToInstruction,
+  // @ts-ignore
   createTransferInstruction,
+  // @ts-ignore
   getAccount as getTokenAccountInfo,
+  // @ts-ignore
   unpackAccount as unpackTokenAccount,
+  // @ts-ignore
   createBurnInstruction,
 } from "@solana/spl-token";
 import { web3 } from "@project-serum/anchor";
