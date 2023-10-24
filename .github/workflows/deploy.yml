@@ -3,7 +3,7 @@ name: Build and Deploy Docker Image to dev_EC2
 on:
   push:
     branches:
-      - dev-branch
+      - main
 
 jobs:
   deploy_dev:
