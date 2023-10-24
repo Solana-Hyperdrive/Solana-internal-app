@@ -24,7 +24,7 @@ interface SidebarLayoutProps {
 const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
   const queryClient = useQueryClient();
 
-  const { data: me, isReAuthLoading } = useIsLoggedIn();
+  const { data: me, isLoading: isMeLoading, isReAuthLoading } = useIsLoggedIn();
 
   const [personalPin, setPersonalPin] = useState('');
   const [cPin, setCPin] = useState('');
@@ -76,7 +76,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
 
   return (
     <>
-      {!data?.data && !isLoading && !isReAuthLoading ? (
+      {!data?.data && !isLoading && !isMeLoading && !isReAuthLoading ? (
         <Modal
           defaultOpen={true}
           buttonText={''}
