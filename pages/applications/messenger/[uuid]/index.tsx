@@ -69,11 +69,11 @@ function ChatBox() {
   const router = useRouter();
   const theme = useTheme();
 
-  const { data: contacts } = useGetContacts();
+  const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
 
   const [contactsMenu, setContactsMenu] = useState(false);
 
-  const [recUser, setRecUser] = useState({});
+  const [recUser, setRecUser] = useState({ uid: '' });
 
   const handleDrawerToggle = () => {
     setContactsMenu(!contactsMenu);
@@ -97,7 +97,7 @@ function ChatBox() {
         }
       );
     },
-    { enabled: contacts?.data?.length > 0 }
+    { enabled: !!(contacts?.data?.length > 0) && !isLoadingContacts }
   );
 
   return (

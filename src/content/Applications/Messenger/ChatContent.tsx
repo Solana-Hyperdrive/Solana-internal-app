@@ -132,7 +132,7 @@ function ChatContent({ recUser, chats }) {
                 justifyContent="flex-start"
                 ml={2}
               >
-                <CardWrapperSecondary>Hey there!</CardWrapperSecondary>
+                <CardWrapperSecondary>{chat?.message}</CardWrapperSecondary>
                 <Typography
                   variant="subtitle1"
                   sx={{

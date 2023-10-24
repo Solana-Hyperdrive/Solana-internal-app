@@ -20,7 +20,7 @@ import {
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
   ({ theme }) => `
@@ -31,6 +31,7 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 
 function SearchUser() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const searchTypes = [
     {
       value: 'email',
@@ -67,6 +68,8 @@ function SearchUser() {
       );
 
       setIsSearching(false);
+
+      queryClient.invalidateQueries({ queryKey: ['recUser'] });
 
       return response;
     },
