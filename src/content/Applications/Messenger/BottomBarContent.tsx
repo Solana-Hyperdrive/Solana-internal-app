@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useState } from 'react';
+import { useQueryClient } from 'react-query';
 
 const MessageInputWrapper = styled(InputBase)(
   ({ theme }) => `
@@ -26,7 +27,9 @@ const Input = styled('input')({
   display: 'none'
 });
 
-function BottomBarContent({ recUser }) {
+function BottomBarContent({ recUser, otherUUID }) {
+  const queryClient = useQueryClient();
+
   const [message, setMessage] = useState('');
 
   const { data: me, isLoading } = useIsLoggedIn();
@@ -50,6 +53,7 @@ function BottomBarContent({ recUser }) {
     );
 
     setMessage('');
+    queryClient.invalidateQueries({ queryKey: ['recUser', otherUUID] });
   }
 
   if (isLoading) {

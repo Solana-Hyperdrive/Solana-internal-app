@@ -138,7 +138,7 @@ function ChatBox() {
           </Scrollbar>
         </Box>
         <Divider />
-        <BottomBarContent recUser={recUser} />
+        <BottomBarContent recUser={recUser} otherUUID={router?.query?.uuid} />
       </ChatWindow>
     </RootWrapper>
   );
