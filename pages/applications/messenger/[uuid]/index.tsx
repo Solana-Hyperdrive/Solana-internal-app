@@ -16,8 +16,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import io from 'socket.io-client';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -78,6 +79,30 @@ function ChatBox() {
   const handleDrawerToggle = () => {
     setContactsMenu(!contactsMenu);
   };
+
+  useEffect(() => {
+    const socket = io('https://socket.flitchcoin.com', {});
+
+    socket.on('connect', () => {
+      console.log(socket.id);
+    });
+
+    //   // socket.on('message', (data) => {
+    //   //   console.log('Transaction UID received with ', data.uid);
+    //   //   console.log('Status received with ', data.status);
+    //   //   socket.emit('response', { response: 'my response' });
+    //   // });
+
+    //   socket.on('disconnect', () => {
+    //     console.log('disconnected from server');
+    //   });
+
+    return () => {
+      // socket.off('connect');
+      // socket.off('message');
+      // socket.off('disconnect');
+    };
+  }, []);
 
   const { data } = useQuery(
     ['recUser', router?.query?.uuid],
