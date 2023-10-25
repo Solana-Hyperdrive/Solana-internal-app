@@ -4,6 +4,7 @@ import ChatContent from '@/content/Applications/Messenger/ChatContent';
 import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
 import TopBarContent from '@/content/Applications/Messenger/TopBarContent';
 import useGetContacts from '@/hooks/useGetContacts';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import {
@@ -16,8 +17,9 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { io } from 'socket.io-client';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -69,15 +71,49 @@ function ChatBox() {
   const router = useRouter();
   const theme = useTheme();
 
+  const { data: me } = useIsLoggedIn();
   const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
 
   const [contactsMenu, setContactsMenu] = useState(false);
 
   const [recUser, setRecUser] = useState({ uid: '' });
+  const [newChats, setNewChats] = useState([]);
 
   const handleDrawerToggle = () => {
     setContactsMenu(!contactsMenu);
   };
+
+  useEffect(() => {
+    setNewChats([]);
+  }, [router?.query?.uuid]);
+
+  useEffect(() => {
+    const socket = io('https://socket.flitchcoin.com', {
+      transports: ['websocket']
+    });
+
+    // socket.on('connect', () => {});
+
+    socket.on('msg', (message) => {
+      if (
+        (message?.rec_uid === recUser?.uid &&
+          message?.sender_uid === me?.data?.uid) ||
+        (message?.rec_uid === me?.data?.uid &&
+          message?.sender_uid === recUser?.uid)
+      )
+        setNewChats((prevChats) => [...prevChats, message]);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('disconnected from server');
+    });
+
+    return () => {
+      socket.off('connect');
+      socket.off('msg');
+      socket.off('disconnect');
+    };
+  }, [me?.data?.uid, recUser?.uid]);
 
   const { data } = useQuery(
     ['recUser', router?.query?.uuid],
@@ -97,7 +133,10 @@ function ChatBox() {
         }
       );
     },
-    { enabled: !!(contacts?.data?.length > 0) && !isLoadingContacts }
+    {
+      enabled: !!(contacts?.data?.length > 0) && !isLoadingContacts,
+      refetchInterval: Infinity
+    }
   );
 
   return (
@@ -134,11 +173,15 @@ function ChatBox() {
         </ChatTopBar>
         <Box flex={1}>
           <Scrollbar>
-            <ChatContent recUser={recUser} chats={data} />
+            <ChatContent
+              recUser={recUser}
+              prevChats={data}
+              newChats={newChats}
+            />
           </Scrollbar>
         </Box>
         <Divider />
-        <BottomBarContent recUser={recUser} otherUUID={router?.query?.uuid} />
+        <BottomBarContent recUser={recUser} />
       </ChatWindow>
     </RootWrapper>
   );

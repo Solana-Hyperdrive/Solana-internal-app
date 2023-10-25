@@ -108,7 +108,9 @@ function TopBarContent({ recUser }) {
             src={recUser?.img}
           />
           <Box ml={1}>
-            <Typography variant="h4">{recUser?.name}</Typography>
+            <Typography variant="h4">
+              {recUser?.name || recUser?.email}
+            </Typography>
             {/* <Typography variant="subtitle1">
               {formatDistance(subMinutes(new Date(), 8), new Date(), {
                 addSuffix: true

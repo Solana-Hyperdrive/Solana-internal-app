@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Label from 'src/components/Label';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -47,8 +46,6 @@ function SidebarContent() {
     name: me?.data?.name,
     avatar: me?.data?.img
   };
-
-  console.log({ contacts });
 
   return (
     <RootWrapper>
@@ -136,12 +133,11 @@ function SidebarContent() {
                     color: 'textSecondary',
                     noWrap: true
                   }}
-                  primary={contact?.name}
-                  secondary="Hey there, how are you today? Is it ok if I call you?"
+                  primary={contact?.name || contact?.email}
                 />
-                <Label color="primary">
+                {/* <Label color="primary">
                   <b>0</b>
-                </Label>
+                </Label> */}
               </ListItemWrapper>
             </Link>
           ))}
