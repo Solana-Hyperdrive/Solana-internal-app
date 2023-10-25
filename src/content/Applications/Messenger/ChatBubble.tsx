@@ -38,6 +38,7 @@ function ChatBubble({ chat, user, recUser }) {
       justifyContent="flex-end"
       flexDirection={isMe ? 'row' : 'row-reverse'}
       py={3}
+      id={chat?.uuid}
       key={chat?.uuid}
     >
       <Box

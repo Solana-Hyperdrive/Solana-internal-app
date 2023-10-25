@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import { useEffect } from 'react';
 import ChatBubble from './ChatBubble';
 
 // const DividerWrapper = styled(Divider)(
@@ -18,15 +19,30 @@ import ChatBubble from './ChatBubble';
 function ChatContent({ recUser, prevChats, newChats }) {
   const { data: me, isLoading } = useIsLoggedIn();
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   const user = {
     name: me?.data?.name,
     avatar: me?.data?.img,
     uid: me?.data?.uid
   };
+
+  useEffect(() => {
+    if (newChats?.length > 0)
+      document
+        .getElementById(newChats[newChats.length - 1]?.uuid)
+        ?.scrollIntoView({
+          behavior: 'smooth'
+        });
+    else if (prevChats?.data?.length > 0)
+      document
+        .getElementById(prevChats?.data[prevChats.data.length - 1]?.uuid)
+        ?.scrollIntoView({
+          behavior: 'smooth'
+        });
+  }, [prevChats?.data?.length, newChats?.length]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <Box p={3}>

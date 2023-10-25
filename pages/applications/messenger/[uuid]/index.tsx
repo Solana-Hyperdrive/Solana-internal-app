@@ -135,7 +135,7 @@ function ChatBox() {
     },
     {
       enabled: !!(contacts?.data?.length > 0) && !isLoadingContacts,
-      staleTime: Infinity
+      refetchInterval: Infinity
     }
   );
 
