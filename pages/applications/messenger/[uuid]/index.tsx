@@ -84,50 +84,7 @@ function ChatBox() {
     setContactsMenu(!contactsMenu);
   };
 
-  // reset newChats and isUnread when changing recUser
-  useEffect(() => {
-    setNewChats([]);
-    setIsUnread(true);
-  }, [router?.query?.uuid]);
-
-  // connect to web socket
-  useEffect(() => {
-    const socket = io('https://socket.flitchcoin.com', {
-      transports: ['websocket']
-    });
-
-    socket.on('connect', () => {
-      console.log('connected to ws');
-    });
-
-    socket.on('msg', (message) => {
-      if (
-        (message?.rec_uid === recUser?.uid &&
-          message?.sender_uid === me?.data?.uid) ||
-        (message?.rec_uid === me?.data?.uid &&
-          message?.sender_uid === recUser?.uid)
-      ) {
-        if (message?.sender_uid === recUser?.uid && isUnread) {
-          setNewChats((prevChats) => [...prevChats, 'unread', message]);
-          setIsUnread(false);
-        } else {
-          setNewChats((prevChats) => [...prevChats, message]);
-        }
-      }
-    });
-
-    socket.on('disconnect', () => {
-      console.log('disconnected from server');
-    });
-
-    return () => {
-      socket.off('connect');
-      socket.off('msg');
-      socket.off('disconnect');
-    };
-  }, [me?.data?.uid, recUser?.uid, isUnread]);
-
-  const { data } = useQuery(
+  const { data, isLoading: isLoadingRecUser } = useQuery(
     ['recUser', router?.query?.uuid],
     async () => {
       const recUser = contacts?.data?.find(
@@ -150,6 +107,61 @@ function ChatBox() {
       refetchInterval: Infinity
     }
   );
+
+  // reset newChats and isUnread when changing recUser
+  useEffect(() => {
+    setNewChats([]);
+    setIsUnread(true);
+  }, [router?.query?.uuid]);
+
+  // connect to web socket
+  useEffect(() => {
+    let socket;
+
+    if (!isLoadingContacts && !isLoadingRecUser) {
+      socket = io('https://socket.flitchcoin.com', {
+        transports: ['websocket']
+      });
+
+      socket.on('connect', () => {
+        console.log('server connected');
+      });
+
+      socket.on('msg', (message) => {
+        console.log({ message });
+
+        if (
+          (message?.rec_uid === recUser?.uid &&
+            message?.sender_uid === me?.data?.uid) ||
+          (message?.rec_uid === me?.data?.uid &&
+            message?.sender_uid === recUser?.uid)
+        ) {
+          if (message?.sender_uid === recUser?.uid && isUnread) {
+            setNewChats((prevChats) => [...prevChats, 'unread', message]);
+            setIsUnread(false);
+          } else {
+            setNewChats((prevChats) => [...prevChats, message]);
+          }
+        }
+      });
+
+      socket.on('disconnect', () => {
+        console.log('disconnected from server');
+      });
+    }
+
+    return () => {
+      socket?.off('connect');
+      socket?.off('msg');
+      socket?.off('disconnect');
+    };
+  }, [
+    me?.data?.uid,
+    recUser?.uid,
+    isUnread,
+    isLoadingRecUser,
+    isLoadingContacts
+  ]);
 
   return (
     <RootWrapper>

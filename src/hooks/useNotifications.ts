@@ -10,7 +10,7 @@ export default function useNotifications() {
   const { isLoading, isError, data } = useQuery({
     queryKey: ['notifications'],
     queryFn: async () =>
-      axios.post(`https://ledger.flitchcoin.com/rec/msg?uid=${userId}`, {
+      axios.get(`https://ledger.flitchcoin.com/notification`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }

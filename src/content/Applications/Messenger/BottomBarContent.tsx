@@ -28,12 +28,15 @@ const Input = styled('input')({
 
 function BottomBarContent({ recUser }) {
   const [message, setMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
   const { data: me, isLoading } = useIsLoggedIn();
   const theme = useTheme();
 
   async function handleSendMessage() {
     if (!message) return;
+
+    setIsSending(true);
 
     await axios.post(
       'https://ledger.flitchcoin.com/send/msg',
@@ -50,6 +53,7 @@ function BottomBarContent({ recUser }) {
     );
 
     setMessage('');
+    setIsSending(false);
   }
 
   if (isLoading) {
@@ -67,7 +71,7 @@ function BottomBarContent({ recUser }) {
         background: theme.colors.alpha.white[50],
         display: 'flex',
         alignItems: 'center',
-        p: 2
+        p: 1
       }}
     >
       <Box flexGrow={1} display="flex" alignItems="center">
@@ -104,7 +108,7 @@ function BottomBarContent({ recUser }) {
         <Button
           startIcon={<SendTwoToneIcon />}
           variant="contained"
-          disabled={!recUser?.uid}
+          disabled={!recUser?.uid || isSending}
           onClick={handleSendMessage}
         >
           Send

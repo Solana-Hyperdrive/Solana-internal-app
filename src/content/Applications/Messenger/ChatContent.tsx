@@ -41,6 +41,8 @@ function ChatContent({ recUser, prevChats, newChats }) {
         });
   }, [prevChats?.data?.length, newChats?.length]);
 
+  console.log({ newChats });
+
   if (isLoading) {
     return <p>Loading...</p>;
   }
@@ -66,7 +68,11 @@ function ChatContent({ recUser, prevChats, newChats }) {
       {/* New chats - from web socket */}
       {newChats?.map((chat) => {
         if (typeof chat === 'string' && chat === 'unread')
-          return <Divider about="unread messages">Unread</Divider>;
+          return (
+            <Divider key="unreadDivider" about="unread messages">
+              Unread
+            </Divider>
+          );
 
         return (
           <ChatBubble
