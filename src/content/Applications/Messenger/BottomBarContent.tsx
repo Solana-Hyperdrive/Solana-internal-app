@@ -104,6 +104,7 @@ function BottomBarContent({ recUser }) {
         <Button
           startIcon={<SendTwoToneIcon />}
           variant="contained"
+          disabled={!recUser?.uid}
           onClick={handleSendMessage}
         >
           Send

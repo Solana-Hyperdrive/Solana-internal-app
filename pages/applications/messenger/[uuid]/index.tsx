@@ -78,21 +78,27 @@ function ChatBox() {
 
   const [recUser, setRecUser] = useState({ uid: '' });
   const [newChats, setNewChats] = useState([]);
+  const [isUnread, setIsUnread] = useState(true);
 
   const handleDrawerToggle = () => {
     setContactsMenu(!contactsMenu);
   };
 
+  // reset newChats and isUnread when changing recUser
   useEffect(() => {
     setNewChats([]);
+    setIsUnread(true);
   }, [router?.query?.uuid]);
 
+  // connect to web socket
   useEffect(() => {
     const socket = io('https://socket.flitchcoin.com', {
       transports: ['websocket']
     });
 
-    // socket.on('connect', () => {});
+    socket.on('connect', () => {
+      console.log('connected to ws');
+    });
 
     socket.on('msg', (message) => {
       if (
@@ -100,8 +106,14 @@ function ChatBox() {
           message?.sender_uid === me?.data?.uid) ||
         (message?.rec_uid === me?.data?.uid &&
           message?.sender_uid === recUser?.uid)
-      )
-        setNewChats((prevChats) => [...prevChats, message]);
+      ) {
+        if (message?.sender_uid === recUser?.uid && isUnread) {
+          setNewChats((prevChats) => [...prevChats, 'unread', message]);
+          setIsUnread(false);
+        } else {
+          setNewChats((prevChats) => [...prevChats, message]);
+        }
+      }
     });
 
     socket.on('disconnect', () => {
@@ -113,7 +125,7 @@ function ChatBox() {
       socket.off('msg');
       socket.off('disconnect');
     };
-  }, [me?.data?.uid, recUser?.uid]);
+  }, [me?.data?.uid, recUser?.uid, isUnread]);
 
   const { data } = useQuery(
     ['recUser', router?.query?.uuid],

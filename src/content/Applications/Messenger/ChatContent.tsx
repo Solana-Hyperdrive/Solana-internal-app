@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { useEffect } from 'react';
@@ -25,6 +25,7 @@ function ChatContent({ recUser, prevChats, newChats }) {
     uid: me?.data?.uid
   };
 
+  // Scroll to bottom on new message
   useEffect(() => {
     if (newChats?.length > 0)
       document
@@ -61,15 +62,21 @@ function ChatContent({ recUser, prevChats, newChats }) {
             user={user}
           />
         ))}
+
       {/* New chats - from web socket */}
-      {newChats?.map((chat) => (
-        <ChatBubble
-          key={chat?.uuid}
-          recUser={recUser}
-          chat={chat}
-          user={user}
-        />
-      ))}
+      {newChats?.map((chat) => {
+        if (typeof chat === 'string' && chat === 'unread')
+          return <Divider about="unread messages">Unread</Divider>;
+
+        return (
+          <ChatBubble
+            key={chat?.uuid}
+            recUser={recUser}
+            chat={chat}
+            user={user}
+          />
+        );
+      })}
     </Box>
   );
 }
