@@ -97,6 +97,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
                   value={cPin}
                   onChange={setCPin}
                   numInputs={4}
+                  inputType="tel"
                   renderSeparator={<span style={{ width: '1rem' }}></span>}
                   inputStyle={{
                     backgroundColor: 'transparent',
@@ -119,6 +120,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ children }) => {
                   value={personalPin}
                   onChange={setPersonalPin}
                   numInputs={6}
+                  inputType="tel"
                   renderSeparator={<span style={{ width: '1rem' }}></span>}
                   inputStyle={{
                     backgroundColor: 'transparent',
