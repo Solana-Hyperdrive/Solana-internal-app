@@ -1,7 +1,7 @@
-import RecentOrdersTable from './RecentOrdersTable';
+import AllProductsTable from './AllProductsTable';
 
 function RecentOrders() {
-  return <RecentOrdersTable />;
+  return <AllProductsTable />;
 }
 
 export default RecentOrders;

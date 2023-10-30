@@ -83,7 +83,7 @@ const CardCoverAction = styled(Box)(
 `
 );
 
-const AddProduct = () => {
+const ProfileCover = () => {
   const router = useRouter();
 
   const { data: me, isLoading } = useIsLoggedIn();
@@ -150,8 +150,6 @@ const AddProduct = () => {
 
     router.push('/products');
   }
-
-  // console.log({ name });
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -252,4 +250,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default ProfileCover;

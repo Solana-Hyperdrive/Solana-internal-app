@@ -1,3 +1,10 @@
+import Label from '@/components/Label';
+import Text from '@/components/Text';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import { Check } from '@mui/icons-material';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
+import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
+import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import {
   Box,
   Button,
@@ -7,13 +14,6 @@ import {
   Grid,
   Typography
 } from '@mui/material';
-
-import Label from '@/components/Label';
-import Text from '@/components/Text';
-import useIsLoggedIn from '@/hooks/useIsLoggedIn';
-import { Check } from '@mui/icons-material';
-import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { useRef, useState } from 'react';
@@ -72,6 +72,17 @@ function EditProfileTab() {
       account: tab === 'account',
       email: tab === 'email'
     });
+  }
+
+  async function handleResetPins() {
+    await axios('https://ledger.flitchcoin.com/pins', {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      }
+    });
+
+    queryClient.invalidateQueries({ queryKey: ['pins'] });
   }
 
   return (
@@ -269,6 +280,20 @@ function EditProfileTab() {
                 </Grid>
               </Grid>
             </Typography>
+            <Button
+              variant="contained"
+              color="error"
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '2rem',
+                marginLeft: 'auto'
+              }}
+              onClick={handleResetPins}
+            >
+              Reset Pins
+              <AutorenewIcon style={{ marginLeft: '0.5rem' }} />
+            </Button>
           </CardContent>
         </Card>
       </Grid>

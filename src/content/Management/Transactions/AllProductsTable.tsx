@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardHeader,
   Divider,
@@ -20,13 +21,14 @@ import { ChangeEvent, useState } from 'react';
 
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import axios from 'axios';
+import Link from 'next/link';
 import { useQuery, useQueryClient } from 'react-query';
 
 const applyPagination = (allProducts, page: number, limit: number) => {
   return allProducts?.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable = () => {
+const AllProductsTable = () => {
   const queryClient = useQueryClient();
 
   const { data: products, isLoading } = useQuery(['products'], async () =>
@@ -52,10 +54,6 @@ const RecentOrdersTable = () => {
 
   const theme = useTheme();
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
   async function handleDeleteProduct(uuid: string) {
     await axios.delete(`https://ledger.flitchcoin.com/product?uuid=${uuid}`, {
       headers: {
@@ -64,6 +62,10 @@ const RecentOrdersTable = () => {
     });
 
     queryClient.invalidateQueries({ queryKey: ['products'] });
+  }
+
+  if (isLoading) {
+    return <p>Loading...</p>;
   }
 
   return (
@@ -80,6 +82,7 @@ const RecentOrdersTable = () => {
               <TableCell>Product ID</TableCell>
               <TableCell>Description</TableCell>
               <TableCell align="right">Price (USD)</TableCell>
+              <TableCell align="right">Checkout Page</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -133,6 +136,22 @@ const RecentOrdersTable = () => {
                 </TableCell>
 
                 <TableCell align="right">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    color="text.primary"
+                    gutterBottom
+                    noWrap
+                  >
+                    <Link
+                      href={`https://ledger.flitchcoin.com/checkout/page?qp=${product.link}`}
+                    >
+                      Go
+                    </Link>
+                  </Typography>
+                </TableCell>
+
+                <TableCell align="right">
                   <Tooltip title="Delete Product" arrow>
                     <IconButton
                       sx={{
@@ -169,12 +188,12 @@ const RecentOrdersTable = () => {
   );
 };
 
-RecentOrdersTable.propTypes = {
+AllProductsTable.propTypes = {
   cryptoOrders: PropTypes.array.isRequired
 };
 
-RecentOrdersTable.defaultProps = {
+AllProductsTable.defaultProps = {
   cryptoOrders: []
 };
 
-export default RecentOrdersTable;
+export default AllProductsTable;

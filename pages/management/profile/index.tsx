@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 import { Container, Grid } from '@mui/material';
 
-import ProfileCover from '@/content/Management/Users/details/ProfileCover';
+import AddProduct from '@/content/Management/Users/details/AddProduct';
 
 function ManagementUserProfile() {
   return (
@@ -12,7 +12,6 @@ function ManagementUserProfile() {
       <Head>
         <title>Create a Product</title>
       </Head>
-
       <Container sx={{ mt: 3 }} maxWidth="lg">
         <Grid
           container
@@ -22,11 +21,10 @@ function ManagementUserProfile() {
           spacing={3}
         >
           <Grid item xs={12} md={8}>
-            <ProfileCover />
+            <AddProduct />
           </Grid>
         </Grid>
       </Container>
-
       <Footer />
     </>
   );

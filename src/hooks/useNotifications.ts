@@ -10,24 +10,15 @@ export default function useNotifications() {
   const { isLoading, isError, data } = useQuery({
     queryKey: ['notifications'],
     queryFn: async () =>
-      axios.get(`https://ledger.flitchcoin.com/notification`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      axios.get(
+        `https://ledger.flitchcoin.com/prev/notification?start=0&limit=100`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
         }
-      }),
-    enabled: !!userId,
-    onSuccess: () => {
-      if (localStorage.getItem('notifications') && data?.data) {
-        const oldData = JSON.parse(localStorage.getItem('notifications'));
-        const newData = [...oldData, ...data?.data];
-        localStorage.setItem('notifications', JSON.stringify(newData));
-      } else {
-        localStorage.setItem(
-          'notifications',
-          JSON.stringify(data?.data ? data?.data : [])
-        );
-      }
-    }
+      ),
+    enabled: !!userId
   });
 
   return { data, isError, isLoading };
