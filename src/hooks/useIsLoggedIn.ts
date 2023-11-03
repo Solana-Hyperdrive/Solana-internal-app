@@ -62,7 +62,8 @@ export default function useIsLoggedIn(redirect?: string) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
 
-        if (router.asPath !== '/') router.push('/');
+        if (router.asPath !== '/')
+          router.push('https://ledger.flitchcoin.com/login');
       }
     }
   );
