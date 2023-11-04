@@ -9,11 +9,13 @@ import {
   List,
   ListItem,
   Popover,
+  Stack,
   Tooltip,
   Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useRef, useState } from 'react';
+import NotificationCard from './NotificationCard';
 
 const NotificationsBadge = styled(Badge)(
   ({ theme }) => `
@@ -110,20 +112,11 @@ function HeaderNotifications() {
                 color="text.secondary"
               >
                 {data?.data?.length > 0 ? (
-                  <>
+                  <Stack gap={1.5}>
                     {data?.data?.map((message: any) => (
-                      <div key={message.uuid}>
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          color="text.secondary"
-                        >
-                          {message.message}
-                        </Typography>
-                        <br />
-                      </div>
+                      <NotificationCard key={message.uuid} message={message} />
                     ))}
-                  </>
+                  </Stack>
                 ) : (
                   'No new messages in your inbox'
                 )}
