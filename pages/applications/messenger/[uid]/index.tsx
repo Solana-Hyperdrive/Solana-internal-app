@@ -85,10 +85,10 @@ function ChatBox() {
   };
 
   const { data, isLoading: isLoadingRecUser } = useQuery(
-    ['recUser', router?.query?.uuid],
+    ['recUser', router?.query?.uid],
     async () => {
       const recUser = contacts?.data?.find(
-        (contact) => contact?.uuid === router?.query?.uuid
+        (contact) => contact?.uid === router?.query?.uid
       );
 
       setRecUser(recUser);

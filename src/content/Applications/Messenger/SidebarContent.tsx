@@ -111,11 +111,11 @@ function SidebarContent() {
         <List disablePadding component="div">
           {contacts?.data?.map((contact) => (
             <Link
-              href={`/applications/messenger/${contact?.uuid}`}
+              href={`/applications/messenger/${contact?.uid}`}
               key={contact?.uuid}
             >
               <ListItemWrapper
-                selected={contact?.uuid === router.asPath.split('/')[3]}
+                selected={contact?.uid === router.asPath.split('/')[3]}
               >
                 <ListItemAvatar>
                   <Avatar src={contact?.img} />

@@ -1,3 +1,4 @@
+import useNotifications from '@/hooks/useNotifications';
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import {
   alpha,
@@ -13,8 +14,6 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useRef, useState } from 'react';
-
-import useNotifications from '@/hooks/useNotifications';
 
 const NotificationsBadge = styled(Badge)(
   ({ theme }) => `
@@ -45,7 +44,7 @@ function HeaderNotifications() {
 
   const [isOpen, setOpen] = useState<boolean>(false);
 
-  const { isLoading } = useNotifications();
+  const { data, isLoading } = useNotifications();
 
   const handleOpen = (): void => {
     setOpen(true);
@@ -59,17 +58,12 @@ function HeaderNotifications() {
     return null;
   }
 
-  const data =
-    typeof window !== 'undefined'
-      ? JSON.parse(localStorage.getItem('notifications')) || []
-      : [];
-
   return (
     <>
       <Tooltip arrow title="Notifications">
         <IconButton color="primary" ref={ref} onClick={handleOpen}>
           <NotificationsBadge
-            badgeContent={data?.length}
+            badgeContent={data?.data?.length}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right'
@@ -115,9 +109,9 @@ function HeaderNotifications() {
                 variant="body2"
                 color="text.secondary"
               >
-                {data?.length > 0 ? (
+                {data?.data?.length > 0 ? (
                   <>
-                    {data?.map((message: any) => (
+                    {data?.data?.map((message: any) => (
                       <div key={message.uuid}>
                         <Typography
                           component="span"
