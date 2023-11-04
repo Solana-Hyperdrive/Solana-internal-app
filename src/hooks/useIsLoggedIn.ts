@@ -31,7 +31,8 @@ export default function useIsLoggedIn(redirect?: string) {
     },
     onError: async () => {
       setIsEnableReAuth(true);
-    }
+    },
+    retry: false
   });
 
   const { isLoading: isReAuthLoading } = useQuery(
@@ -58,6 +59,7 @@ export default function useIsLoggedIn(redirect?: string) {
     },
     {
       enabled: isEnableReAuth,
+      retry: false,
       onError: () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
