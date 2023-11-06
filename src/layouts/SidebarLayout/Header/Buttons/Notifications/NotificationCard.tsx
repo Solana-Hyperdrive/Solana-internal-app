@@ -59,7 +59,13 @@ const NotificationCard = ({ notification }) => {
 
       const { pub_key, token } = response.data;
 
-      const sign = await sendSol(pub_key, notification.act.product.price);
+      let solAmount = -1;
+      if (notification?.act?.product?.price)
+        solAmount = notification.act.product.price;
+      else if (notification?.act?.peer?.amt)
+        solAmount = notification.act.peer.amt;
+
+      const sign = await sendSol(pub_key, solAmount);
 
       await axios.post(
         'https://ledger.flitchcoin.com/payment/verification',
@@ -74,7 +80,7 @@ const NotificationCard = ({ notification }) => {
         }
       );
 
-      // await handleMessageClick(true);
+      await handleMessageClick(true);
     } catch (err) {
       console.log(err);
     }

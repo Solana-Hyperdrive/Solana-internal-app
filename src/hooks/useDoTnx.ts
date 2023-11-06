@@ -25,7 +25,7 @@ function useDoTnx() {
   }, [connection, publicKey]);
 
   const sendSol = async (recPubKey, amount: number) => {
-    if (amount > balance / LAMPORTS_PER_SOL)
+    if (amount <= 0 || amount > balance / LAMPORTS_PER_SOL)
       throw new Error('Insufficient Balance');
 
     const transaction = new web3.Transaction();
