@@ -67,7 +67,7 @@ function BottomBarContent({ recUser }) {
       {
         sender_uid: me?.data?.uid,
         rec_uid: recUser?.uid,
-        message: `Payment of ${amount} from ${me?.data?.name} to ${
+        message: `Payment of ${amount} to ${me?.data?.name} from ${
           recUser?.name || recUser?.email
         }`,
         act: {
@@ -77,7 +77,7 @@ function BottomBarContent({ recUser }) {
             // no_revert: true,
             uid_sender: me?.data?.uid,
             rec_uid: recUser?.uid,
-            message: `Payment of ${amount} from ${me?.data?.name} to ${recUser?.name}`,
+            message: `Payment of ${amount} to ${me?.data?.name} from ${recUser?.name}`,
             amt: amount,
             token: 'sol',
             currency: 'USD'
