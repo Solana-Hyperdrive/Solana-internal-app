@@ -113,8 +113,11 @@ function HeaderNotifications() {
               >
                 {data?.data?.length > 0 ? (
                   <Stack gap={1.5}>
-                    {data?.data?.map((message: any) => (
-                      <NotificationCard key={message.uuid} message={message} />
+                    {data?.data?.map((notification: any) => (
+                      <NotificationCard
+                        key={notification.uuid}
+                        notification={notification}
+                      />
                     ))}
                   </Stack>
                 ) : (
