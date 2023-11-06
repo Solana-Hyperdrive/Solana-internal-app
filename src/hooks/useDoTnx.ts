@@ -9,9 +9,7 @@ function useDoTnx() {
   const { publicKey, sendTransaction } = useWallet();
 
   useEffect(() => {
-    if (!connection || !publicKey) {
-      return;
-    }
+    if (!connection || !publicKey) return;
 
     connection.onAccountChange(
       publicKey,

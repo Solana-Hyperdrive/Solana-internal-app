@@ -1,5 +1,5 @@
+import Modal from '@/components/Modal';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
-import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
 import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
 import {
   Avatar,
@@ -7,7 +7,10 @@ import {
   Button,
   IconButton,
   InputBase,
+  Stack,
+  TextField,
   Tooltip,
+  Typography,
   styled,
   useTheme
 } from '@mui/material';
@@ -22,13 +25,11 @@ const MessageInputWrapper = styled(InputBase)(
 `
 );
 
-const Input = styled('input')({
-  display: 'none'
-});
-
 function BottomBarContent({ recUser }) {
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [amount, setAmount] = useState(0);
+  const [isPaying, setIsPaying] = useState(false);
 
   const { data: me, isLoading } = useIsLoggedIn();
   const theme = useTheme();
@@ -56,7 +57,43 @@ function BottomBarContent({ recUser }) {
     setIsSending(false);
   }
 
-  if (isLoading) {
+  async function handleSendPayment() {
+    if (!amount) return;
+
+    setIsPaying(true);
+
+    await axios.post(
+      'https://ledger.flitchcoin.com/payment/request',
+      {
+        sender_uid: me?.data?.uid,
+        rec_uid: recUser?.uid,
+        message: `Payment of ${amount} from ${me?.data?.name} to ${recUser?.name}`,
+        act: {
+          uid: me?.data?.uid,
+          seen: false,
+          peer: {
+            // no_revert: true,
+            uid_sender: me?.data?.uid,
+            rec_uid: recUser?.uid,
+            message: `Payment of ${amount} from ${me?.data?.name} to ${recUser?.name}`,
+            amt: amount,
+            token: 'sol',
+            currency: 'USD'
+          }
+        }
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      }
+    );
+
+    setAmount(0);
+    setIsPaying(false);
+  }
+
+  if (isLoading || !recUser) {
     return <p>Loading...</p>;
   }
 
@@ -89,22 +126,43 @@ function BottomBarContent({ recUser }) {
         />
       </Box>
       <Box>
-        <Tooltip arrow placement="top" title="Choose an emoji">
-          <IconButton
-            sx={{ fontSize: theme.typography.pxToRem(16) }}
-            color="primary"
-          >
-            😀
-          </IconButton>
-        </Tooltip>
-        <Input accept="image/*" id="messenger-upload-file" type="file" />
-        <Tooltip arrow placement="top" title="Attach a file">
-          <label htmlFor="messenger-upload-file">
-            <IconButton sx={{ mx: 1 }} color="primary" component="span">
-              <AttachFileTwoToneIcon fontSize="small" />
-            </IconButton>
-          </label>
-        </Tooltip>
+        <Modal
+          defaultOpen={false}
+          buttonText={
+            <Tooltip arrow placement="top" title="Request Payment">
+              <IconButton
+                sx={{ fontSize: theme.typography.pxToRem(16), p: 1 }}
+                color="primary"
+                disabled={!recUser?.uid || isPaying}
+              >
+                🤑
+              </IconButton>
+            </Tooltip>
+          }
+          modalHeader={
+            <Typography fontSize={30} fontWeight={800}>
+              Payment
+            </Typography>
+          }
+          dialogContentHeader={''}
+          dialogContent={
+            <Stack gap={2} alignItems="center">
+              <Typography>
+                Please enter amount to send to {recUser?.name}
+              </Typography>
+              <TextField
+                id="amount"
+                type="number"
+                label="Amount"
+                variant="outlined"
+                value={amount}
+                onChange={(e) => setAmount(Number(e.target.value))}
+              />
+            </Stack>
+          }
+          handleAction={handleSendPayment}
+        />
+
         <Button
           startIcon={<SendTwoToneIcon />}
           variant="contained"

@@ -36,9 +36,15 @@ function Modal({
   return (
     <>
       {!defaultOpen ? (
-        <Button variant="outlined" onClick={handleClickOpen}>
-          {buttonText}
-        </Button>
+        <>
+          {typeof buttonText === 'string' ? (
+            <Button variant="outlined" onClick={handleClickOpen}>
+              {buttonText}
+            </Button>
+          ) : (
+            <span onClick={handleClickOpen}>{buttonText}</span>
+          )}
+        </>
       ) : null}
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>{modalHeader}</DialogTitle>

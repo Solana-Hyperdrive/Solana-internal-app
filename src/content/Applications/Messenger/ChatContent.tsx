@@ -41,8 +41,6 @@ function ChatContent({ recUser, prevChats, newChats }) {
         });
   }, [prevChats?.data?.length, newChats?.length]);
 
-  console.log({ newChats });
-
   if (isLoading) {
     return <p>Loading...</p>;
   }

@@ -89,7 +89,7 @@ const NotificationCard = ({ notification }) => {
         </Button>
         <Modal
           defaultOpen={false}
-          buttonText={'Accept'}
+          buttonText={<Button variant="contained">Accept</Button>}
           modalHeader={
             <Typography fontSize={30} fontWeight={800}>
               Create PINS
