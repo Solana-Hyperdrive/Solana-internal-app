@@ -67,7 +67,9 @@ function BottomBarContent({ recUser }) {
       {
         sender_uid: me?.data?.uid,
         rec_uid: recUser?.uid,
-        message: `Payment of ${amount} from ${me?.data?.name} to ${recUser?.name}`,
+        message: `Payment of ${amount} from ${me?.data?.name} to ${
+          recUser?.name || recUser?.email
+        }`,
         act: {
           uid: me?.data?.uid,
           seen: false,
