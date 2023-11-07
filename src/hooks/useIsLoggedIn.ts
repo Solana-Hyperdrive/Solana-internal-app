@@ -31,8 +31,7 @@ export default function useIsLoggedIn(redirect?: string) {
     },
     onError: async () => {
       setIsEnableReAuth(true);
-    },
-    retry: false
+    }
   });
 
   const { isLoading: isReAuthLoading } = useQuery(

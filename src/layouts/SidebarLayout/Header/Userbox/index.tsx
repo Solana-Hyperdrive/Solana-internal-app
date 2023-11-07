@@ -132,18 +132,24 @@ function HeaderUserbox() {
             color="primary"
             fullWidth
             onClick={async () => {
-              localStorage.removeItem('accessToken');
-              localStorage.removeItem('refreshToken');
+              try {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
 
-              await axios.get('https://ledger.flitchcoin.com/sign-out', {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                }
-              });
+                await axios.get('https://ledger.flitchcoin.com/sign-out', {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem(
+                      'accessToken'
+                    )}`
+                  }
+                });
 
-              queryClient.invalidateQueries({ queryKey: ['me'] });
+                queryClient.invalidateQueries({ queryKey: ['me'] });
 
-              router.push('/');
+                router.push('/');
+              } catch (err) {
+                console.error(err);
+              }
             }}
           >
             <LockOpenTwoToneIcon sx={{ mr: 1 }} />
