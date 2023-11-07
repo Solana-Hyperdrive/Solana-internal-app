@@ -23,7 +23,7 @@ function PageHeader() {
           Products
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, these are your recent transactions
+          {user.name}, these are all your products
         </Typography>
       </Grid>
       <Grid item>

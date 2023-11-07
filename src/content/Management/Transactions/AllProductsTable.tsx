@@ -69,7 +69,7 @@ const AllProductsTable = () => {
 
   return (
     <Card>
-      <CardHeader title="Recent Orders" />
+      <CardHeader title="Products" />
 
       <Divider />
 

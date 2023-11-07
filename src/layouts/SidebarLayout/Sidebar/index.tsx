@@ -4,17 +4,16 @@ import { SidebarContext } from 'src/contexts/SidebarContext';
 
 import {
   Box,
+  Divider,
   Drawer,
   alpha,
-  styled,
-  Divider,
-  useTheme,
+  darken,
   lighten,
-  darken
+  styled,
+  useTheme
 } from '@mui/material';
 
 import SidebarMenu from './SidebarMenu';
-import Logo from 'src/components/LogoSign';
 
 const SidebarWrapper = styled(Box)(
   ({ theme }) => `
@@ -53,23 +52,6 @@ function Sidebar() {
         }}
       >
         <Scrollbar>
-          {/* <Box mt={3}>
-            <Box
-              mx={2}
-              sx={{
-                width: 52
-              }}
-            >
-              <Logo />
-            </Box>
-          </Box> */}
-          {/* <Divider
-            sx={{
-              mt: theme.spacing(3),
-              mx: theme.spacing(2),
-              background: theme.colors.alpha.trueWhite[10]
-            }}
-          /> */}
           <SidebarMenu />
         </Scrollbar>
         <Divider
@@ -77,19 +59,6 @@ function Sidebar() {
             background: theme.colors.alpha.trueWhite[10]
           }}
         />
-        {/* <Box p={2}>
-          <Button
-            href="https://flitchcoin.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="contained"
-            color="success"
-            size="small"
-            fullWidth
-          >
-            Upgrade to Enterprise
-          </Button>
-        </Box> */}
       </SidebarWrapper>
       <Drawer
         sx={{
@@ -110,23 +79,6 @@ function Sidebar() {
           }}
         >
           <Scrollbar>
-            <Box mt={3}>
-              <Box
-                mx={2}
-                sx={{
-                  width: 52
-                }}
-              >
-                <Logo />
-              </Box>
-            </Box>
-            <Divider
-              sx={{
-                mt: theme.spacing(3),
-                mx: theme.spacing(2),
-                background: theme.colors.alpha.trueWhite[10]
-              }}
-            />
             <SidebarMenu />
           </Scrollbar>
         </SidebarWrapper>
