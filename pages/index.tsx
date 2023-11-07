@@ -46,7 +46,7 @@ function Overview({
   accessToken: string | undefined;
   refreshToken: string | undefined;
 }) {
-  useIsLoggedIn('dashboards/tasks');
+  useIsLoggedIn('dashboard');
 
   useEffect(() => {
     if (accessToken && refreshToken) {

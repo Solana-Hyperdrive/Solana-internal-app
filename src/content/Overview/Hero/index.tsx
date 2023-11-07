@@ -122,7 +122,7 @@ function Hero() {
 
           <Button
             component={Link}
-            href="/dashboards/tasks"
+            href="/dashboard"
             size="large"
             variant="contained"
           >
