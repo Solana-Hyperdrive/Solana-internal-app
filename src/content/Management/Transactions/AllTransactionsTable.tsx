@@ -1,4 +1,5 @@
 import Label from '@/components/Label';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import {
   Box,
   Card,
@@ -17,15 +18,14 @@ import axios from 'axios';
 import { formatDistance } from 'date-fns';
 import PropTypes from 'prop-types';
 import { ChangeEvent, useState } from 'react';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 
 const applyPagination = (allProducts, page: number, limit: number) => {
   return allProducts?.slice(page * limit, page * limit + limit);
 };
 
 const AllTransactionsTable = () => {
-  const queryClient = useQueryClient();
-
+  const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
   const { data: products, isLoading } = useQuery(['products'], async () =>
     axios.get('https://ledger.flitchcoin.com/tnx/history?start=0&limit=50', {
       headers: {
@@ -47,7 +47,7 @@ const AllTransactionsTable = () => {
 
   const paginatedTnxs = applyPagination(products?.data, page, limit);
 
-  if (isLoading) {
+  if (isLoading || isMeLoading) {
     return <p>Loading...</p>;
   }
 
@@ -152,7 +152,11 @@ const AllTransactionsTable = () => {
                     noWrap
                   >
                     {tnx.product ? tnx?.product?.name : null}
-                    {tnx.peer ? tnx?.peer?.message : null}
+                    {tnx.peer
+                      ? tnx.peer.uid_sender === me.data.uid
+                        ? tnx.peer.rec_uid
+                        : tnx.peer.uid_sender
+                      : null}
                   </Typography>
                 </TableCell>
               </TableRow>
