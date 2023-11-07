@@ -1,20 +1,19 @@
 import Footer from '@/components/Footer';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
 import PageHeader from '@/content/Management/PageHeader';
+import AllTransactionsTable from '@/content/Management/Transactions/AllTransactionsTable';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import { Container, Grid } from '@mui/material';
 import Head from 'next/head';
 
-import AllProductsTable from '@/content/Management/Product/AllProductsTable';
-
-function ApplicationsTransactions() {
+const TNX = () => {
   return (
     <>
       <Head>
-        <title>All Products</title>
+        <title>All Transactions</title>
       </Head>
       <PageTitleWrapper>
-        <PageHeader title={'products'} />
+        <PageHeader title={'transactions'} />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -25,17 +24,15 @@ function ApplicationsTransactions() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <AllProductsTable />
+            <AllTransactionsTable />
           </Grid>
         </Grid>
       </Container>
       <Footer />
     </>
   );
-}
+};
 
-ApplicationsTransactions.getLayout = (page) => (
-  <SidebarLayout>{page}</SidebarLayout>
-);
+TNX.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default ApplicationsTransactions;
+export default TNX;

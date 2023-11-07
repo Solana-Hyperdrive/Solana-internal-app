@@ -4,7 +4,7 @@ import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
 import Link from 'next/link';
 
-function PageHeader() {
+function PageHeader({ title }: { title: 'products' | 'transactions' }) {
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
   const user = {
@@ -20,21 +20,23 @@ function PageHeader() {
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
         <Typography variant="h3" component="h3" gutterBottom>
-          Products
+          {title.toUpperCase()}
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, these are all your products
+          {user.name}, these are all your {title}
         </Typography>
       </Grid>
-      <Grid item>
-        <Button
-          sx={{ mt: { xs: 2, md: 0 } }}
-          variant="contained"
-          startIcon={<AddTwoToneIcon fontSize="small" />}
-        >
-          <Link href="/management/profile">Create product</Link>
-        </Button>
-      </Grid>
+      {title === 'products' ? (
+        <Grid item>
+          <Button
+            sx={{ mt: { xs: 2, md: 0 } }}
+            variant="contained"
+            startIcon={<AddTwoToneIcon fontSize="small" />}
+          >
+            <Link href="/management/profile">Create product</Link>
+          </Button>
+        </Grid>
+      ) : null}
     </Grid>
   );
 }
