@@ -9,7 +9,7 @@ import {
   Divider,
   Hidden,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   Popover,
   Typography
@@ -21,6 +21,7 @@ import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import InboxTwoToneIcon from '@mui/icons-material/InboxTwoTone';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useQueryClient } from 'react-query';
 
@@ -113,16 +114,16 @@ function HeaderUserbox() {
         <Divider sx={{ mb: 0 }} />
         <List sx={{ p: 1 }} component="nav">
           <NextLink href="/applications/messenger" passHref>
-            <ListItem button>
+            <ListItemButton>
               <InboxTwoToneIcon fontSize="small" />
               <ListItemText primary="Messenger" />
-            </ListItem>
+            </ListItemButton>
           </NextLink>
           <NextLink href="/management/profile/settings" passHref>
-            <ListItem button>
+            <ListItemButton>
               <AccountTreeTwoToneIcon fontSize="small" />
               <ListItemText primary="Account Settings" />
-            </ListItem>
+            </ListItemButton>
           </NextLink>
         </List>
         <Divider />
@@ -130,9 +131,15 @@ function HeaderUserbox() {
           <Button
             color="primary"
             fullWidth
-            onClick={() => {
+            onClick={async () => {
               localStorage.removeItem('accessToken');
               localStorage.removeItem('refreshToken');
+
+              await axios.get('https://ledger.flitchcoin.com/sign-out', {
+                headers: {
+                  Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                }
+              });
 
               queryClient.invalidateQueries({ queryKey: ['me'] });
 
