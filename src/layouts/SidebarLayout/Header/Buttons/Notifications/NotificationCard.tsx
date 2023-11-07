@@ -67,11 +67,21 @@ const NotificationCard = ({ notification }) => {
 
       const sign = await sendSol(pub_key, solAmount);
 
+      const encryptedSign = AES.encrypt(
+        sign,
+        process.env.NEXT_PUBLIC_AES_KEY
+      ).toString();
+
+      const encryptedToken = AES.encrypt(
+        token,
+        process.env.NEXT_PUBLIC_AES_KEY
+      ).toString();
+
       await axios.post(
         'https://ledger.flitchcoin.com/payment/verification',
         {
-          token,
-          sign
+          encryptedToken,
+          encryptedSign
         },
         {
           headers: {
