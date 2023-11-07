@@ -18,7 +18,8 @@ export default function useNotifications() {
           }
         }
       ),
-    enabled: !!userId
+    enabled: !!userId,
+    refetchInterval: 30 * 1000
   });
 
   return { data, isError, isLoading };

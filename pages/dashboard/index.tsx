@@ -1,12 +1,14 @@
 import Footer from '@/components/Footer';
 import PageTitleWrapper from '@/components/PageTitleWrapper';
-import AliasOverview from '@/content/Dashboards/Tasks/AliasOverview';
-import PageHeader from '@/content/Dashboards/Tasks/PageHeader';
-import SearchUser from '@/content/Dashboards/Tasks/SearchUser';
+import AccountBalances from '@/content/Dashboards/AccountBalances';
+import AliasOverview from '@/content/Dashboards/AliasOverview';
+import PageHeader from '@/content/Dashboards/PageHeader';
+import SearchUser from '@/content/Dashboards/SearchUser';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import { Box, Card, Container, Grid, Tab, Tabs, styled } from '@mui/material';
 import Head from 'next/head';
+import Script from 'next/script';
 import { ChangeEvent, useState } from 'react';
 
 const TabsContainerWrapper = styled(Box)(
@@ -113,6 +115,8 @@ function DashboardTasks() {
         <title>Tasks Dashboard</title>
       </Head>
 
+      <Script src="https://price-static.crypto.com/latest/public/static/widget/index.js" />
+
       <PageTitleWrapper>
         <PageHeader />
       </PageTitleWrapper>
@@ -142,7 +146,17 @@ function DashboardTasks() {
             {currentTab === 'alias' && (
               <Grid item xs={12}>
                 <Box p={4}>
-                  <AliasOverview />
+                  <AliasOverview
+                    ticker={
+                      <div
+                        id="crypto-widget-CoinBlocks"
+                        data-transparent="true"
+                        data-theme="dark"
+                        data-design="classic"
+                        data-coin-ids="1986"
+                      ></div>
+                    }
+                  />
                 </Box>
               </Grid>
             )}
@@ -156,6 +170,16 @@ function DashboardTasks() {
           </Grid>
         </Card>
       </Container>
+
+      <AccountBalances />
+
+      <div
+        id="crypto-widget-CoinBlocks"
+        data-theme="dark"
+        data-design="modern"
+        data-coin-ids="1986"
+      ></div>
+
       <Footer />
     </>
   );
