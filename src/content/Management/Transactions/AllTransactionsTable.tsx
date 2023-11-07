@@ -61,12 +61,13 @@ const AllTransactionsTable = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center">UUID</TableCell>
+              <TableCell align="center">Transaction ID</TableCell>
               <TableCell align="center">Type</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Amount (USD)</TableCell>
               <TableCell align="center">Time</TableCell>
               <TableCell align="center">Description</TableCell>
+              <TableCell align="center">Debit/Credit</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -151,12 +152,30 @@ const AllTransactionsTable = () => {
                     gutterBottom
                     noWrap
                   >
-                    {tnx.product ? tnx?.product?.name : null}
+                    {tnx.product ? `Spent on ${tnx?.product?.name}` : null}
                     {tnx.peer
                       ? tnx.peer.uid_sender === me.data.uid
-                        ? tnx.peer.rec_uid
-                        : tnx.peer.uid_sender
+                        ? `Sent to ${tnx.peer.rec_uid}`
+                        : `Received from ${tnx.peer.uid_sender}`
                       : null}
+                  </Typography>
+                </TableCell>
+
+                <TableCell align="center">
+                  <Typography
+                    variant="body1"
+                    fontWeight="bold"
+                    color="text.primary"
+                    gutterBottom
+                  >
+                    {tnx.product ? <Label color="error">Debit</Label> : null}
+                    {tnx.peer ? (
+                      tnx.peer.uid_sender === me.data.uid ? (
+                        <Label color="error">Debit</Label>
+                      ) : (
+                        <Label color="success">Credit</Label>
+                      )
+                    ) : null}
                   </Typography>
                 </TableCell>
               </TableRow>

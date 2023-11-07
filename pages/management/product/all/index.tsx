@@ -25,7 +25,7 @@ function ApplicationsTransactions() {
           spacing={3}
         >
           <Grid item xs={12}>
-            <AllProductsTable />
+            <AllProductsTable key="product" />
           </Grid>
         </Grid>
       </Container>

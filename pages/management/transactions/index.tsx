@@ -24,7 +24,7 @@ const TNX = () => {
           spacing={3}
         >
           <Grid item xs={12}>
-            <AllTransactionsTable />
+            <AllTransactionsTable key="tnx" />
           </Grid>
         </Grid>
       </Container>
