@@ -30,8 +30,14 @@ function EditProfileTab() {
     email: false
   });
 
+  // personal details
   const nameRef = useRef(null);
   const addressRef = useRef(null);
+
+  // dev details
+  const webhookRef = useRef(null);
+  const successCallbackRef = useRef(null);
+  const failCallbackRef = useRef(null);
 
   if (isLoading || !data) {
     return <p>Loading...</p>;
@@ -44,6 +50,14 @@ function EditProfileTab() {
       form = {
         name: nameRef.current?.value,
         address: addressRef.current?.value
+      };
+    }
+
+    if (tab === 'development') {
+      form = {
+        webhook_url: webhookRef.current?.value,
+        success_callback_url: successCallbackRef.current?.value,
+        fail_callback_url: failCallbackRef.current?.value
       };
     }
 
@@ -135,7 +149,7 @@ function EditProfileTab() {
                   {editMode.personal ? (
                     <TextField
                       id="outlined-basic"
-                      variant="outlined"
+                      variant="standard"
                       inputRef={nameRef}
                       defaultValue={data.data.name}
                     />
@@ -157,7 +171,7 @@ function EditProfileTab() {
                   {editMode.personal ? (
                     <TextField
                       id="outlined-basic"
-                      variant="outlined"
+                      variant="standard"
                       inputRef={addressRef}
                       defaultValue={data.data.address || ''}
                     />
@@ -189,6 +203,24 @@ function EditProfileTab() {
                 Manage information related to your development details
               </Typography>
             </Box>
+            {editMode.development ? (
+              <Button
+                variant="text"
+                color="success"
+                startIcon={<Check />}
+                onClick={() => handleEdit('development')}
+              >
+                Done
+              </Button>
+            ) : (
+              <Button
+                variant="text"
+                startIcon={<EditTwoToneIcon />}
+                onClick={() => enableEditMode('development')}
+              >
+                Edit
+              </Button>
+            )}
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
@@ -196,26 +228,66 @@ function EditProfileTab() {
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    API Key:
+                    Webhook URL:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>{data.data.name}</b>
-                  </Text>
+                  {editMode.development ? (
+                    <TextField
+                      id="outlined-basic"
+                      variant="standard"
+                      inputRef={webhookRef}
+                      defaultValue={data?.data?.webhook_url || ''}
+                    />
+                  ) : (
+                    <Text color="black">
+                      <b>Fetched API</b>
+                    </Text>
+                  )}
                 </Grid>
               </Grid>
 
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Secret Key:
+                    Success Callback URL:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>{data.data.name}</b>
-                  </Text>
+                  {editMode.development ? (
+                    <TextField
+                      id="outlined-basic"
+                      variant="standard"
+                      inputRef={successCallbackRef}
+                      defaultValue={data?.data?.success_callback_url || ''}
+                    />
+                  ) : (
+                    <Text color="black">
+                      <b>Fetched API</b>
+                    </Text>
+                  )}
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={0}>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2}>
+                    Fail Callback URL:
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={9}>
+                  {editMode.development ? (
+                    <TextField
+                      id="outlined-basic"
+                      variant="standard"
+                      inputRef={failCallbackRef}
+                      defaultValue={data?.data?.fail_callback_url || ''}
+                    />
+                  ) : (
+                    <Text color="black">
+                      <b>Fetched API</b>
+                    </Text>
+                  )}
                 </Grid>
               </Grid>
             </Typography>
