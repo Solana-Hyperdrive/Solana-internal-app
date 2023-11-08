@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useRef, useState } from 'react';
+import useWsStore from 'store/ws';
 import NotificationCard from './NotificationCard';
 
 const NotificationsBadge = styled(Badge)(
@@ -42,6 +43,8 @@ const NotificationsBadge = styled(Badge)(
 );
 
 function HeaderNotifications() {
+  const newNotifications = useWsStore((state) => state.newNotifications);
+
   const ref = useRef<any>(null);
 
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -60,12 +63,14 @@ function HeaderNotifications() {
     return null;
   }
 
+  console.log({ newNotifications });
+
   return (
     <>
       <Tooltip arrow title="Notifications">
         <IconButton color="primary" ref={ref} onClick={handleOpen}>
           <NotificationsBadge
-            badgeContent={data?.data?.length}
+            badgeContent={data?.data?.length + newNotifications.length || 0}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right'
@@ -120,9 +125,20 @@ function HeaderNotifications() {
                       />
                     ))}
                   </Stack>
-                ) : (
-                  'No new messages in your inbox'
-                )}
+                ) : null}
+                {newNotifications?.length > 0 ? (
+                  <Stack gap={1.5}>
+                    {newNotifications?.map((notification: any) => (
+                      <NotificationCard
+                        key={notification.uuid}
+                        notification={notification}
+                      />
+                    ))}
+                  </Stack>
+                ) : null}
+                {data?.data?.length === 0 && newNotifications?.length === 0
+                  ? 'No new messages in your inbox'
+                  : null}
               </Typography>
             </Box>
           </ListItem>

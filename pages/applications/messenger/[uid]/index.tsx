@@ -69,6 +69,8 @@ const IconButtonToggle = styled(IconButton)(
 
 function ChatBox() {
   const socket = useWsStore((state) => state.socket);
+  const updateNotifications = useWsStore((state) => state.updateNotifications);
+
   const router = useRouter();
   const theme = useTheme();
 
@@ -136,6 +138,8 @@ function ChatBox() {
         } else {
           setNewChats((prevChats) => [...prevChats, message]);
         }
+      } else {
+        updateNotifications(message);
       }
     });
 
