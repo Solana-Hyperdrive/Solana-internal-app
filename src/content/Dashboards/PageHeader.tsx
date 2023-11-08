@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  Stack,
   Typography,
   alpha,
   lighten,
@@ -66,7 +67,7 @@ function PageHeader() {
           </Typography>
         </Box>
       </Box>
-      <Box mt={{ xs: 3, md: 0 }}>
+      <Stack direction="row" gap={2} flexWrap="wrap" mt={3}>
         <Button
           variant="contained"
           startIcon={<ArrowDropUp />}
@@ -82,7 +83,6 @@ function PageHeader() {
         <Button
           variant="contained"
           startIcon={<ArrowDropDown />}
-          style={{ marginLeft: '1rem' }}
           onClick={() => {
             toast('Request Early Access!', {
               icon: '🚀',
@@ -92,12 +92,10 @@ function PageHeader() {
         >
           Withdraw
         </Button>
-        <Link href={'https://tally.so/r/nrOxzR'}>
-          <Button style={{ marginLeft: '1rem' }}>
-            🚀 Request Early Access
-          </Button>
+        <Link href={'https://tally.so/r/nrOxzR'} target="_blank">
+          <Button>🚀 Request Early Access</Button>
         </Link>
-      </Box>
+      </Stack>
     </Box>
   );
 }
