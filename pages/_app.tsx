@@ -28,6 +28,7 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import React from 'react';
+import { Toaster } from 'react-hot-toast';
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 const clientSideEmotionCache = createEmotionCache();
@@ -93,6 +94,7 @@ function TokyoApp(props: TokyoAppProps) {
       <WalletProvider wallets={wallets} autoConnect={true}>
         <WalletModalProvider>
           <TokyoAppContent props={props} />
+          <Toaster />
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>

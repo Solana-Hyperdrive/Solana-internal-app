@@ -10,6 +10,8 @@ import {
   lighten,
   styled
 } from '@mui/material';
+import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 const AvatarPageTitle = styled(Avatar)(
   ({ theme }) => `
@@ -65,16 +67,36 @@ function PageHeader() {
         </Box>
       </Box>
       <Box mt={{ xs: 3, md: 0 }}>
-        <Button variant="contained" startIcon={<ArrowDropUp />}>
+        <Button
+          variant="contained"
+          startIcon={<ArrowDropUp />}
+          onClick={() => {
+            toast('Request Early Access!', {
+              icon: '🚀',
+              duration: 5000
+            });
+          }}
+        >
           Deposit
         </Button>
         <Button
           variant="contained"
           startIcon={<ArrowDropDown />}
           style={{ marginLeft: '1rem' }}
+          onClick={() => {
+            toast('Request Early Access!', {
+              icon: '🚀',
+              duration: 5000
+            });
+          }}
         >
           Withdraw
         </Button>
+        <Link href={'https://tally.so/r/nrOxzR'}>
+          <Button style={{ marginLeft: '1rem' }}>
+            🚀 Request Early Access
+          </Button>
+        </Link>
       </Box>
     </Box>
   );
