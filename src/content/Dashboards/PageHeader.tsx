@@ -1,6 +1,6 @@
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
-import DocumentScannerTwoToneIcon from '@mui/icons-material/DocumentScannerTwoTone';
 import {
   Avatar,
   Box,
@@ -65,8 +65,15 @@ function PageHeader() {
         </Box>
       </Box>
       <Box mt={{ xs: 3, md: 0 }}>
-        <Button variant="contained" startIcon={<DocumentScannerTwoToneIcon />}>
-          Export
+        <Button variant="contained" startIcon={<ArrowDropUp />}>
+          Deposit
+        </Button>
+        <Button
+          variant="contained"
+          startIcon={<ArrowDropDown />}
+          style={{ marginLeft: '1rem' }}
+        >
+          Withdraw
         </Button>
       </Box>
     </Box>

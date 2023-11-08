@@ -25,6 +25,8 @@ function useDoTnx() {
   }, [connection, publicKey]);
 
   const sendSol = async (recPubKey, amount: number) => {
+    if (!connection || !publicKey) throw new Error('No Public Key');
+
     if (amount <= 0 || amount > balance / LAMPORTS_PER_SOL)
       throw new Error('Insufficient Balance');
 

@@ -17,11 +17,11 @@ function Modal({
   handleAction
 }: {
   defaultOpen?: boolean;
-  buttonText: React.ReactNode | string;
+  buttonText?: React.ReactNode | string;
   modalHeader: React.ReactNode | string;
   dialogContentHeader: React.ReactNode | string;
   dialogContent: React.ReactNode | string;
-  handleAction: () => void;
+  handleAction?: () => void;
 }) {
   const [open, setOpen] = React.useState(defaultOpen);
 
@@ -54,15 +54,17 @@ function Modal({
         </DialogContent>
         <DialogActions sx={{ padding: '2rem' }}>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              handleAction();
-              handleClose();
-            }}
-          >
-            Add
-          </Button>
+          {handleAction ? (
+            <Button
+              variant="contained"
+              onClick={() => {
+                handleAction();
+                handleClose();
+              }}
+            >
+              Add
+            </Button>
+          ) : null}
         </DialogActions>
       </Dialog>
     </>

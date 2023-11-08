@@ -101,8 +101,8 @@ function SearchUser() {
 
       console.log({ response });
       let route: string;
-      if (response.status === 208) route = response.data?.detail?.uuid;
-      else route = response.data?.uuid;
+      if (response.status === 208) route = response.data?.detail?.uid;
+      else route = response.data?.uid;
       router.push(`/applications/messenger/${route}`);
     } catch (e) {
       console.log(e);

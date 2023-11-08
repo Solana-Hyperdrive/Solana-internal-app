@@ -1,7 +1,8 @@
 import Modal from '@/components/Modal';
 import useDoTnx from '@/hooks/useDoTnx';
 import { Button, Stack, Typography } from '@mui/material';
-import axios from 'axios';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import axios, { AxiosError } from 'axios';
 import { AES } from 'crypto-js';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -17,6 +18,7 @@ const NotificationCard = ({ notification, isWs = false }) => {
   const { sendSol } = useDoTnx();
 
   const [personalPin, setPersonalPin] = useState('');
+  const [shouldConnectWallet, setShouldConnectWallet] = useState(false);
 
   const path = `/applications/messenger/${notification.sender_uid}`;
 
@@ -82,16 +84,17 @@ const NotificationCard = ({ notification, isWs = false }) => {
         process.env.NEXT_PUBLIC_AES_KEY
       ).toString();
 
-      const encryptedToken = AES.encrypt(
-        token,
-        process.env.NEXT_PUBLIC_AES_KEY
-      ).toString();
+      // const encryptedToken = AES.encrypt(
+      //   token,
+      //   process.env.NEXT_PUBLIC_AES_KEY
+      // ).toString();
 
       await axios.post(
         'https://ledger.flitchcoin.com/payment/verification',
         {
-          encryptedToken,
-          encryptedSign
+          // token: encryptedToken,
+          sign: encryptedSign,
+          token
         },
         {
           headers: {
@@ -102,7 +105,11 @@ const NotificationCard = ({ notification, isWs = false }) => {
 
       await handleMessageClick(true);
     } catch (err) {
-      console.log(err);
+      if (err instanceof AxiosError) {
+        console.log({ err });
+      } else if (err instanceof Error && err.message === 'No Public Key') {
+        setShouldConnectWallet(true);
+      }
     }
   }
 
@@ -110,6 +117,18 @@ const NotificationCard = ({ notification, isWs = false }) => {
   if (notification?.act)
     return (
       <div>
+        {shouldConnectWallet ? (
+          <Modal
+            defaultOpen={true}
+            modalHeader={
+              <Typography fontSize={30} fontWeight={800}>
+                Connect Wallet
+              </Typography>
+            }
+            dialogContentHeader={'Connect your wallet to send payment'}
+            dialogContent={<WalletMultiButton />}
+          />
+        ) : null}
         <Button>
           <p>{notification.message}</p>
         </Button>
