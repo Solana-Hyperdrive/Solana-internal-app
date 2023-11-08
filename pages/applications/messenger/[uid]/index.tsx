@@ -19,7 +19,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { io } from 'socket.io-client';
+import useWsStore from 'store/ws';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -68,6 +68,7 @@ const IconButtonToggle = styled(IconButton)(
 );
 
 function ChatBox() {
+  const socket = useWsStore((state) => state.socket);
   const router = useRouter();
   const theme = useTheme();
 
@@ -114,41 +115,33 @@ function ChatBox() {
     setIsUnread(true);
   }, [router?.query?.uuid]);
 
-  // connect to web socket
+  // add ws functions
   useEffect(() => {
-    let socket;
+    socket.on('connect', () => {
+      console.log('server connected');
+    });
 
-    if (!isLoadingContacts && !isLoadingRecUser) {
-      socket = io('https://socket.flitchcoin.com', {
-        transports: ['websocket']
-      });
+    socket.on('msg', (message) => {
+      console.log({ message });
 
-      socket.on('connect', () => {
-        console.log('server connected');
-      });
-
-      socket.on('msg', (message) => {
-        console.log({ message });
-
-        if (
-          (message?.rec_uid === recUser?.uid &&
-            message?.sender_uid === me?.data?.uid) ||
-          (message?.rec_uid === me?.data?.uid &&
-            message?.sender_uid === recUser?.uid)
-        ) {
-          if (message?.sender_uid === recUser?.uid && isUnread) {
-            setNewChats((prevChats) => [...prevChats, 'unread', message]);
-            setIsUnread(false);
-          } else {
-            setNewChats((prevChats) => [...prevChats, message]);
-          }
+      if (
+        (message?.rec_uid === recUser?.uid &&
+          message?.sender_uid === me?.data?.uid) ||
+        (message?.rec_uid === me?.data?.uid &&
+          message?.sender_uid === recUser?.uid)
+      ) {
+        if (message?.sender_uid === recUser?.uid && isUnread) {
+          setNewChats((prevChats) => [...prevChats, 'unread', message]);
+          setIsUnread(false);
+        } else {
+          setNewChats((prevChats) => [...prevChats, message]);
         }
-      });
+      }
+    });
 
-      socket.on('disconnect', () => {
-        console.log('disconnected from server');
-      });
-    }
+    socket.on('disconnect', () => {
+      console.log('disconnected from server');
+    });
 
     return () => {
       socket?.off('connect');

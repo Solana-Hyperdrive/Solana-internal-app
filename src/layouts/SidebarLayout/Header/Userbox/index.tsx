@@ -133,9 +133,6 @@ function HeaderUserbox() {
             fullWidth
             onClick={async () => {
               try {
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-
                 await axios.get('https://ledger.flitchcoin.com/sign-out', {
                   headers: {
                     Authorization: `Bearer ${localStorage.getItem(
@@ -143,12 +140,15 @@ function HeaderUserbox() {
                     )}`
                   }
                 });
+              } catch (err) {
+                console.error(err);
+              } finally {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
 
                 queryClient.invalidateQueries({ queryKey: ['me'] });
 
                 router.push('/');
-              } catch (err) {
-                console.error(err);
               }
             }}
           >
