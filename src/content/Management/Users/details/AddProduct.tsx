@@ -148,7 +148,7 @@ const ProfileCover = () => {
       }
     );
 
-    router.push('/management/product/all');
+    router.push('/products');
   }
 
   if (isLoading) {

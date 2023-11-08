@@ -10,6 +10,7 @@ const AccountBalances = () => {
       }
     })
   );
+
   console.log({ data });
 
   return (
