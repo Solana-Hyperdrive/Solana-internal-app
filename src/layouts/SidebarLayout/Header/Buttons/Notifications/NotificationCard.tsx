@@ -7,8 +7,11 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import OtpInput from 'react-otp-input';
 import { useQueryClient } from 'react-query';
+import useWsStore from 'store/wsStore';
 
-const NotificationCard = ({ notification }) => {
+const NotificationCard = ({ notification, isWs = false }) => {
+  const filterNotifications = useWsStore((state) => state.filterNotifications);
+
   const queryClient = useQueryClient();
   const router = useRouter();
   const { sendSol } = useDoTnx();
@@ -18,6 +21,13 @@ const NotificationCard = ({ notification }) => {
   const path = `/applications/messenger/${notification.sender_uid}`;
 
   async function handleMessageClick(isPayment: boolean = false) {
+    if (isWs) {
+      filterNotifications(notification.uuid);
+      if (!isPayment && router.asPath !== path) router.push(path);
+
+      return;
+    }
+
     await axios.post(
       `https://ledger.flitchcoin.com/commit/seen?uuid=${notification.uuid}`,
       notification,

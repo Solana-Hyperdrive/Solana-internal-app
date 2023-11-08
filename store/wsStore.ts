@@ -8,6 +8,7 @@ type State = {
 
 type Action = {
   updateNotifications: (state: State['newNotifications']) => void;
+  filterNotifications: (state: State['newNotifications']) => void;
 };
 
 const useWsStore = create<State & Action>((set) => ({
@@ -18,6 +19,12 @@ const useWsStore = create<State & Action>((set) => ({
   updateNotifications: (state) =>
     set(({ newNotifications }) => ({
       newNotifications: [...newNotifications, state]
+    })),
+  filterNotifications: (id: string) =>
+    set(({ newNotifications }) => ({
+      newNotifications: newNotifications.filter(
+        (notification) => notification.uuid !== id
+      )
     }))
 }));
 

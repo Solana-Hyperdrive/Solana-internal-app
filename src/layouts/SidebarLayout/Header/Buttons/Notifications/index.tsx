@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useRef, useState } from 'react';
-import useWsStore from 'store/ws';
+import useWsStore from 'store/wsStore';
 import NotificationCard from './NotificationCard';
 
 const NotificationsBadge = styled(Badge)(
@@ -132,6 +132,7 @@ function HeaderNotifications() {
                       <NotificationCard
                         key={notification.uuid}
                         notification={notification}
+                        isWs={true}
                       />
                     ))}
                   </Stack>

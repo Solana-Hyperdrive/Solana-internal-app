@@ -19,7 +19,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import useWsStore from 'store/ws';
+import useWsStore from 'store/wsStore';
 
 const RootWrapper = styled(Box)(
   ({ theme }) => `
@@ -115,7 +115,7 @@ function ChatBox() {
   useEffect(() => {
     setNewChats([]);
     setIsUnread(true);
-  }, [router?.query?.uuid]);
+  }, [router?.query?.uid]);
 
   // add ws functions
   useEffect(() => {
