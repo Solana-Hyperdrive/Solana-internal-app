@@ -1,38 +1,45 @@
 import useAlias from '@/hooks/useAlias';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
+import { Avatar, Box, Grid, Stack, Typography } from '@mui/material';
 import AddAlias from './AddAlias';
 
 function AliasOverview() {
   const { data, isLoading } = useAlias();
+  const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
-  if (isLoading) {
+  if (isLoading || isMeLoading) {
     return <p>Loading</p>;
   }
 
   return (
     <>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
+      <Stack direction="column" gap={1}>
+        <Avatar alt={me.data.name} src={me.data.img} />
+        <Typography fontSize={24}>My Alias</Typography>
+      </Stack>
+
+      <Grid container spacing={0}>
+        <Grid item>
           <Stack direction="row" justifyContent="space-between">
             <Box>
-              {data?.data?.map((alias) => (
-                <Box key={alias.uuid}>
-                  <Box display="flex" alignItems="center" pb={3}>
-                    <Box
-                      sx={{
-                        ml: 1.5
-                      }}
-                    >
-                      <Typography variant="h4" noWrap gutterBottom>
-                        {alias.alias}
-                      </Typography>
-                      <Typography variant="subtitle2" noWrap>
-                        {alias.sol_wallet}
-                      </Typography>
+              <ul>
+                {data?.data?.map((alias) => (
+                  <li key={alias.uuid}>
+                    <Box>
+                      <Box display="flex" alignItems="center" pb={3}>
+                        <Box>
+                          <Typography variant="h4" noWrap gutterBottom>
+                            {alias.alias}
+                          </Typography>
+                          <Typography variant="subtitle2" noWrap>
+                            {alias.sol_wallet}
+                          </Typography>
+                        </Box>
+                      </Box>
                     </Box>
-                  </Box>
-                </Box>
-              ))}
+                  </li>
+                ))}
+              </ul>
             </Box>
 
             {/* {ticker} */}

@@ -153,7 +153,7 @@ function DashboardTasks() {
             {currentTab === 'alias' && (
               <Grid item xs={12}>
                 <Stack direction="row" p={4} justifyContent="space-between">
-                  <Box alignItems="center" justifyContent="center" p={4}>
+                  <Box alignItems="center" justifyContent="center" ml={3}>
                     <AliasOverview />
                   </Box>
                   <AccountBalances />
