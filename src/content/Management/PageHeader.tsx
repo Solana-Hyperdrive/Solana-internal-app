@@ -33,7 +33,7 @@ function PageHeader({ title }: { title: 'products' | 'transactions' }) {
             variant="contained"
             startIcon={<AddTwoToneIcon fontSize="small" />}
           >
-            <Link href="/management/profile">Create product</Link>
+            <Link href="/management/product">Create product</Link>
           </Button>
         </Grid>
       ) : null}

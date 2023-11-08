@@ -2,7 +2,7 @@ import useAlias from '@/hooks/useAlias';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import AddAlias from './AddAlias';
 
-function AliasOverview({ ticker }: { ticker: React.ReactNode }) {
+function AliasOverview() {
   const { data, isLoading } = useAlias();
 
   if (isLoading) {
@@ -35,7 +35,7 @@ function AliasOverview({ ticker }: { ticker: React.ReactNode }) {
               ))}
             </Box>
 
-            {ticker}
+            {/* {ticker} */}
           </Stack>
           <AddAlias />
         </Grid>

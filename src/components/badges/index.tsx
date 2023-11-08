@@ -24,7 +24,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
-
+2
 const shapeStyles = { bgcolor: 'primary.main', width: 40, height: 40 };
 const shapeCircleStyles = { borderRadius: '50%' };
 const rectangle = <Box component="span" sx={shapeStyles} />;

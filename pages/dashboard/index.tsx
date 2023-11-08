@@ -8,7 +8,7 @@ import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import { Box, Card, Container, Grid, Tab, Tabs, styled } from '@mui/material';
 import Head from 'next/head';
-import Script from 'next/script';
+// import Script from 'next/script';
 import { ChangeEvent, useState } from 'react';
 
 const TabsContainerWrapper = styled(Box)(
@@ -115,12 +115,10 @@ function DashboardTasks() {
         <title>Tasks Dashboard</title>
       </Head>
 
-      <Script src="https://price-static.crypto.com/latest/public/static/widget/index.js" />
-
       <PageTitleWrapper>
         <PageHeader />
       </PageTitleWrapper>
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <TabsContainerWrapper>
           <Tabs
             onChange={handleTabsChange}
@@ -140,24 +138,21 @@ function DashboardTasks() {
             container
             direction="row"
             justifyContent="center"
-            alignItems="stretch"
-            spacing={0}
+            alignItems="center"
+            spacing={4}
           >
             {currentTab === 'alias' && (
               <Grid item xs={12}>
-                <Box p={4}>
+              <Box 
+        
+        width={500} height={100} 
+        alignItems="center"
+        justifyContent="center"
+      >
                   <AliasOverview
-                    ticker={
-                      <div
-                        id="crypto-widget-CoinBlocks"
-                        data-transparent="true"
-                        data-theme="dark"
-                        data-design="classic"
-                        data-coin-ids="1986"
-                      ></div>
-                    }
                   />
                 </Box>
+                <AccountBalances />
               </Grid>
             )}
             {currentTab === 'search' && (
@@ -171,14 +166,13 @@ function DashboardTasks() {
         </Card>
       </Container>
 
-      <AccountBalances />
-
+{/* 
       <div
         id="crypto-widget-CoinBlocks"
         data-theme="dark"
         data-design="modern"
         data-coin-ids="1986"
-      ></div>
+      ></div> */}
 
       <Footer />
     </>

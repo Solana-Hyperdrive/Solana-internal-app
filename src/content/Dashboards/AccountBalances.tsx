@@ -11,7 +11,7 @@ const AccountBalances = () => {
     })
   );
 
-  console.log({ data });
+  // console.log({ data });
 
   return (
     <Stack alignItems="center">
