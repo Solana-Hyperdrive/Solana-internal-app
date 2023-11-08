@@ -14,27 +14,52 @@ const AccountBalances = () => {
   console.log({ data });
 
   return (
-    <Stack alignItems="center">
-      <Stack
-        p={4}
-        alignItems={'center'}
-        justifyContent={'space-between'}
-        gap={3}
-        style={{
-          border: '1px solid gray',
-          borderRadius: '20px'
-        }}
-      >
-        <Stack direction="row" alignItems="center" gap={2}>
-          <Avatar src="https://s3-symbol-logo.tradingview.com/crypto/XTVCBTC.svg" />
-          <Typography fontWeight={900} fontSize={18}>
-            BTC
-          </Typography>
-        </Stack>
-        <Typography fontWeight={900} fontSize={28}>
-          $1343.24
-        </Typography>
-      </Stack>
+    <Stack
+      gap={5}
+      style={{
+        width: '250px',
+        height: '300px',
+        overflow: 'scroll'
+      }}
+    >
+      {data?.data?.balances &&
+        Object.keys(data?.data?.balances).map((coin) => {
+          if (coin === 'ts') return null;
+
+          return (
+            <Stack alignItems="center" key={coin}>
+              <Stack
+                p={3}
+                alignItems={'center'}
+                justifyContent={'space-between'}
+                gap={3}
+                style={{
+                  border: '1px solid gray',
+                  borderRadius: '20px',
+                  width: '200px',
+                  height: '150px'
+                }}
+              >
+                <Stack direction="row" alignItems="center" gap={2}>
+                  <Avatar
+                    src={`https://s3-symbol-logo.tradingview.com/crypto/XTVC${coin}.svg`}
+                  />
+                  <Stack alignItems="center">
+                    <Typography fontWeight={900} fontSize={18}>
+                      {coin}
+                    </Typography>
+                    <Typography fontWeight={900} fontSize={12} color="gray">
+                      ${data?.data?.prices[coin].price}
+                    </Typography>
+                  </Stack>
+                </Stack>
+                <Typography fontWeight={900} fontSize={28}>
+                  ${data?.data?.balances[coin]}
+                </Typography>
+              </Stack>
+            </Stack>
+          );
+        })}
     </Stack>
   );
 };

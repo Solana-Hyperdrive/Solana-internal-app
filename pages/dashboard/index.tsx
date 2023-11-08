@@ -6,7 +6,16 @@ import PageHeader from '@/content/Dashboards/PageHeader';
 import SearchUser from '@/content/Dashboards/SearchUser';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import SidebarLayout from '@/layouts/SidebarLayout';
-import { Box, Card, Container, Grid, Tab, Tabs, styled } from '@mui/material';
+import {
+  Box,
+  Card,
+  Container,
+  Grid,
+  Stack,
+  Tab,
+  Tabs,
+  styled
+} from '@mui/material';
 import Head from 'next/head';
 // import Script from 'next/script';
 import { ChangeEvent, useState } from 'react';
@@ -143,16 +152,12 @@ function DashboardTasks() {
           >
             {currentTab === 'alias' && (
               <Grid item xs={12}>
-              <Box 
-        
-        width={500} height={100} 
-        alignItems="center"
-        justifyContent="center"
-      >
-                  <AliasOverview
-                  />
-                </Box>
-                <AccountBalances />
+                <Stack direction="row" p={4} justifyContent="space-between">
+                  <Box alignItems="center" justifyContent="center" p={4}>
+                    <AliasOverview />
+                  </Box>
+                  <AccountBalances />
+                </Stack>
               </Grid>
             )}
             {currentTab === 'search' && (
@@ -166,7 +171,7 @@ function DashboardTasks() {
         </Card>
       </Container>
 
-{/* 
+      {/* 
       <div
         id="crypto-widget-CoinBlocks"
         data-theme="dark"
