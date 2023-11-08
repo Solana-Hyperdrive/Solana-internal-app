@@ -70,6 +70,7 @@ const IconButtonToggle = styled(IconButton)(
 function ChatBox() {
   const socket = useWsStore((state) => state.socket);
   const updateNotifications = useWsStore((state) => state.updateNotifications);
+  const updateNewChat = useWsStore((state) => state.updateNewChat);
 
   const router = useRouter();
   const theme = useTheme();
@@ -115,6 +116,8 @@ function ChatBox() {
   useEffect(() => {
     setNewChats([]);
     setIsUnread(true);
+
+    return () => {};
   }, [router?.query?.uid]);
 
   // add ws functions
@@ -133,10 +136,10 @@ function ChatBox() {
           message?.sender_uid === recUser?.uid)
       ) {
         if (message?.sender_uid === recUser?.uid && isUnread) {
-          setNewChats((prevChats) => [...prevChats, 'unread', message]);
+          updateNewChat('unread');
           setIsUnread(false);
         } else {
-          setNewChats((prevChats) => [...prevChats, message]);
+          updateNewChat(message);
         }
       } else {
         updateNotifications(message);
