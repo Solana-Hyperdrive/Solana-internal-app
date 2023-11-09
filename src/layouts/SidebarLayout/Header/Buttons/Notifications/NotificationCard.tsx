@@ -71,13 +71,18 @@ const NotificationCard = ({ notification, isWs = false }) => {
 
       const { pub_key, token } = response.data;
 
-      let solAmount = -1;
+      let usd = -1;
       if (notification?.act?.product?.price)
-        solAmount = notification.act.product.price;
-      else if (notification?.act?.peer?.amt)
-        solAmount = notification.act.peer.amt;
+        usd = notification.act.product.price;
+      else if (notification?.act?.peer?.amt) usd = notification.act.peer.amt;
 
-      const sign = await sendSol(pub_key, solAmount);
+      const prices = await axios.get(
+        'https://ledger.flitchcoin.com/api/prices'
+      );
+
+      const sol = +(usd / prices.data.SOL.price).toFixed(6);
+
+      const sign = await sendSol(pub_key, sol);
 
       const encryptedSign = AES.encrypt(
         sign,
@@ -109,6 +114,8 @@ const NotificationCard = ({ notification, isWs = false }) => {
         console.log({ err });
       } else if (err instanceof Error && err.message === 'No Public Key') {
         setShouldConnectWallet(true);
+      } else {
+        console.log({ err });
       }
     }
   }
