@@ -23,12 +23,7 @@ const NotificationCard = ({ notification, isWs = false }) => {
   const path = `/applications/messenger/${notification.sender_uid}`;
 
   async function handleMessageClick(isPayment: boolean = false) {
-    if (isWs) {
-      filterNotifications(notification.uuid);
-      if (!isPayment && router.asPath !== path) router.push(path);
-
-      return;
-    }
+    if (isWs) filterNotifications(notification.uuid);
 
     await axios.post(
       `https://ledger.flitchcoin.com/commit/seen?uuid=${notification.uuid}`,
@@ -40,7 +35,7 @@ const NotificationCard = ({ notification, isWs = false }) => {
       }
     );
 
-    queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    if (!isWs) queryClient.invalidateQueries({ queryKey: ['notifications'] });
 
     if (!isPayment && router.asPath !== path) router.push(path);
   }
