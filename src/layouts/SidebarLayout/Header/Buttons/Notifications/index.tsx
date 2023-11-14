@@ -1,3 +1,4 @@
+import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import useNotifications from '@/hooks/useNotifications';
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import {
@@ -14,7 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useWsStore from 'store/wsStore';
 import NotificationCard from './NotificationCard';
 
@@ -43,13 +44,55 @@ const NotificationsBadge = styled(Badge)(
 );
 
 function HeaderNotifications() {
+  const socket = useWsStore((state) => state.socket);
+
   const newNotifications = useWsStore((state) => state.newNotifications);
+  const updateNotifications = useWsStore((state) => state.updateNotifications);
+
+  const updateNewChat = useWsStore((state) => state.updateNewChat);
+
+  const recUser = useWsStore((state) => state.recUser);
 
   const ref = useRef<any>(null);
-
   const [isOpen, setOpen] = useState<boolean>(false);
 
+  const { data: me } = useIsLoggedIn();
+
   const { data, isLoading } = useNotifications();
+
+  // add ws functions
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('server connected');
+    });
+
+    socket.on('msg', (message) => {
+      console.log({ message });
+
+      if (
+        (recUser &&
+          !message.act &&
+          message?.rec_uid === recUser?.uid &&
+          message?.sender_uid === me?.data?.uid) ||
+        (recUser &&
+          !message.act &&
+          message?.rec_uid === me?.data?.uid &&
+          message?.sender_uid === recUser?.uid)
+      )
+        updateNewChat(message);
+      else updateNotifications(message);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('disconnected from server');
+    });
+
+    return () => {
+      socket?.off('connect');
+      socket?.off('msg');
+      socket?.off('disconnect');
+    };
+  }, [me?.data?.uid, recUser?.uid]);
 
   const handleOpen = (): void => {
     setOpen(true);

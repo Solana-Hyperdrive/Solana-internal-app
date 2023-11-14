@@ -11,9 +11,9 @@ type State = {
 type Action = {
   updateNotifications: (state: State['newNotifications']) => void;
   updateNewChat: (state: State['newChat']) => void;
-  clearNewChat: (state: State['newChat']) => void;
+  clearNewChat: () => void;
   updateRecUser: (state: State['recUser']) => void;
-  clearRecUser: (state: State['recUser']) => void;
+  clearRecUser: () => void;
   filterNotifications: (state: State['newNotifications']) => void;
 };
 
@@ -21,7 +21,7 @@ const useWsStore = create<State & Action>((set) => ({
   socket: io('https://socket.flitchcoin.com', {
     transports: ['websocket']
   }),
-  recUser: {},
+  recUser: null,
   newChat: [],
   newNotifications: [],
   updateNotifications: (state) =>

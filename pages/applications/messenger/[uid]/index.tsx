@@ -4,7 +4,6 @@ import ChatContent from '@/content/Applications/Messenger/ChatContent';
 import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
 import TopBarContent from '@/content/Applications/Messenger/TopBarContent';
 import useGetContacts from '@/hooks/useGetContacts';
-import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import {
@@ -68,25 +67,19 @@ const IconButtonToggle = styled(IconButton)(
 );
 
 function ChatBox() {
-  const socket = useWsStore((state) => state.socket);
-  const updateNotifications = useWsStore((state) => state.updateNotifications);
-  const updateNewChat = useWsStore((state) => state.updateNewChat);
+  const newChats = useWsStore((state) => state.newChat);
+  const clearNewChat = useWsStore((state) => state.clearNewChat);
+
+  const recUser = useWsStore((state) => state.recUser);
+  const updateRecUser = useWsStore((state) => state.updateRecUser);
+  const clearRecUser = useWsStore((state) => state.clearRecUser);
 
   const router = useRouter();
   const theme = useTheme();
 
-  const { data: me } = useIsLoggedIn();
-  const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
-
   const [contactsMenu, setContactsMenu] = useState(false);
 
-  const [recUser, setRecUser] = useState({ uid: '' });
-  const [newChats, setNewChats] = useState([]);
-  const [isUnread, setIsUnread] = useState(true);
-
-  const handleDrawerToggle = () => {
-    setContactsMenu(!contactsMenu);
-  };
+  const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
 
   const { data, isLoading: isLoadingRecUser } = useQuery(
     ['recUser', router?.query?.uid],
@@ -95,7 +88,7 @@ function ChatBox() {
         (contact) => contact?.uid === router?.query?.uid
       );
 
-      setRecUser(recUser);
+      updateRecUser(recUser);
 
       return axios.get(
         `https://ledger.flitchcoin.com/prev/msg?rec_uid=${recUser?.uid}&start=0&limit=100`,
@@ -112,56 +105,21 @@ function ChatBox() {
     }
   );
 
-  // reset newChats and isUnread when changing recUser
+  // reset newChats when changing recUser
   useEffect(() => {
-    setNewChats([]);
-    setIsUnread(true);
-
-    return () => {};
-  }, [router?.query?.uid]);
-
-  // add ws functions
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('server connected');
-    });
-
-    socket.on('msg', (message) => {
-      console.log({ message });
-
-      if (
-        (message?.rec_uid === recUser?.uid &&
-          message?.sender_uid === me?.data?.uid) ||
-        (message?.rec_uid === me?.data?.uid &&
-          message?.sender_uid === recUser?.uid)
-      ) {
-        if (message?.sender_uid === recUser?.uid && isUnread) {
-          updateNewChat('unread');
-          setIsUnread(false);
-        } else {
-          updateNewChat(message);
-        }
-      } else {
-        updateNotifications(message);
-      }
-    });
-
-    socket.on('disconnect', () => {
-      console.log('disconnected from server');
-    });
+    clearNewChat();
 
     return () => {
-      socket?.off('connect');
-      socket?.off('msg');
-      socket?.off('disconnect');
+      clearNewChat();
+      clearRecUser();
     };
-  }, [
-    me?.data?.uid,
-    recUser?.uid,
-    isUnread,
-    isLoadingRecUser,
-    isLoadingContacts
-  ]);
+  }, [router?.query?.uid]);
+
+  const handleDrawerToggle = () => {
+    setContactsMenu(!contactsMenu);
+  };
+
+  if (isLoadingRecUser) return <p>Loading...</p>;
 
   return (
     <RootWrapper>

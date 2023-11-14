@@ -78,8 +78,8 @@ function ChatBubble({ chat, user, recUser }) {
           width: 50,
           height: 50
         }}
-        alt={isMe ? user.name : recUser.name}
-        src={isMe ? user.avatar : recUser.img}
+        alt={isMe ? user?.name : recUser?.name}
+        src={isMe ? user?.avatar : recUser?.img}
       />
     </Box>
   );

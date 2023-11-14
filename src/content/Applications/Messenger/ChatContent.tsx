@@ -4,18 +4,6 @@ import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { useEffect } from 'react';
 import ChatBubble from './ChatBubble';
 
-// const DividerWrapper = styled(Divider)(
-//   ({ theme }) => `
-//       .MuiDivider-wrapper {
-//         border-radius: ${theme.general.borderRadiusSm};
-//         text-transform: none;
-//         background: ${theme.palette.background.default};
-//         font-size: ${theme.typography.pxToRem(13)};
-//         color: ${theme.colors.alpha.black[50]};
-//       }
-// `
-// );
-
 function ChatContent({ recUser, prevChats, newChats }) {
   const { data: me, isLoading } = useIsLoggedIn();
 

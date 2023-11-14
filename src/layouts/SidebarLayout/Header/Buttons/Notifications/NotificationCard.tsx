@@ -89,15 +89,9 @@ const NotificationCard = ({ notification, isWs = false }) => {
         process.env.NEXT_PUBLIC_AES_KEY
       ).toString();
 
-      // const encryptedToken = AES.encrypt(
-      //   token,
-      //   process.env.NEXT_PUBLIC_AES_KEY
-      // ).toString();
-
       await axios.post(
         'https://ledger.flitchcoin.com/payment/verification',
         {
-          // token: encryptedToken,
           sign: encryptedSign,
           token
         },
