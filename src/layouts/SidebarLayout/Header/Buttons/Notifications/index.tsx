@@ -159,16 +159,7 @@ function HeaderNotifications() {
                 variant="body2"
                 color="text.secondary"
               >
-                {data?.data?.length > 0 ? (
-                  <Stack gap={1.5}>
-                    {data?.data?.map((notification: any) => (
-                      <NotificationCard
-                        key={notification.uuid}
-                        notification={notification}
-                      />
-                    ))}
-                  </Stack>
-                ) : null}
+                {/* New */}
                 {newNotifications?.length > 0 ? (
                   <Stack gap={1.5}>
                     {newNotifications?.map((notification: any) => (
@@ -180,6 +171,20 @@ function HeaderNotifications() {
                     ))}
                   </Stack>
                 ) : null}
+
+                {/* Old */}
+                {data?.data?.length > 0 ? (
+                  <Stack gap={1.5}>
+                    {data?.data?.map((notification: any) => (
+                      <NotificationCard
+                        key={notification.uuid}
+                        notification={notification}
+                      />
+                    ))}
+                  </Stack>
+                ) : null}
+
+                {/* None */}
                 {data?.data?.length === 0 && newNotifications?.length === 0
                   ? 'No new messages in your inbox'
                   : null}
