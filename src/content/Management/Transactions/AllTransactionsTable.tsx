@@ -26,7 +26,7 @@ const applyPagination = (allProducts, page: number, limit: number) => {
 
 const AllTransactionsTable = () => {
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
-  const { data: products, isLoading } = useQuery(['products'], async () =>
+  const { data: products, isLoading } = useQuery(['tnxs'], async () =>
     axios.get('https://ledger.flitchcoin.com/tnx/history?start=0&limit=50', {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken')}`
