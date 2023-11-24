@@ -9,7 +9,7 @@ function AliasOverview() {
 
   return (
     <>
-      <Stack direction="column" gap={1}>
+      <Stack direction="row" gap={2} alignItems="center">
         {isMeLoading ? (
           <Skeleton variant="circular">
             <Avatar />
@@ -23,7 +23,7 @@ function AliasOverview() {
           letterSpacing={0.5}
           variant="h2"
         >
-          MY ALIAS
+          ALIAS
         </Typography>
       </Stack>
       <div style={{ marginBlock: '6px', paddingBlockEnd: '9px' }}>
@@ -33,7 +33,7 @@ function AliasOverview() {
 
         {data?.data?.map((alias) => (
           <div key={alias.uuid}>
-            <Box>
+            <Box mt={2}>
               <Typography
                 fontSize={16}
                 style={{ color: 'hsl(240 5% 56.9%)' }}
