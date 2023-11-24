@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Skeleton, Stack, Typography } from '@mui/material';
 
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import AddTwoToneIcon from '@mui/icons-material/AddTwoTone';
@@ -12,10 +12,6 @@ function PageHeader({ title }: { title: 'products' | 'transactions' }) {
     avatar: me?.data?.img
   };
 
-  if (isMeLoading) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <Grid container justifyContent="space-between" alignItems="center">
       <Grid item>
@@ -23,7 +19,14 @@ function PageHeader({ title }: { title: 'products' | 'transactions' }) {
           {title.toUpperCase()}
         </Typography>
         <Typography variant="subtitle2">
-          {user.name}, these are all your {title}
+          <Stack direction="row">
+            {isMeLoading ? (
+              <Skeleton variant="text" width={100} height={25} />
+            ) : (
+              user.name
+            )}
+            , these are all your {title}
+          </Stack>
         </Typography>
       </Grid>
       {title === 'products' ? (
