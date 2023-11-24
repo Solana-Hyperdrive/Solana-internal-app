@@ -17,7 +17,8 @@ const AccountBalances = () => {
       style={{
         width: '250px',
         height: '300px',
-        overflow: 'scroll'
+        overflow: 'scroll',
+        overflowX: 'hidden'
       }}
     >
       {data?.data?.balances &&
