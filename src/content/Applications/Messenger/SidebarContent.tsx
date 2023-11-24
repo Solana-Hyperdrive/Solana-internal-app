@@ -11,6 +11,7 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  Skeleton,
   TextField,
   Typography,
   styled
@@ -34,13 +35,9 @@ const ListItemWrapper = styled(ListItemButton)(
 
 function SidebarContent() {
   const router = useRouter();
-  const { data: me, isLoading } = useIsLoggedIn();
+  const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
   const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
-
-  if (isLoading || isLoadingContacts) {
-    return <p>Loading...</p>;
-  }
 
   const user = {
     name: me?.data?.name,
@@ -50,7 +47,14 @@ function SidebarContent() {
   return (
     <RootWrapper>
       <Box display="flex" alignItems="flex-start">
-        <Avatar alt={user.name} src={user.avatar} />
+        {isMeLoading ? (
+          <Skeleton variant="circular">
+            <Avatar />
+          </Skeleton>
+        ) : (
+          <Avatar alt={user?.name} src={user?.avatar} />
+        )}
+
         <Box
           sx={{
             ml: 1.5,
@@ -64,7 +68,11 @@ function SidebarContent() {
           >
             <Box>
               <Typography variant="h5" noWrap>
-                {user.name}
+                {isMeLoading ? (
+                  <Skeleton variant="rectangular" width={150} height={30} />
+                ) : (
+                  user?.name
+                )}
               </Typography>
             </Box>
             <IconButton
@@ -109,6 +117,9 @@ function SidebarContent() {
 
       <Box mt={2}>
         <List disablePadding component="div">
+          {isMeLoading || isLoadingContacts ? (
+            <Skeleton variant="rectangular" width="70vw" height="50vh" />
+          ) : null}
           {contacts?.data?.map((contact) => (
             <Link
               href={`/applications/messenger/${contact?.uid}`}

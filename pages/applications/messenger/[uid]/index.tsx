@@ -81,7 +81,7 @@ function ChatBox() {
 
   const { data: contacts, isLoading: isLoadingContacts } = useGetContacts();
 
-  const { data, isLoading: isLoadingRecUser } = useQuery(
+  const { data } = useQuery(
     ['recUser', router?.query?.uid],
     async () => {
       const recUser = contacts?.data?.find(
@@ -118,8 +118,6 @@ function ChatBox() {
   const handleDrawerToggle = () => {
     setContactsMenu(!contactsMenu);
   };
-
-  if (isLoadingRecUser) return <p>Loading...</p>;
 
   return (
     <RootWrapper>

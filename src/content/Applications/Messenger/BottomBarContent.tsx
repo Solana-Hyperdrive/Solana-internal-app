@@ -7,6 +7,7 @@ import {
   Button,
   IconButton,
   InputBase,
+  Skeleton,
   Stack,
   TextField,
   Tooltip,
@@ -31,7 +32,7 @@ function BottomBarContent({ recUser }) {
   const [amount, setAmount] = useState(0);
   const [isPaying, setIsPaying] = useState(false);
 
-  const { data: me, isLoading } = useIsLoggedIn();
+  const { data: me } = useIsLoggedIn();
   const theme = useTheme();
 
   async function handleSendMessage() {
@@ -95,10 +96,6 @@ function BottomBarContent({ recUser }) {
     setIsPaying(false);
   }
 
-  if (isLoading || !recUser) {
-    return <p>Loading...</p>;
-  }
-
   const user = {
     name: me?.data?.name,
     avatar: me?.data?.img
@@ -114,11 +111,16 @@ function BottomBarContent({ recUser }) {
       }}
     >
       <Box flexGrow={1} display="flex" alignItems="center">
-        <Avatar
-          sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}
-          alt={user.name}
-          src={user.avatar}
-        />
+        {user?.name ? (
+          <Avatar
+            sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}
+            alt={user?.name}
+            src={user?.avatar}
+          />
+        ) : (
+          <Skeleton width={48} height={48} variant="circular" />
+        )}
+
         <MessageInputWrapper
           autoFocus
           placeholder="Write your message here..."

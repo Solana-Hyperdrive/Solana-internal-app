@@ -1,11 +1,11 @@
-import { Box, Divider } from '@mui/material';
+import { Box, Divider, Skeleton } from '@mui/material';
 
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { useEffect } from 'react';
 import ChatBubble from './ChatBubble';
 
 function ChatContent({ recUser, prevChats, newChats }) {
-  const { data: me, isLoading } = useIsLoggedIn();
+  const { data: me } = useIsLoggedIn();
 
   const user = {
     name: me?.data?.name,
@@ -29,9 +29,8 @@ function ChatContent({ recUser, prevChats, newChats }) {
         });
   }, [prevChats?.data?.length, newChats?.length]);
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+  if (!recUser?.name || prevChats?.length < 0)
+    return <Skeleton variant="rectangular" width="100vw" height="100vh" />;
 
   return (
     <Box p={3}>
