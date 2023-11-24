@@ -12,6 +12,7 @@ import {
   Menu,
   MenuItem,
   OutlinedInput,
+  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -183,7 +184,7 @@ function SearchUser() {
           </Menu>
         </Box>
       </Box>
-      {isLoading ? <Typography variant="body2">Loading...</Typography> : null}
+      {isLoading ? <Skeleton variant="text" height={70} width={300} /> : null}
       {isFetched ? (
         data?.data ? (
           <Stack direction="row" alignItems="center" spacing={2}>
