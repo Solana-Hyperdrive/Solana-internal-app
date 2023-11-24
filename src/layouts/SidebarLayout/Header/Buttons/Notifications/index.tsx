@@ -11,6 +11,7 @@ import {
   List,
   ListItem,
   Popover,
+  Skeleton,
   Stack,
   Tooltip,
   Typography
@@ -59,9 +60,10 @@ function HeaderNotifications() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [shouldConnectWallet, setShouldConnectWallet] = useState(false);
 
-  const { data: me } = useIsLoggedIn();
+  const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
-  const { data, isLoading } = useNotifications();
+  const { data: notifications, isLoading: isNotificationsLoading } =
+    useNotifications();
 
   // add ws functions
   useEffect(() => {
@@ -105,23 +107,29 @@ function HeaderNotifications() {
     setOpen(false);
   };
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <>
       <Tooltip arrow title="Notifications">
         <IconButton color="primary" ref={ref} onClick={handleOpen}>
-          <NotificationsBadge
-            badgeContent={data?.data?.length + newNotifications.length || 0}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-          >
-            <NotificationsActiveTwoToneIcon />
-          </NotificationsBadge>
+          {isNotificationsLoading || isMeLoading ? (
+            <Skeleton width={30} height={70}>
+              <NotificationsBadge>
+                <NotificationsActiveTwoToneIcon />
+              </NotificationsBadge>
+            </Skeleton>
+          ) : (
+            <NotificationsBadge
+              badgeContent={
+                notifications?.data?.length + newNotifications.length || 0
+              }
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+            >
+              <NotificationsActiveTwoToneIcon />
+            </NotificationsBadge>
+          )}
         </IconButton>
       </Tooltip>
 
@@ -190,9 +198,9 @@ function HeaderNotifications() {
                 ) : null}
 
                 {/* Old */}
-                {data?.data?.length > 0 ? (
+                {notifications?.data?.length > 0 ? (
                   <Stack gap={1.5}>
-                    {data?.data?.map((notification: any) => (
+                    {notifications?.data?.map((notification: any) => (
                       <NotificationCard
                         key={notification.uuid}
                         notification={notification}
@@ -204,7 +212,8 @@ function HeaderNotifications() {
                 ) : null}
 
                 {/* None */}
-                {data?.data?.length === 0 && newNotifications?.length === 0
+                {notifications?.data?.length === 0 &&
+                newNotifications?.length === 0
                   ? 'No new messages in your inbox'
                   : null}
               </Typography>
