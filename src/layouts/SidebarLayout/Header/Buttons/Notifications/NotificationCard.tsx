@@ -1,16 +1,30 @@
 import Modal from '@/components/Modal';
 import useDoTnx from '@/hooks/useDoTnx';
 import { Button, Stack, Typography } from '@mui/material';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import axios, { AxiosError } from 'axios';
 import { AES } from 'crypto-js';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import OtpInput from 'react-otp-input';
 import { useQueryClient } from 'react-query';
 import useWsStore from 'store/wsStore';
 
-const NotificationCard = ({ notification, isWs = false }) => {
+const NotificationCard = ({
+  notification,
+  isWs = false,
+  handleClose,
+  setShouldConnectWallet
+}: {
+  notification: {
+    message: string;
+    sender_uid: string;
+    uuid: string;
+    act: any;
+  };
+  isWs?: boolean;
+  handleClose: () => void;
+  setShouldConnectWallet: Dispatch<SetStateAction<boolean>>;
+}) => {
   const filterNotifications = useWsStore((state) => state.filterNotifications);
 
   const queryClient = useQueryClient();
@@ -18,7 +32,6 @@ const NotificationCard = ({ notification, isWs = false }) => {
   const { sendSol } = useDoTnx();
 
   const [personalPin, setPersonalPin] = useState('');
-  const [shouldConnectWallet, setShouldConnectWallet] = useState(false);
 
   const path = `/applications/messenger/${notification.sender_uid}`;
 
@@ -38,6 +51,8 @@ const NotificationCard = ({ notification, isWs = false }) => {
     if (!isWs) queryClient.invalidateQueries({ queryKey: ['notifications'] });
 
     if (!isPayment && router.asPath !== path) router.push(path);
+
+    handleClose();
   }
 
   async function handleAcceptPayment() {
@@ -102,10 +117,14 @@ const NotificationCard = ({ notification, isWs = false }) => {
       if (err instanceof AxiosError) {
         console.log({ err });
       } else if (err instanceof Error && err.message === 'No Public Key') {
+        setShouldConnectWallet(false); // to force re-render of connect wallet modal
         setShouldConnectWallet(true);
       } else {
         console.log({ err });
       }
+    } finally {
+      setPersonalPin('');
+      handleClose();
     }
   }
 
@@ -113,18 +132,6 @@ const NotificationCard = ({ notification, isWs = false }) => {
   if (notification?.act)
     return (
       <div>
-        {shouldConnectWallet ? (
-          <Modal
-            defaultOpen={true}
-            modalHeader={
-              <Typography fontSize={30} fontWeight={800}>
-                Connect Wallet
-              </Typography>
-            }
-            dialogContentHeader={'Connect your wallet to send payment'}
-            dialogContent={<WalletMultiButton />}
-          />
-        ) : null}
         <Button>
           <p>{notification.message}</p>
         </Button>

@@ -14,7 +14,8 @@ function Modal({
   modalHeader,
   dialogContentHeader,
   dialogContent,
-  handleAction
+  handleAction,
+  shouldCloseOnDialogClick = false
 }: {
   defaultOpen?: boolean;
   buttonText?: React.ReactNode | string;
@@ -22,6 +23,7 @@ function Modal({
   dialogContentHeader: React.ReactNode | string;
   dialogContent: React.ReactNode | string;
   handleAction?: () => void;
+  shouldCloseOnDialogClick?: boolean;
 }) {
   const [open, setOpen] = React.useState(defaultOpen);
 
@@ -50,7 +52,13 @@ function Modal({
         <DialogTitle>{modalHeader}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogContentHeader}</DialogContentText>
-          {dialogContent}
+          <span
+            onClick={() => {
+              shouldCloseOnDialogClick ? handleClose() : null;
+            }}
+          >
+            {dialogContent}
+          </span>
         </DialogContent>
         <DialogActions sx={{ padding: '2rem' }}>
           <Button onClick={handleClose}>Cancel</Button>

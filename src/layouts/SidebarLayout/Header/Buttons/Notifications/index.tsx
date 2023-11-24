@@ -1,3 +1,4 @@
+import Modal from '@/components/Modal';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import useNotifications from '@/hooks/useNotifications';
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
@@ -15,6 +16,7 @@ import {
   Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { useEffect, useRef, useState } from 'react';
 import useWsStore from 'store/wsStore';
 import NotificationCard from './NotificationCard';
@@ -55,6 +57,7 @@ function HeaderNotifications() {
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
+  const [shouldConnectWallet, setShouldConnectWallet] = useState(false);
 
   const { data: me } = useIsLoggedIn();
 
@@ -124,6 +127,20 @@ function HeaderNotifications() {
         </IconButton>
       </Tooltip>
 
+      {shouldConnectWallet ? (
+        <Modal
+          defaultOpen={true}
+          modalHeader={
+            <Typography fontSize={30} fontWeight={800}>
+              Connect Wallet
+            </Typography>
+          }
+          dialogContentHeader={'Connect your wallet to send payment'}
+          dialogContent={<WalletMultiButton />}
+          shouldCloseOnDialogClick={true}
+        />
+      ) : null}
+
       <Popover
         anchorEl={ref.current}
         onClose={handleClose}
@@ -167,6 +184,8 @@ function HeaderNotifications() {
                         key={notification.uuid}
                         notification={notification}
                         isWs={true}
+                        handleClose={handleClose}
+                        setShouldConnectWallet={setShouldConnectWallet}
                       />
                     ))}
                   </Stack>
@@ -179,6 +198,8 @@ function HeaderNotifications() {
                       <NotificationCard
                         key={notification.uuid}
                         notification={notification}
+                        handleClose={handleClose}
+                        setShouldConnectWallet={setShouldConnectWallet}
                       />
                     ))}
                   </Stack>
