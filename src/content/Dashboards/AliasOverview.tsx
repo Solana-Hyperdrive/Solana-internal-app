@@ -15,38 +15,32 @@ function AliasOverview() {
     <>
       <Stack direction="column" gap={1}>
         <Avatar alt={me.data.name} src={me.data.img} />
-        <Typography fontSize={24}>My Alias</Typography>
+        <Typography fontSize={20} fontWeight={800} letterSpacing={0.5}>
+          My Alias
+        </Typography>
       </Stack>
-
-      <Grid container spacing={0}>
-        <Grid item>
-          <Stack direction="row" justifyContent="space-between">
+      <div style={{ marginBlock: '6px', paddingBlockEnd: '9px' }}>
+        {data?.data?.map((alias) => (
+          <div key={alias.uuid}>
             <Box>
-              <ul>
-                {data?.data?.map((alias) => (
-                  <li key={alias.uuid}>
-                    <Box>
-                      <Box display="flex" alignItems="center" pb={3}>
-                        <Box>
-                          <Typography variant="h4" noWrap gutterBottom>
-                            {alias.alias}
-                          </Typography>
-                          <Typography variant="subtitle2" noWrap>
-                            {alias.sol_wallet}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </li>
-                ))}
-              </ul>
+              <Typography
+                fontSize={16}
+                style={{ color: 'hsl(240 5% 56.9%)' }}
+                variant="subtitle2"
+                noWrap
+                gutterBottom
+              >
+                {alias.alias}
+              </Typography>
+              <Typography fontSize={16} variant="subtitle2" noWrap>
+                {alias.sol_wallet}
+              </Typography>
             </Box>
-
-            {/* {ticker} */}
-          </Stack>
-          <AddAlias />
-        </Grid>
-      </Grid>
+          </div>
+        ))}
+      </div>
+      {/* {ticker} */}
+      <AddAlias />
     </>
   );
 }
