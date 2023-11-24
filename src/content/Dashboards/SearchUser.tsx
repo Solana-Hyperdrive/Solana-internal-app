@@ -114,7 +114,7 @@ function SearchUser() {
       <FormControl variant="outlined" fullWidth>
         <OutlinedInputWrapper
           type="text"
-          placeholder="Search terms here..."
+          placeholder="Search users here..."
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           endAdornment={

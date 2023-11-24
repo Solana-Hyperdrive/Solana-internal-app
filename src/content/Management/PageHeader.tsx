@@ -28,13 +28,16 @@ function PageHeader({ title }: { title: 'products' | 'transactions' }) {
       </Grid>
       {title === 'products' ? (
         <Grid item>
-          <Button
-            sx={{ mt: { xs: 2, md: 0 } }}
-            variant="contained"
-            startIcon={<AddTwoToneIcon fontSize="small" />}
-          >
-            <Link href="/management/product">Create product</Link>
-          </Button>
+          <Link href="/management/product" passHref>
+            <Button
+              sx={{ mt: { xs: 2, md: 0 } }}
+              variant="contained"
+              startIcon={<AddTwoToneIcon fontSize="small" />}
+              component="a"
+            >
+              Create product
+            </Button>
+          </Link>
         </Grid>
       ) : null}
     </Grid>
