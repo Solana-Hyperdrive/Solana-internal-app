@@ -4,7 +4,6 @@ import AccountBalances from '@/content/Dashboards/AccountBalances';
 import AliasOverview from '@/content/Dashboards/AliasOverview';
 import PageHeader from '@/content/Dashboards/PageHeader';
 import SearchUser from '@/content/Dashboards/SearchUser';
-import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import {
   Box,
@@ -17,7 +16,6 @@ import {
   styled
 } from '@mui/material';
 import Head from 'next/head';
-// import Script from 'next/script';
 import { ChangeEvent, useState } from 'react';
 
 const TabsContainerWrapper = styled(Box)(
@@ -103,8 +101,6 @@ const TabsContainerWrapper = styled(Box)(
 );
 
 function DashboardTasks() {
-  const { isLoading } = useIsLoggedIn();
-
   const [currentTab, setCurrentTab] = useState<string>('alias');
 
   const tabs = [
@@ -115,8 +111,6 @@ function DashboardTasks() {
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
-
-  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
@@ -170,14 +164,6 @@ function DashboardTasks() {
           </Grid>
         </Card>
       </Container>
-
-      {/* 
-      <div
-        id="crypto-widget-CoinBlocks"
-        data-theme="dark"
-        data-design="modern"
-        data-coin-ids="1986"
-      ></div> */}
 
       <Footer />
     </>

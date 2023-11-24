@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Button,
+  Skeleton,
   Stack,
   Typography,
   alpha,
@@ -39,11 +40,11 @@ const AvatarPageTitle = styled(Avatar)(
 );
 
 function PageHeader() {
-  const { data } = useIsLoggedIn();
+  const { data: me } = useIsLoggedIn();
 
   const user = {
-    name: data?.data?.name,
-    avatar: data?.data?.img
+    name: me?.data?.name,
+    avatar: me?.data?.img
   };
 
   return (
@@ -59,11 +60,20 @@ function PageHeader() {
         </AvatarPageTitle>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            Welcome, {user.name}!
+            <Stack direction="row" gap={2}>
+              Welcome,{' '}
+              {user.name || (
+                <Skeleton
+                  variant="rectangular"
+                  width={200}
+                  sx={{ bgcolor: 'gray' }}
+                />
+              )}
+              !
+            </Stack>
           </Typography>
           <Typography variant="subtitle2">
-            Manage your day to day tasks with style! Enjoy a well built UI
-            system.
+            Manage your aliases and contacts in a highly secure environment!
           </Typography>
         </Box>
       </Box>
