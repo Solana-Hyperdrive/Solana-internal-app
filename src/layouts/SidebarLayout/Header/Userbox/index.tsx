@@ -12,6 +12,7 @@ import {
   ListItemButton,
   ListItemText,
   Popover,
+  Skeleton,
   Typography
 } from '@mui/material';
 
@@ -57,7 +58,7 @@ const UserBoxLabel = styled(Typography)(
 function HeaderUserbox() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { data, isLoading } = useIsLoggedIn();
+  const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
   const ref = useRef<any>(null);
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -70,93 +71,97 @@ function HeaderUserbox() {
     setOpen(false);
   };
 
-  if (isLoading) {
-    return null;
-  }
+  const handleSignOut = async () => {
+    try {
+      await axios.get('https://ledger.flitchcoin.com/sign-out', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+
+      queryClient.invalidateQueries({ queryKey: ['me'] });
+
+      router.push('/');
+    }
+  };
 
   const user = {
-    name: data?.data?.name,
-    avatar: data?.data?.img
+    name: me?.data?.name,
+    avatar: me?.data?.img
   };
 
   return (
     <>
       <UserBoxButton color="secondary" ref={ref} onClick={handleOpen}>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        {isMeLoading ? (
+          <Skeleton height={70}>
+            <Avatar variant="rounded" />
+          </Skeleton>
+        ) : (
+          <Avatar variant="rounded" alt={user?.name} src={user?.avatar} />
+        )}
         <Hidden mdDown>
           <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
+            {isMeLoading ? (
+              <Skeleton variant="rectangular" width={100} />
+            ) : (
+              <UserBoxLabel variant="body1">{user?.name}</UserBoxLabel>
+            )}
           </UserBoxText>
         </Hidden>
         <Hidden smDown>
           <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />
         </Hidden>
       </UserBoxButton>
-      <Popover
-        anchorEl={ref.current}
-        onClose={handleClose}
-        open={isOpen}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-      >
-        <MenuUserBox sx={{ minWidth: 210 }} display="flex">
-          <Avatar variant="rounded" alt={user.name} src={user.avatar} />
-          <UserBoxText>
-            <UserBoxLabel variant="body1">{user.name}</UserBoxLabel>
-          </UserBoxText>
-        </MenuUserBox>
-        <Divider sx={{ mb: 0 }} />
-        <List sx={{ p: 1 }} component="nav">
-          <NextLink href="/applications/messenger" passHref>
-            <ListItemButton>
-              <InboxTwoToneIcon fontSize="small" />
-              <ListItemText primary="Messenger" />
-            </ListItemButton>
-          </NextLink>
-          <NextLink href="/management/profile/settings" passHref>
-            <ListItemButton>
-              <AccountTreeTwoToneIcon fontSize="small" />
-              <ListItemText primary="Account Settings" />
-            </ListItemButton>
-          </NextLink>
-        </List>
-        <Divider />
-        <Box sx={{ m: 1 }}>
-          <Button
-            color="primary"
-            fullWidth
-            onClick={async () => {
-              try {
-                await axios.get('https://ledger.flitchcoin.com/sign-out', {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem(
-                      'accessToken'
-                    )}`
-                  }
-                });
-              } catch (err) {
-                console.error(err);
-              } finally {
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-
-                queryClient.invalidateQueries({ queryKey: ['me'] });
-
-                router.push('/');
-              }
-            }}
-          >
-            <LockOpenTwoToneIcon sx={{ mr: 1 }} />
-            Sign out
-          </Button>
-        </Box>
-      </Popover>
+      {!isMeLoading && me ? (
+        <Popover
+          anchorEl={ref.current}
+          onClose={handleClose}
+          open={isOpen}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right'
+          }}
+        >
+          <MenuUserBox sx={{ minWidth: 210 }} display="flex">
+            <Avatar variant="rounded" alt={user?.name} src={user?.avatar} />
+            <UserBoxText>
+              <UserBoxLabel variant="body1">{user?.name}</UserBoxLabel>
+            </UserBoxText>
+          </MenuUserBox>
+          <Divider sx={{ mb: 0 }} />
+          <List sx={{ p: 1 }} component="nav">
+            <NextLink href="/applications/messenger" passHref>
+              <ListItemButton>
+                <InboxTwoToneIcon fontSize="small" />
+                <ListItemText primary="Messenger" />
+              </ListItemButton>
+            </NextLink>
+            <NextLink href="/management/profile/settings" passHref>
+              <ListItemButton>
+                <AccountTreeTwoToneIcon fontSize="small" />
+                <ListItemText primary="Account Settings" />
+              </ListItemButton>
+            </NextLink>
+          </List>
+          <Divider />
+          <Box sx={{ m: 1 }}>
+            <Button color="primary" fullWidth onClick={handleSignOut}>
+              <LockOpenTwoToneIcon sx={{ mr: 1 }} />
+              Sign out
+            </Button>
+          </Box>
+        </Popover>
+      ) : null}
     </>
   );
 }

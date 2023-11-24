@@ -40,7 +40,7 @@ const AvatarPageTitle = styled(Avatar)(
 );
 
 function PageHeader() {
-  const { data: me } = useIsLoggedIn();
+  const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
   const user = {
     name: me?.data?.name,
@@ -60,14 +60,12 @@ function PageHeader() {
         </AvatarPageTitle>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            <Stack direction="row" gap={2}>
-              Welcome,{' '}
-              {user.name || (
-                <Skeleton
-                  variant="rectangular"
-                  width={200}
-                  sx={{ bgcolor: 'gray' }}
-                />
+            <Stack direction="row" gap={1}>
+              Welcome,
+              {isMeLoading ? (
+                <Skeleton variant="rectangular" width={200} />
+              ) : (
+                <span>{user.name || 'User'}</span>
               )}
               !
             </Stack>

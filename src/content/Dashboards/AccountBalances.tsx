@@ -11,8 +11,6 @@ const AccountBalances = () => {
     })
   );
 
-  console.log({ data });
-
   return (
     <Stack
       gap={5}

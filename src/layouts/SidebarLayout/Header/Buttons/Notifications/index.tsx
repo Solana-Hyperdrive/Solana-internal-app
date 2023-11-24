@@ -109,8 +109,6 @@ function HeaderNotifications() {
     return null;
   }
 
-  console.log({ newNotifications });
-
   return (
     <>
       <Tooltip arrow title="Notifications">
