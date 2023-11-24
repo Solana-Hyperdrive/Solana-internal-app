@@ -1,25 +1,36 @@
 import useAlias from '@/hooks/useAlias';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
-import { Avatar, Box, Grid, Stack, Typography } from '@mui/material';
+import { Avatar, Box, Skeleton, Stack, Typography } from '@mui/material';
 import AddAlias from './AddAlias';
 
 function AliasOverview() {
   const { data, isLoading } = useAlias();
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
-  if (isLoading || isMeLoading) {
-    return <p>Loading</p>;
-  }
-
   return (
     <>
       <Stack direction="column" gap={1}>
-        <Avatar alt={me.data.name} src={me.data.img} />
-        <Typography fontSize={20} fontWeight={800} letterSpacing={0.5}>
-          My Alias
+        {isMeLoading ? (
+          <Skeleton variant="circular">
+            <Avatar />
+          </Skeleton>
+        ) : (
+          <Avatar alt={me?.data?.name} src={me?.data?.img} />
+        )}
+        <Typography
+          fontSize={22}
+          fontWeight={900}
+          letterSpacing={0.5}
+          variant="h2"
+        >
+          MY ALIAS
         </Typography>
       </Stack>
       <div style={{ marginBlock: '6px', paddingBlockEnd: '9px' }}>
+        {isLoading || isMeLoading ? (
+          <Skeleton variant="rectangular" width={150} height={50} />
+        ) : null}
+
         {data?.data?.map((alias) => (
           <div key={alias.uuid}>
             <Box>
