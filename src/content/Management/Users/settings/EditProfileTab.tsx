@@ -241,7 +241,7 @@ function EditProfileTab() {
                     />
                   ) : (
                     <Text color="black">
-                      <b>Fetched API</b>
+                      <b>{data?.data?.webhook_url || ''}</b>
                     </Text>
                   )}
                 </Grid>
@@ -263,7 +263,7 @@ function EditProfileTab() {
                     />
                   ) : (
                     <Text color="black">
-                      <b>Fetched API</b>
+                      <b>{data?.data?.success_callback_url || ''}</b>
                     </Text>
                   )}
                 </Grid>
@@ -285,7 +285,7 @@ function EditProfileTab() {
                     />
                   ) : (
                     <Text color="black">
-                      <b>Fetched API</b>
+                      <b>{data?.data?.fail_callback_url || ''}</b>
                     </Text>
                   )}
                 </Grid>
@@ -311,9 +311,6 @@ function EditProfileTab() {
                 Manage details related to your account
               </Typography>
             </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
@@ -329,16 +326,7 @@ function EditProfileTab() {
                     <b>English (US)</b>
                   </Text>
                 </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Timezone:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>GMT +2</b>
-                  </Text>
-                </Grid>
+
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
                     Account status:

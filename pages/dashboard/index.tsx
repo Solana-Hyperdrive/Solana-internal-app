@@ -22,15 +22,10 @@ const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
       padding: 0 ${theme.spacing(2)};
       position: relative;
-      bottom: -1px;
 
       .MuiTabs-root {
         height: 44px;
         min-height: 44px;
-      }
-
-      .MuiTabs-scrollableX {
-        overflow-x: auto !important;
       }
 
       .MuiTabs-indicator {
@@ -100,7 +95,7 @@ const TabsContainerWrapper = styled(Box)(
   `
 );
 
-function DashboardTasks() {
+function Dashboard() {
   const [currentTab, setCurrentTab] = useState<string>('alias');
 
   const tabs = [
@@ -115,12 +110,13 @@ function DashboardTasks() {
   return (
     <>
       <Head>
-        <title>Tasks Dashboard</title>
+        <title>Dashboard</title>
       </Head>
 
       <PageTitleWrapper>
         <PageHeader />
       </PageTitleWrapper>
+
       <Container maxWidth="md">
         <TabsContainerWrapper>
           <Tabs
@@ -154,6 +150,7 @@ function DashboardTasks() {
                 </Stack>
               </Grid>
             )}
+
             {currentTab === 'search' && (
               <Grid item xs={12}>
                 <Box p={4}>
@@ -170,6 +167,6 @@ function DashboardTasks() {
   );
 }
 
-DashboardTasks.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
+Dashboard.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>;
 
-export default DashboardTasks;
+export default Dashboard;

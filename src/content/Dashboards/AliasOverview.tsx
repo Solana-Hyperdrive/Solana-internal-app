@@ -4,7 +4,7 @@ import { Avatar, Box, Skeleton, Stack, Typography } from '@mui/material';
 import AddAlias from './AddAlias';
 
 function AliasOverview() {
-  const { data, isLoading } = useAlias();
+  const { data: alaises, isLoading: isAliasesLoading } = useAlias();
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
 
   return (
@@ -17,21 +17,16 @@ function AliasOverview() {
         ) : (
           <Avatar alt={me?.data?.name} src={me?.data?.img} />
         )}
-        <Typography
-          fontSize={22}
-          fontWeight={900}
-          letterSpacing={0.5}
-          variant="h2"
-        >
+        <Typography fontSize={22} letterSpacing={0.5} variant="h2">
           ALIAS
         </Typography>
       </Stack>
       <div style={{ marginBlock: '6px', paddingBlockEnd: '9px' }}>
-        {isLoading || isMeLoading ? (
+        {isAliasesLoading ? (
           <Skeleton variant="rectangular" width={150} height={50} />
         ) : null}
 
-        {data?.data?.map((alias) => (
+        {alaises?.data?.map((alias) => (
           <div key={alias.uuid}>
             <Box mt={2}>
               <Typography

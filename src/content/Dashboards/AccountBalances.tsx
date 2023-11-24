@@ -1,28 +1,39 @@
-import { Avatar, Stack, Typography } from '@mui/material';
+import { Avatar, Skeleton, Stack, Typography, styled } from '@mui/material';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 
-const AccountBalances = () => {
-  const { data } = useQuery(['accountBalances'], async () =>
-    axios.get('https://ledger.flitchcoin.com/account/balance', {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+const ScrollableStack = styled(Stack)(
+  () => `
+      width: 250px;
+      height: 300px;
+      overflow: scroll;
+      overflowX: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
       }
-    })
+  `
+);
+
+const AccountBalances = () => {
+  const { data: balances, isLoading: isLoadingBalances } = useQuery(
+    ['accountBalances'],
+    async () =>
+      axios.get('https://ledger.flitchcoin.com/account/balance', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      })
   );
 
+  if (isLoadingBalances) return <Skeleton width="250px" height="300px" />;
+
   return (
-    <Stack
-      gap={5}
-      style={{
-        width: '250px',
-        height: '300px',
-        overflow: 'scroll',
-        overflowX: 'hidden'
-      }}
-    >
-      {data?.data?.balances &&
-        Object.keys(data?.data?.balances).map((coin) => {
+    <ScrollableStack gap={5}>
+      {balances?.data?.balances &&
+        Object.keys(balances?.data?.balances).map((coin) => {
           if (coin === 'ts') return null;
 
           return (
@@ -48,18 +59,18 @@ const AccountBalances = () => {
                       {coin}
                     </Typography>
                     <Typography fontWeight={900} fontSize={12} color="gray">
-                      ${data?.data?.prices[coin].price}
+                      ${balances?.data?.prices[coin].price}
                     </Typography>
                   </Stack>
                 </Stack>
                 <Typography fontWeight={900} fontSize={28}>
-                  ${data?.data?.balances[coin]}
+                  ${balances?.data?.balances[coin]}
                 </Typography>
               </Stack>
             </Stack>
           );
         })}
-    </Stack>
+    </ScrollableStack>
   );
 };
 

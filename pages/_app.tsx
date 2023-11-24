@@ -1,5 +1,3 @@
-import { ReactElement, ReactNode, useMemo } from 'react';
-
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -10,11 +8,11 @@ import Head from 'next/head';
 import Router from 'next/router';
 import nProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { ReactElement, ReactNode, useMemo, useState } from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { SidebarProvider } from 'src/contexts/SidebarContext';
 import createEmotionCache from 'src/createEmotionCache';
 import ThemeProvider from 'src/theme/ThemeProvider';
-
 // wallet connnecitvity imports
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
@@ -27,7 +25,6 @@ import {
   SolflareWalletAdapter
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
-import React from 'react';
 import { Toaster } from 'react-hot-toast';
 require('@solana/wallet-adapter-react-ui/styles.css');
 
@@ -46,7 +43,7 @@ function TokyoAppContent({ props }: { props: TokyoAppProps }) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const [queryClient] = React.useState(
+  const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: { queries: { refetchOnWindowFocus: false } }

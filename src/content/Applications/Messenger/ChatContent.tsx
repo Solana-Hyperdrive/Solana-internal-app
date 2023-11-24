@@ -52,23 +52,20 @@ function ChatContent({ recUser, prevChats, newChats }) {
         ))}
 
       {/* New chats - from web socket */}
-      {newChats?.map((chat) => {
-        if (typeof chat === 'string' && chat === 'unread')
-          return (
-            <Divider key="unreadDivider" about="unread messages">
-              Unread
-            </Divider>
-          );
-
-        return (
+      {newChats?.map((chat) =>
+        typeof chat === 'string' && chat === 'unread' ? (
+          <Divider key="unreadDivider" about="unread messages">
+            Unread
+          </Divider>
+        ) : (
           <ChatBubble
             key={chat?.uuid}
             recUser={recUser}
             chat={chat}
             user={user}
           />
-        );
-      })}
+        )
+      )}
     </Box>
   );
 }

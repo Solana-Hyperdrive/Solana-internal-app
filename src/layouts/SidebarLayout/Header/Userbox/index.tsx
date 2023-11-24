@@ -84,7 +84,7 @@ function HeaderUserbox() {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
 
-      queryClient.invalidateQueries({ queryKey: ['me'] });
+      queryClient.invalidateQueries();
 
       router.push('/');
     }
