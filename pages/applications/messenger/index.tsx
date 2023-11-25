@@ -1,4 +1,3 @@
-import Scrollbar from '@/components/Scrollbar';
 import SidebarContent from '@/content/Applications/Messenger/SidebarContent';
 import SidebarLayout from '@/layouts/SidebarLayout';
 import { Box, styled } from '@mui/material';
@@ -27,9 +26,7 @@ function ApplicationsMessenger() {
       </Head>
       <RootWrapper className="Mui-FixedWrapper">
         <Sidebar>
-          <Scrollbar>
-            <SidebarContent />
-          </Scrollbar>
+          <SidebarContent />
         </Sidebar>
       </RootWrapper>
     </>

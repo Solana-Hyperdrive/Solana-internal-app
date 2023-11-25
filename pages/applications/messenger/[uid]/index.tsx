@@ -127,9 +127,7 @@ function ChatBox() {
         open={contactsMenu}
         onClose={handleDrawerToggle}
       >
-        <Scrollbar>
-          <SidebarContent />
-        </Scrollbar>
+        <SidebarContent />
       </DrawerWrapperMobile>
 
       <ChatWindow>

@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import Scrollbar from 'src/components/Scrollbar';
 import { SidebarContext } from 'src/contexts/SidebarContext';
 
 import {
@@ -76,9 +75,7 @@ function Sidebar() {
                 : darken(theme.colors.alpha.black[100], 0.5)
           }}
         >
-          <Scrollbar>
-            <SidebarMenu />
-          </Scrollbar>
+          <SidebarMenu />
         </SidebarWrapper>
       </Drawer>
     </>
