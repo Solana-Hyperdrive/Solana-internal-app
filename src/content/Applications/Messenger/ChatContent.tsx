@@ -29,9 +29,7 @@ function ChatContent({ recUser, prevChats, newChats }) {
         });
   }, [prevChats?.data?.length, newChats?.length]);
 
-  console.log({ recUser, prevChats });
-
-  if (!recUser.email || prevChats?.length < 0)
+  if (!recUser?.email || prevChats?.length < 0)
     return <Skeleton variant="rectangular" width="100vw" height="100vh" />;
 
   return (
