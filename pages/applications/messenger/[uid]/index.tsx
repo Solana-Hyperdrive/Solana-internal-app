@@ -152,7 +152,7 @@ function ChatBox() {
           <TopBarContent recUser={recUser} />
         </ChatTopBar>
         <Box flex={1}>
-          <Scrollbar>
+          <Scrollbar className="no-scrollbar">
             <ChatContent
               recUser={recUser}
               prevChats={data}

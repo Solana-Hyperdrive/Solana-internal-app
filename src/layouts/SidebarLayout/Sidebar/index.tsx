@@ -51,9 +51,7 @@ function Sidebar() {
             theme.palette.mode === 'dark' ? theme.sidebar.boxShadow : 'none'
         }}
       >
-        <Scrollbar>
-          <SidebarMenu />
-        </Scrollbar>
+        <SidebarMenu />
         <Divider
           sx={{
             background: theme.colors.alpha.trueWhite[10]

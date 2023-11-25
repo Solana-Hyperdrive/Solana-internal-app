@@ -26,6 +26,7 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import { clusterApiUrl } from '@solana/web3.js';
 import { Toaster } from 'react-hot-toast';
+import './global.css';
 require('@solana/wallet-adapter-react-ui/styles.css');
 
 const clientSideEmotionCache = createEmotionCache();
