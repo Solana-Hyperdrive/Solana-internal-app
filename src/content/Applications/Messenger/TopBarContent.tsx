@@ -16,7 +16,7 @@ function TopBarContent({ recUser }) {
     <>
       <RootWrapper>
         <Box display="flex" alignItems="center">
-          {recUser?.name ? (
+          {recUser?.name || recUser?.email ? (
             <Avatar
               variant="rounded"
               sx={{
