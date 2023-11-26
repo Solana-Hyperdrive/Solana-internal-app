@@ -85,7 +85,8 @@ function HeaderNotifications() {
           message?.sender_uid === recUser?.uid)
       )
         updateNewChat(message);
-      else updateNotifications(message);
+      // notify any message where I am the receiver (and not chatting with the sender)
+      else if (message.rec_uid === me?.data?.uid) updateNotifications(message);
     });
 
     socket.on('disconnect', () => {
