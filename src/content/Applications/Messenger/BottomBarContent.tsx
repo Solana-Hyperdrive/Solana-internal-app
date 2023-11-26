@@ -35,7 +35,9 @@ function BottomBarContent({ recUser }) {
   const { data: me } = useIsLoggedIn();
   const theme = useTheme();
 
-  async function handleSendMessage() {
+  async function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     if (!message) return;
 
     setIsSending(true);
@@ -102,81 +104,83 @@ function BottomBarContent({ recUser }) {
   };
 
   return (
-    <Box
-      sx={{
-        background: theme.colors.alpha.white[50],
-        display: 'flex',
-        alignItems: 'center',
-        p: 1
-      }}
-    >
-      <Box flexGrow={1} display="flex" alignItems="center">
-        {user?.name ? (
-          <Avatar
-            sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}
-            alt={user?.name}
-            src={user?.avatar}
+    <form onSubmit={handleSendMessage}>
+      <Box
+        sx={{
+          background: theme.colors.alpha.white[50],
+          display: 'flex',
+          alignItems: 'center',
+          p: 1
+        }}
+      >
+        <Box flexGrow={1} display="flex" alignItems="center">
+          {user?.name ? (
+            <Avatar
+              sx={{ display: { xs: 'none', sm: 'flex' }, mr: 1 }}
+              alt={user?.name}
+              src={user?.avatar}
+            />
+          ) : (
+            <Skeleton width={48} height={48} variant="circular" />
+          )}
+
+          <MessageInputWrapper
+            autoFocus
+            placeholder="Write your message here..."
+            fullWidth
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
-        ) : (
-          <Skeleton width={48} height={48} variant="circular" />
-        )}
-
-        <MessageInputWrapper
-          autoFocus
-          placeholder="Write your message here..."
-          fullWidth
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-      </Box>
-      <Box>
-        <Modal
-          defaultOpen={false}
-          buttonText={
-            <Tooltip arrow placement="top" title="Request Payment">
-              <IconButton
-                sx={{ fontSize: theme.typography.pxToRem(16), p: 1 }}
-                color="primary"
-                disabled={!recUser?.uid || isPaying}
-              >
-                🤑
-              </IconButton>
-            </Tooltip>
-          }
-          modalHeader={
-            <Typography fontSize={30} fontWeight={800}>
-              Payment
-            </Typography>
-          }
-          dialogContentHeader={''}
-          dialogContent={
-            <Stack gap={2} alignItems="center">
-              <Typography>
-                Please enter amount to send to {recUser?.name}
+        </Box>
+        <Box>
+          <Modal
+            defaultOpen={false}
+            buttonText={
+              <Tooltip arrow placement="top" title="Request Payment">
+                <IconButton
+                  sx={{ fontSize: theme.typography.pxToRem(16), p: 1 }}
+                  color="primary"
+                  disabled={!recUser?.uid || isPaying}
+                >
+                  🤑
+                </IconButton>
+              </Tooltip>
+            }
+            modalHeader={
+              <Typography fontSize={30} fontWeight={800}>
+                Payment
               </Typography>
-              <TextField
-                id="amount"
-                type="number"
-                label="Amount"
-                variant="outlined"
-                value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
-              />
-            </Stack>
-          }
-          handleAction={handleSendPayment}
-        />
+            }
+            dialogContentHeader={''}
+            dialogContent={
+              <Stack gap={2} alignItems="center">
+                <Typography>
+                  Please enter amount to send to {recUser?.name}
+                </Typography>
+                <TextField
+                  id="amount"
+                  type="number"
+                  label="Amount"
+                  variant="outlined"
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                />
+              </Stack>
+            }
+            handleAction={handleSendPayment}
+          />
 
-        <Button
-          startIcon={<SendTwoToneIcon />}
-          variant="contained"
-          disabled={!recUser?.uid || isSending}
-          onClick={handleSendMessage}
-        >
-          Send
-        </Button>
+          <Button
+            startIcon={<SendTwoToneIcon />}
+            variant="contained"
+            disabled={!recUser?.uid || isSending}
+            type="submit"
+          >
+            Send
+          </Button>
+        </Box>
       </Box>
-    </Box>
+    </form>
   );
 }
 
