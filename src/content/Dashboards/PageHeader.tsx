@@ -1,6 +1,8 @@
+import PersonalPin from '@/components/Modal/PersonalPin';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { Send } from '@mui/icons-material';
 import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {
   Avatar,
   Box,
@@ -52,6 +54,8 @@ function PageHeader() {
 
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
   const [open, setOpen] = useState(false);
+  const [personalPin, setPersonalPin] = useState('');
+  const [isValidPPin, setIsValidPPin] = useState(false);
 
   const handleClickOpen = () => {
     if (!wallet.connected) {
@@ -64,7 +68,13 @@ function PageHeader() {
 
   const handleClose = () => {
     setOpen(false);
+    setIsValidPPin(false);
   };
+
+  function handleVerifyPPin() {
+    setIsValidPPin(true);
+    toast.success('Correct Personal Pin!');
+  }
 
   const user = {
     name: me?.data?.name,
@@ -122,7 +132,24 @@ function PageHeader() {
             <DialogContentText mb={3}>
               Search User -{'>'} Enter Amount -{'>'} Send
             </DialogContentText>
-            <SendUserSol handleCloseDialog={handleClose} />
+            {isValidPPin ? (
+              <SendUserSol handleCloseDialog={handleClose} />
+            ) : (
+              <>
+                <PersonalPin
+                  personalPin={personalPin}
+                  setPersonalPin={setPersonalPin}
+                />
+                <Button
+                  onClick={handleVerifyPPin}
+                  sx={{ ml: 'calc(100% - 7rem)', mt: '1rem' }}
+                  color="success"
+                  endIcon={<ArrowForwardIosIcon />}
+                >
+                  Next
+                </Button>
+              </>
+            )}
           </DialogContent>
 
           <DialogActions>
