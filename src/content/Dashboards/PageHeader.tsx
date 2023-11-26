@@ -17,6 +17,7 @@ import {
   lighten,
   styled
 } from '@mui/material';
+import Image from 'next/image';
 import { useState } from 'react';
 import SendUserSol from './SendUserSol';
 
@@ -92,10 +93,18 @@ function PageHeader() {
       <Stack direction="row" gap={2} flexWrap="wrap" mt={3}>
         <Button
           variant="contained"
-          endIcon={<Send />}
+          endIcon={<Send sx={{ ml: '0.75rem' }} />}
           onClick={handleClickOpen}
         >
-          Send SOL
+          <Stack direction="row" alignItems="center" gap={1}>
+            Send{' '}
+            <Image
+              src="/static/images/logo/SOL.svg"
+              width={20}
+              height={20}
+              alt="Solana"
+            />
+          </Stack>
         </Button>
         <Dialog open={open} onClose={handleClose} fullWidth>
           <DialogTitle>Send SOL</DialogTitle>

@@ -1,6 +1,5 @@
-import Modal from '@/components/Modal';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
-import { Add } from '@mui/icons-material';
+import { Send } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
 import SearchTwoToneIcon from '@mui/icons-material/SearchTwoTone';
 import {
@@ -9,9 +8,11 @@ import {
   Button,
   FormControl,
   InputAdornment,
+  InputLabel,
   Menu,
   MenuItem,
   OutlinedInput,
+  Select,
   Skeleton,
   Stack,
   TextField,
@@ -19,8 +20,10 @@ import {
   styled
 } from '@mui/material';
 import axios from 'axios';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useQuery, useQueryClient } from 'react-query';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
@@ -54,10 +57,14 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
 
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [name, setName] = useState('');
+  const [amount, setAmount] = useState(0);
 
   const { data: user } = useIsLoggedIn();
-  const { data, isLoading, isFetched } = useQuery(
+  const {
+    data: contact,
+    isLoading,
+    isFetched
+  } = useQuery(
     ['sendUser', searchText],
     async () => {
       const response = await axios.post(
@@ -68,30 +75,38 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
         }
       );
 
-      setIsSearching(false);
-
       queryClient.invalidateQueries({ queryKey: ['recUser'] });
 
       return response;
     },
-    { enabled: isSearching && !!searchText }
+    {
+      enabled: isSearching && !!searchText,
+      retry: false,
+      onSettled: () => setIsSearching(false)
+    }
   );
 
-  function handleSearch() {
+  function startSearch() {
+    if (!searchText) return;
+
     setIsSearching(true);
   }
 
-  async function handleAddContact(contact) {
-    if (!name) return;
+  async function handleSendSol() {
+    if (!user || !contact) return;
+
+    if (!amount) {
+      toast.error('Please enter amount to send');
+      return;
+    }
 
     try {
       const response = await axios.post(
         'https://ledger.flitchcoin.com/contact',
         {
           my_uid: user.data.uid,
-          uid: contact.uid,
-          email: contact.email,
-          name
+          uid: contact.data.uid,
+          email: contact.data.email
         },
         {
           headers: {
@@ -110,11 +125,38 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
   }
 
   return (
-    <>
-      <Box></Box>
+    <Box component="form">
+      <Stack mb={3} direction="row" gap={2}>
+        <FormControl>
+          <InputLabel id="currency">Currency</InputLabel>
+          <Select
+            labelId="currency"
+            id="currency"
+            label="Currency"
+            defaultValue="sol"
+          >
+            <MenuItem value="sol">
+              <Stack direction="row" alignItems="center" gap={2}>
+                SOL{' '}
+                <Image
+                  src="/static/images/logo/SOL.svg"
+                  width={20}
+                  height={20}
+                  alt="Solana"
+                />
+              </Stack>
+            </MenuItem>
+            <MenuItem value="usd">USD $</MenuItem>
+          </Select>
+        </FormControl>
+
+        <TextField label="Amount" inputMode="numeric" />
+      </Stack>
+
       <Box
         mb={2}
         display="flex"
+        flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
       >
@@ -164,6 +206,7 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
           </Menu>
         </Box>
       </Box>
+
       <FormControl variant="outlined" fullWidth>
         <OutlinedInputWrapper
           type="text"
@@ -173,7 +216,12 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
           onChange={(e) => setSearchText(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
-              <Button variant="contained" size="small" onClick={handleSearch}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={startSearch}
+                disabled={isSearching}
+              >
                 Search
               </Button>
             </InputAdornment>
@@ -187,42 +235,23 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
       </FormControl>
 
       {isLoading ? <Skeleton variant="text" height={70} width={300} /> : null}
+
       {isFetched ? (
-        data?.data ? (
+        contact?.data ? (
           <Stack direction="row" alignItems="center" mt={2} spacing={2}>
-            <Avatar alt={data?.data?.email} src={data?.data?.img} />
+            <Avatar alt={contact?.data?.email} src={contact?.data?.img} />
 
-            <p>{data?.data?.email}</p>
+            <p>{contact?.data?.email}</p>
 
-            <Modal
-              buttonText={
-                <Button>
-                  <Add color="success" />
-                </Button>
-              }
-              modalHeader={'Name of contact'}
-              dialogContentHeader={'Please add the name of the contact.'}
-              dialogContent={
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  label="Name"
-                  type="text"
-                  fullWidth
-                  variant="standard"
-                  value={name}
-                  required
-                  onChange={(e) => setName(e.target.value)}
-                />
-              }
-              handleAction={() => handleAddContact(data?.data)}
-            />
+            <Button onClick={handleSendSol}>
+              <Send color="success" />
+            </Button>
           </Stack>
         ) : (
           <p>No contact found! Please recheck details.</p>
         )
       ) : null}
-    </>
+    </Box>
   );
 }
 

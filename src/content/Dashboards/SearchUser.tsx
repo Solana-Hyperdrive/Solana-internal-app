@@ -64,6 +64,8 @@ function SearchUser() {
   } = useQuery(
     ['searchUser', searchText],
     async () => {
+      setIsSearching(true);
+
       const response = await axios.post(
         `https://ledger.flitchcoin.com/api/strict/search
 `,
@@ -72,16 +74,20 @@ function SearchUser() {
         }
       );
 
-      setIsSearching(false);
-
       queryClient.invalidateQueries({ queryKey: ['recUser'] });
 
       return response;
     },
-    { enabled: isSearching && !!searchText }
+    {
+      enabled: isSearching && !!searchText,
+      onSettled: () => setIsSearching(false),
+      retry: false
+    }
   );
 
-  function handleSearch() {
+  function startSearch() {
+    if (!searchText) return;
+
     setIsSearching(true);
   }
 
@@ -176,7 +182,12 @@ function SearchUser() {
           onChange={(e) => setSearchText(e.target.value)}
           endAdornment={
             <InputAdornment position="end">
-              <Button variant="contained" size="small" onClick={handleSearch}>
+              <Button
+                variant="contained"
+                size="small"
+                onClick={startSearch}
+                disabled={isSearching}
+              >
                 Search
               </Button>
             </InputAdornment>
@@ -190,7 +201,7 @@ function SearchUser() {
       </FormControl>
 
       {isLoading ? <Skeleton variant="text" height={70} width={300} /> : null}
-      {isFetched ? (
+      {!isSearching && isFetched ? (
         searchUser?.data ? (
           <Stack direction="row" alignItems="center" mt={2} spacing={2}>
             <Avatar alt={searchUser?.data?.email} src={searchUser?.data?.img} />
