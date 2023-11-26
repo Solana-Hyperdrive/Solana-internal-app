@@ -27,7 +27,7 @@ function useDoTnx() {
   const sendSol = async (recPubKey, amount: number) => {
     if (!connection || !publicKey) throw new Error('No Public Key');
 
-    if (amount <= 0 || amount > balance / LAMPORTS_PER_SOL)
+    if (amount <= 0 || amount * LAMPORTS_PER_SOL > balance)
       throw new Error('Insufficient Balance');
 
     const transaction = new web3.Transaction();
@@ -36,7 +36,7 @@ function useDoTnx() {
     const sendSolInstruction = web3.SystemProgram.transfer({
       fromPubkey: publicKey,
       toPubkey: recipientPubKey,
-      lamports: LAMPORTS_PER_SOL * amount
+      lamports: parseInt(`${LAMPORTS_PER_SOL * amount}`)
     });
 
     transaction.add(sendSolInstruction);

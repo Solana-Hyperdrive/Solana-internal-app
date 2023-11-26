@@ -1,11 +1,12 @@
 import Modal from '@/components/Modal';
+import PersonalPin from '@/components/Modal/PersonalPin';
 import useDoTnx from '@/hooks/useDoTnx';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import axios, { AxiosError } from 'axios';
 import { AES } from 'crypto-js';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useState } from 'react';
-import OtpInput from 'react-otp-input';
+import toast from 'react-hot-toast';
 import { useQueryClient } from 'react-query';
 import useWsStore from 'store/wsStore';
 
@@ -90,7 +91,7 @@ const NotificationCard = ({
         'https://ledger.flitchcoin.com/api/prices'
       );
 
-      const sol = +(usd / prices.data.SOL.price).toFixed(6);
+      const sol = usd / prices.data.SOL.price;
 
       const sign = await sendSol(pub_key, sol);
 
@@ -113,14 +114,22 @@ const NotificationCard = ({
       );
 
       await handleMessageClick(true);
+
+      toast.success('Payment successful');
     } catch (err) {
       if (err instanceof AxiosError) {
         console.log({ err });
+
+        if (err?.response?.status === 401) toast.error('Wrong personal pin');
       } else if (err instanceof Error && err.message === 'No Public Key') {
+        toast.error('Please connect your wallet first');
+
         setShouldConnectWallet(false); // to force re-render of connect wallet modal
         setShouldConnectWallet(true);
       } else {
         console.log({ err });
+
+        toast.error('Something went wrong! Transaction failed');
       }
     } finally {
       setPersonalPin('');
@@ -145,28 +154,10 @@ const NotificationCard = ({
           }
           dialogContentHeader={''}
           dialogContent={
-            <Stack gap={2} alignItems="center">
-              <Typography>
-                Please enter a 6 digit personal pin to approve transactions
-              </Typography>
-
-              <OtpInput
-                value={personalPin}
-                onChange={setPersonalPin}
-                numInputs={6}
-                inputType="tel"
-                renderSeparator={<span style={{ width: '1rem' }}></span>}
-                inputStyle={{
-                  backgroundColor: 'transparent',
-                  border: '0.25px solid #ccc',
-                  borderRadius: '5px',
-                  fontSize: '1.5rem',
-                  width: '3rem',
-                  height: '3rem'
-                }}
-                renderInput={(props) => <input {...props} />}
-              />
-            </Stack>
+            <PersonalPin
+              personalPin={personalPin}
+              setPersonalPin={setPersonalPin}
+            />
           }
           handleAction={handleAcceptPayment}
         />

@@ -1,6 +1,4 @@
-import { useState, ReactNode, createContext } from 'react';
-// import { useWallet } from '@solana/wallet-adapter-react';
-// import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import { ReactNode, createContext, useState } from 'react';
 
 type SidebarContext = {
   sidebarToggle: any;
@@ -8,7 +6,6 @@ type SidebarContext = {
   closeSidebar: () => void;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SidebarContext = createContext<SidebarContext>(
   {} as SidebarContext
 );
@@ -22,9 +19,6 @@ export function SidebarProvider({ children }: Props) {
   const toggleSidebar = () => {
     setSidebarToggle(!sidebarToggle);
   };
-
-  // const wallet = useWallet();
-  // console.log({ wallet })
 
   const closeSidebar = () => {
     setSidebarToggle(false);

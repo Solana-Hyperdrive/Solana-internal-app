@@ -17,8 +17,10 @@ import {
   lighten,
   styled
 } from '@mui/material';
+import { useWallet } from '@solana/wallet-adapter-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import SendUserSol from './SendUserSol';
 
 const AvatarPageTitle = styled(Avatar)(
@@ -46,10 +48,17 @@ const AvatarPageTitle = styled(Avatar)(
 );
 
 function PageHeader() {
+  const wallet = useWallet();
+
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    if (!wallet.connected) {
+      toast.error('Please connect your wallet first');
+      return;
+    }
+
     setOpen(true);
   };
 
