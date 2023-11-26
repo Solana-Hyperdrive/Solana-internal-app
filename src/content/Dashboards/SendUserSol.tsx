@@ -30,7 +30,7 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 `
 );
 
-function SearchUser() {
+function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const searchTypes = [
@@ -57,12 +57,8 @@ function SearchUser() {
   const [name, setName] = useState('');
 
   const { data: user } = useIsLoggedIn();
-  const {
-    data: searchUser,
-    isLoading,
-    isFetched
-  } = useQuery(
-    ['searchUser', searchText],
+  const { data, isLoading, isFetched } = useQuery(
+    ['sendUser', searchText],
     async () => {
       const response = await axios.post(
         `https://ledger.flitchcoin.com/api/strict/search
@@ -115,6 +111,7 @@ function SearchUser() {
 
   return (
     <>
+      <Box></Box>
       <Box
         mb={2}
         display="flex"
@@ -191,11 +188,11 @@ function SearchUser() {
 
       {isLoading ? <Skeleton variant="text" height={70} width={300} /> : null}
       {isFetched ? (
-        searchUser?.data ? (
+        data?.data ? (
           <Stack direction="row" alignItems="center" mt={2} spacing={2}>
-            <Avatar alt={searchUser?.data?.email} src={searchUser?.data?.img} />
+            <Avatar alt={data?.data?.email} src={data?.data?.img} />
 
-            <p>{searchUser?.data?.email}</p>
+            <p>{data?.data?.email}</p>
 
             <Modal
               buttonText={
@@ -218,7 +215,7 @@ function SearchUser() {
                   onChange={(e) => setName(e.target.value)}
                 />
               }
-              handleAction={() => handleAddContact(searchUser?.data)}
+              handleAction={() => handleAddContact(data?.data)}
             />
           </Stack>
         ) : (
@@ -229,4 +226,4 @@ function SearchUser() {
   );
 }
 
-export default SearchUser;
+export default SendUserSol;

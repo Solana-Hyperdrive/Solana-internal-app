@@ -117,7 +117,7 @@ function Dashboard() {
         <PageHeader />
       </PageTitleWrapper>
 
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ minHeight: '60vh' }}>
         <TabsContainerWrapper>
           <Tabs
             onChange={handleTabsChange}

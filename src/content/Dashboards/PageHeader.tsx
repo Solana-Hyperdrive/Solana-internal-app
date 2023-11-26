@@ -1,10 +1,15 @@
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
-import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
+import { Send } from '@mui/icons-material';
 import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
 import {
   Avatar,
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Skeleton,
   Stack,
   Typography,
@@ -12,8 +17,8 @@ import {
   lighten,
   styled
 } from '@mui/material';
-import Link from 'next/link';
-import toast from 'react-hot-toast';
+import { useState } from 'react';
+import SendUserSol from './SendUserSol';
 
 const AvatarPageTitle = styled(Avatar)(
   ({ theme }) => `
@@ -41,6 +46,15 @@ const AvatarPageTitle = styled(Avatar)(
 
 function PageHeader() {
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const user = {
     name: me?.data?.name,
@@ -78,31 +92,27 @@ function PageHeader() {
       <Stack direction="row" gap={2} flexWrap="wrap" mt={3}>
         <Button
           variant="contained"
-          startIcon={<ArrowDropUp />}
-          onClick={() => {
-            toast('Request Early Access!', {
-              icon: '🚀',
-              duration: 5000
-            });
-          }}
+          endIcon={<Send />}
+          onClick={handleClickOpen}
         >
-          Deposit
+          Send SOL
         </Button>
-        <Button
-          variant="contained"
-          startIcon={<ArrowDropDown />}
-          onClick={() => {
-            toast('Request Early Access!', {
-              icon: '🚀',
-              duration: 5000
-            });
-          }}
-        >
-          Withdraw
-        </Button>
-        <Link href={'https://tally.so/r/nrOxzR'} target="_blank">
-          <Button>🚀 Request Early Access</Button>
-        </Link>
+        <Dialog open={open} onClose={handleClose} fullWidth>
+          <DialogTitle>Send SOL</DialogTitle>
+
+          <DialogContent>
+            <DialogContentText mb={3}>
+              Search User -{'>'} Enter Amount -{'>'} Send
+            </DialogContentText>
+            <SendUserSol handleCloseDialog={handleClose} />
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={handleClose} color="error">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Stack>
     </Box>
   );

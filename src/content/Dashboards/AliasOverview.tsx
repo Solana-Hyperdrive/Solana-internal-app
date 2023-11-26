@@ -26,9 +26,9 @@ function AliasOverview() {
           <Skeleton variant="rectangular" width={150} height={50} />
         ) : null}
 
-        {alaises?.data?.map((alias) => (
-          <div key={alias.uuid}>
-            <Box mt={2}>
+        <Stack mt={2} gap={1}>
+          {alaises?.data?.map((alias) => (
+            <Box key={alias.uuid}>
               <Typography
                 fontSize={16}
                 style={{ color: 'hsl(240 5% 56.9%)' }}
@@ -42,8 +42,8 @@ function AliasOverview() {
                 {alias.sol_wallet}
               </Typography>
             </Box>
-          </div>
-        ))}
+          ))}
+        </Stack>
       </div>
       {/* {ticker} */}
       <AddAlias />
