@@ -39,15 +39,15 @@ const NotificationCard = ({
   async function handleMessageClick(isPayment: boolean = false) {
     if (isWs) filterNotifications(notification.uuid);
 
-    await axios.post(
-      `https://ledger.flitchcoin.com/commit/seen?uuid=${notification.uuid}`,
-      notification,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-        }
+    const url = isPayment
+      ? `https://ledger.flitchcoin.com/commit/seen?uuid=${notification.uuid}`
+      : 'https://ledger.flitchcoin.com/commit/prev/msg';
+
+    await axios.post(url, notification, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`
       }
-    );
+    });
 
     if (!isWs) queryClient.invalidateQueries({ queryKey: ['notifications'] });
 

@@ -87,6 +87,7 @@ function HeaderNotifications() {
         updateNewChat(message);
       // notify any message where I am the receiver (and not chatting with the sender)
       else if (message.rec_uid === me?.data?.uid) updateNotifications(message);
+      // TODO: Send seen message to backend through WS
     });
 
     socket.on('disconnect', () => {
