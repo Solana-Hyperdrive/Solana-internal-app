@@ -13,6 +13,7 @@ import {
   ListItemText,
   Popover,
   Skeleton,
+  Stack,
   Typography
 } from '@mui/material';
 
@@ -86,7 +87,7 @@ function HeaderUserbox() {
 
       queryClient.invalidateQueries();
 
-      router.push('/');
+      router.push('https://ledger.flitchcoin.com/login');
     }
   };
 
@@ -118,6 +119,7 @@ function HeaderUserbox() {
           <ExpandMoreTwoToneIcon sx={{ ml: 1 }} />
         </Hidden>
       </UserBoxButton>
+
       {!isMeLoading && me ? (
         <Popover
           anchorEl={ref.current}
@@ -142,14 +144,18 @@ function HeaderUserbox() {
           <List sx={{ p: 1 }} component="nav">
             <NextLink href="/applications/messenger" passHref>
               <ListItemButton>
-                <InboxTwoToneIcon fontSize="small" />
-                <ListItemText primary="Messenger" />
+                <Stack direction="row" gap={1}>
+                  <InboxTwoToneIcon fontSize="small" />
+                  <ListItemText primary="Messenger" />
+                </Stack>
               </ListItemButton>
             </NextLink>
             <NextLink href="/management/profile/settings" passHref>
               <ListItemButton>
-                <AccountTreeTwoToneIcon fontSize="small" />
-                <ListItemText primary="Account Settings" />
+                <Stack direction="row" gap={1}>
+                  <AccountTreeTwoToneIcon fontSize="small" />
+                  <ListItemText primary="Account Settings" />
+                </Stack>
               </ListItemButton>
             </NextLink>
           </List>

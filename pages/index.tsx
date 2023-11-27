@@ -1,14 +1,17 @@
-import { ReactElement, useEffect } from 'react';
-import BaseLayout from 'src/layouts/BaseLayout';
-
-import Head from 'next/head';
-import Link from 'src/components/Link';
-
-import Hero from 'src/content/Overview/Hero';
-
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
-import { Box, Container, Typography, styled } from '@mui/material';
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Typography,
+  styled
+} from '@mui/material';
 import axios from 'axios';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { ReactElement, useEffect } from 'react';
+import Link from 'src/components/Link';
+import BaseLayout from 'src/layouts/BaseLayout';
 
 const OverviewWrapper = styled(Box)(
   ({ theme }) => `
@@ -46,14 +49,20 @@ function Overview({
   accessToken: string | undefined;
   refreshToken: string | undefined;
 }) {
-  useIsLoggedIn('dashboard');
+  const router = useRouter();
 
   useEffect(() => {
     if (accessToken && refreshToken) {
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
     }
+
+    if (!accessToken && !refreshToken) {
+      router.push('https://ledger.flitchcoin.com/login');
+    }
   }, []);
+
+  useIsLoggedIn('dashboard');
 
   return (
     <OverviewWrapper>
@@ -61,7 +70,17 @@ function Overview({
         <title>FlitchPay</title>
       </Head>
 
-      <Hero />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '80vh'
+        }}
+      >
+        <CircularProgress size={200} />
+      </Box>
+
       <Container maxWidth="lg" sx={{ mt: 8 }}>
         <Typography textAlign="center" variant="subtitle1">
           Crafted by{' '}
