@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 export default function useIsLoggedIn(redirect?: string) {
-  const [isEnableReAuth, setIsEnableReAuth] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const [isEnableReAuth, setIsEnableReAuth] = useState(false);
 
   const { isLoading, isError, data } = useQuery({
     queryKey: ['me'],

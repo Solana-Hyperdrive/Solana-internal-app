@@ -57,7 +57,10 @@ function Overview({
       localStorage.setItem('refreshToken', refreshToken);
     }
 
-    if (!accessToken && !refreshToken) {
+    if (
+      !localStorage.getItem('accessToken') &&
+      !localStorage.getItem('refreshToken')
+    ) {
       router.push('https://ledger.flitchcoin.com/login');
     }
   }, []);

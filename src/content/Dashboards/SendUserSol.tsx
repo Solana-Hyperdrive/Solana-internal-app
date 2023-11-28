@@ -23,7 +23,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 
 const OutlinedInputWrapper = styled(OutlinedInput)(
   ({ theme }) => `
@@ -33,7 +33,6 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 );
 
 function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
-  const queryClient = useQueryClient();
   const searchTypes = [
     {
       value: 'alias',
@@ -64,19 +63,14 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
     isFetched
   } = useQuery(
     ['sendUser', searchText],
-    async () => {
-      const response = await axios.post(
+    async () =>
+      axios.post(
         `https://ledger.flitchcoin.com/api/strict/search
 `,
         {
           [searchBy.value]: searchText
         }
-      );
-
-      queryClient.invalidateQueries({ queryKey: ['recUser'] });
-
-      return response;
-    },
+      ),
     {
       enabled: isSearching && !!searchText,
       retry: false,

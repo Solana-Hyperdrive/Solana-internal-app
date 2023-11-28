@@ -87,7 +87,7 @@ function HeaderUserbox() {
 
       queryClient.invalidateQueries();
 
-      router.push('https://ledger.flitchcoin.com/login');
+      router.push('https://pay.flitchcoin.com/');
     }
   };
 
