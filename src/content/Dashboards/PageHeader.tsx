@@ -99,7 +99,6 @@ function PageHeader() {
           }
         }
       );
-      console.log({ response });
 
       if (response?.data) {
         setIsValidPPin(true);
@@ -109,7 +108,6 @@ function PageHeader() {
       toast.error('Incorrect Personal Pin! Please try again.');
     } finally {
       setIsVerifyingPPin(false);
-      setPPin('');
     }
   }
 
@@ -170,7 +168,7 @@ function PageHeader() {
               Search User -{'>'} Enter Amount -{'>'} Send
             </DialogContentText>
             {isValidPPin ? (
-              <SendUserSol handleCloseDialog={handleClose} />
+              <SendUserSol handleCloseDialog={handleClose} pPin={pPin} />
             ) : (
               <>
                 <PersonalPin personalPin={pPin} setPersonalPin={setPPin} />

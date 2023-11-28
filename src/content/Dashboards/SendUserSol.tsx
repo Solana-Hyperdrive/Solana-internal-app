@@ -1,3 +1,4 @@
+import useDoTnx from '@/hooks/useDoTnx';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { Send } from '@mui/icons-material';
 import ExpandMoreTwoToneIcon from '@mui/icons-material/ExpandMoreTwoTone';
@@ -19,7 +20,8 @@ import {
   Typography,
   styled
 } from '@mui/material';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { AES } from 'crypto-js';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -32,21 +34,29 @@ const OutlinedInputWrapper = styled(OutlinedInput)(
 `
 );
 
-function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
-  const searchTypes = [
-    {
-      value: 'alias',
-      text: 'Alias'
-    },
-    {
-      value: 'email',
-      text: 'Email ID'
-    },
-    {
-      value: 'sol_wallet',
-      text: 'Wallet ID'
-    }
-  ];
+const searchTypes = [
+  {
+    value: 'alias',
+    text: 'Alias'
+  },
+  {
+    value: 'email',
+    text: 'Email ID'
+  },
+  {
+    value: 'sol_wallet',
+    text: 'Wallet ID'
+  }
+];
+
+function SendUserSol({
+  handleCloseDialog,
+  pPin
+}: {
+  handleCloseDialog: () => void;
+  pPin: string;
+}) {
+  const { sendSol } = useDoTnx();
 
   const actionRef1 = useRef<any>(null);
   const [openPeriod, setOpenMenuPeriod] = useState<boolean>(false);
@@ -55,6 +65,7 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [amount, setAmount] = useState('');
+  const [currency, setCurrency] = useState<'sol' | 'usd'>('sol');
 
   const { data: user } = useIsLoggedIn();
   const {
@@ -84,67 +95,6 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
     setIsSearching(true);
   }
 
-  // async function handleAcceptPayment() {
-  //   try {
-  //     if (personalPin.length !== 6) return;
-
-  //     const response = await axios.post(
-  //       'https://ledger.flitchcoin.com/init/payment/request?solpay=false',
-  //       {
-  //         ptm: notification.act,
-  //         ppin: {
-  //           personal_pin: encryptedPPin
-  //         }
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-  //         }
-  //       }
-  //     );
-
-  //     const { pub_key, token } = response.data;
-
-  //     const prices = await axios.get(
-  //       'https://ledger.flitchcoin.com/api/prices'
-  //     );
-
-  //     const sol = +(usd / prices.data.SOL.price).toFixed(6);
-
-  //     const sign = await sendSol(pub_key, sol);
-
-  //     const encryptedSign = AES.encrypt(
-  //       sign,
-  //       process.env.NEXT_PUBLIC_AES_KEY
-  //     ).toString();
-
-  //     await axios.post(
-  //       'https://ledger.flitchcoin.com/payment/verification',
-  //       {
-  //         sign: encryptedSign,
-  //         token
-  //       },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-  //         }
-  //       }
-  //     );
-  //   } catch (err) {
-  //     if (err instanceof AxiosError) {
-  //       console.log({ err });
-  //     } else if (err instanceof Error && err.message === 'No Public Key') {
-  //       setShouldConnectWallet(false); // to force re-render of connect wallet modal
-  //       setShouldConnectWallet(true);
-  //     } else {
-  //       console.log({ err });
-  //     }
-  //   } finally {
-  //     setPersonalPin('');
-  //     handleClose();
-  //   }
-  // }
-
   async function handleSendSol() {
     if (!user || !contact) return;
 
@@ -153,8 +103,59 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
       return;
     }
 
-    console.log('sent');
-    handleCloseDialog();
+    const encryptedPPin = AES.encrypt(
+      pPin,
+      process.env.NEXT_PUBLIC_AES_KEY
+    ).toString();
+
+    let sol: number = +amount;
+    if (currency === 'usd') {
+      const prices = await axios.get(
+        'https://ledger.flitchcoin.com/api/prices'
+      );
+      sol = +(+amount / prices.data.SOL.price).toFixed(6);
+    }
+
+    try {
+      const response = await axios.post(
+        'https://ledger.flitchcoin.com/send/sol',
+        {
+          Send: {
+            asset: 'sol',
+            amt: sol,
+            rec_uid: contact.data.uid,
+            sender_uid: user.data.uid
+          },
+          pin: {
+            personal_pin: encryptedPPin
+          }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }
+      );
+
+      const { pub_key } = response.data;
+
+      await sendSol(pub_key, sol);
+
+      //     const encryptedSign = AES.encrypt(
+      //       sign,
+      //       process.env.NEXT_PUBLIC_AES_KEY
+      //     ).toString();
+      // TODO: Handle verification
+
+      toast.success('Transaction successful!');
+      handleCloseDialog();
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        console.log({ err });
+      }
+
+      toast.error('Something went wrong! Transaction failed');
+    }
   }
 
   return (
@@ -168,6 +169,8 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
               id="currency"
               label="Currency"
               defaultValue="sol"
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value as any)}
             >
               <MenuItem value="sol">
                 <Stack direction="row" alignItems="center" gap={2}>
