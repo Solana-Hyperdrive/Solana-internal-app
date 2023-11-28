@@ -20,6 +20,8 @@ import {
   styled
 } from '@mui/material';
 import { useWallet } from '@solana/wallet-adapter-react';
+import axios from 'axios';
+import { AES } from 'crypto-js';
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -54,7 +56,8 @@ function PageHeader() {
 
   const { data: me, isLoading: isMeLoading } = useIsLoggedIn();
   const [open, setOpen] = useState(false);
-  const [personalPin, setPersonalPin] = useState('');
+  const [pPin, setPPin] = useState('');
+  const [isVerifyingPPin, setIsVerifyingPPin] = useState(false);
   const [isValidPPin, setIsValidPPin] = useState(false);
 
   const handleClickOpen = () => {
@@ -68,12 +71,46 @@ function PageHeader() {
 
   const handleClose = () => {
     setOpen(false);
+    setPPin('');
     setIsValidPPin(false);
   };
 
-  function handleVerifyPPin() {
-    setIsValidPPin(true);
-    toast.success('Correct Personal Pin!');
+  async function handleVerifyPPin() {
+    if (!pPin || pPin.length !== 6) {
+      toast.error('Please enter a valid personal pin');
+      return;
+    }
+
+    try {
+      const encryptedPPin = AES.encrypt(
+        pPin,
+        process.env.NEXT_PUBLIC_AES_KEY
+      ).toString();
+
+      setIsVerifyingPPin(true);
+      const response = await axios.post(
+        'https://ledger.flitchcoin.com/check/ppin',
+        {
+          personal_pin: encryptedPPin
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+          }
+        }
+      );
+      console.log({ response });
+
+      if (response?.data) {
+        setIsValidPPin(true);
+        toast.success('Personal Pin Verified!');
+      } else toast.error('Incorrect Personal Pin!');
+    } catch (err) {
+      toast.error('Incorrect Personal Pin! Please try again.');
+    } finally {
+      setIsVerifyingPPin(false);
+      setPPin('');
+    }
   }
 
   const user = {
@@ -136,15 +173,13 @@ function PageHeader() {
               <SendUserSol handleCloseDialog={handleClose} />
             ) : (
               <>
-                <PersonalPin
-                  personalPin={personalPin}
-                  setPersonalPin={setPersonalPin}
-                />
+                <PersonalPin personalPin={pPin} setPersonalPin={setPPin} />
                 <Button
                   onClick={handleVerifyPPin}
                   sx={{ ml: 'calc(100% - 7rem)', mt: '1rem' }}
                   color="success"
                   endIcon={<ArrowForwardIosIcon />}
+                  disabled={isVerifyingPPin}
                 >
                   Next
                 </Button>

@@ -88,11 +88,6 @@ function SendUserSol({ handleCloseDialog }: { handleCloseDialog: () => void }) {
   //   try {
   //     if (personalPin.length !== 6) return;
 
-  //     const encryptedPPin = AES.encrypt(
-  //       personalPin,
-  //       process.env.NEXT_PUBLIC_AES_KEY
-  //     ).toString();
-
   //     const response = await axios.post(
   //       'https://ledger.flitchcoin.com/init/payment/request?solpay=false',
   //       {
