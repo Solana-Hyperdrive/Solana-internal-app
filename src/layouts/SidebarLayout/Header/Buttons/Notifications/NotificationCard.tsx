@@ -95,8 +95,14 @@ const NotificationCard = ({
 
       const sign = await sendSol(pub_key, sol);
 
+      console.log({ sign });
+
       const encryptedSign = AES.encrypt(
         sign,
+        process.env.NEXT_PUBLIC_AES_KEY
+      ).toString();
+      const encryptedToken = AES.encrypt(
+        token,
         process.env.NEXT_PUBLIC_AES_KEY
       ).toString();
 
@@ -104,7 +110,7 @@ const NotificationCard = ({
         'https://ledger.flitchcoin.com/payment/verification',
         {
           sign: encryptedSign,
-          token
+          token: encryptedToken
         },
         {
           headers: {

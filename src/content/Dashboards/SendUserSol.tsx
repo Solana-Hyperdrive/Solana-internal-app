@@ -20,7 +20,7 @@ import {
   Typography,
   styled
 } from '@mui/material';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { AES } from 'crypto-js';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
@@ -141,18 +141,28 @@ function SendUserSol({
 
       await sendSol(pub_key, sol);
 
-      //     const encryptedSign = AES.encrypt(
-      //       sign,
-      //       process.env.NEXT_PUBLIC_AES_KEY
-      //     ).toString();
-      // TODO: Handle verification
+      // const encryptedSign = AES.encrypt(
+      //   sign,
+      //   process.env.NEXT_PUBLIC_AES_KEY
+      // ).toString();
+
+      // await axios.post(
+      //   'https://ledger.flitchcoin.com/payment/verification',
+      //   {
+      //     sign: encryptedSign,
+      //     token
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+      //     }
+      //   }
+      // );
 
       toast.success('Transaction successful!');
       handleCloseDialog();
     } catch (err) {
-      if (err instanceof AxiosError) {
-        console.log({ err });
-      }
+      console.log({ err });
 
       toast.error('Something went wrong! Transaction failed');
     }
