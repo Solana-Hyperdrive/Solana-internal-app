@@ -2,7 +2,7 @@ import { Stack, Typography } from '@mui/material';
 import { Dispatch, SetStateAction } from 'react';
 import OtpInput from 'react-otp-input';
 
-const PersonalPin = ({
+const PersonalPinModal = ({
   personalPin,
   setPersonalPin
 }: {
@@ -35,4 +35,4 @@ const PersonalPin = ({
   );
 };
 
-export default PersonalPin;
+export default PersonalPinModal;

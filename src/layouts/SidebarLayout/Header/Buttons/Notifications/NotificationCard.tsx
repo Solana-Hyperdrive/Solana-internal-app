@@ -1,5 +1,6 @@
 import Modal from '@/components/Modal';
-import PersonalPin from '@/components/Modal/PersonalPin';
+import LoadingModal from '@/components/Modal/LoadingModal';
+import PersonalPinModal from '@/components/Modal/PersonalPinModal';
 import useDoTnx from '@/hooks/useDoTnx';
 import { Button, Typography } from '@mui/material';
 import axios, { AxiosError } from 'axios';
@@ -33,6 +34,7 @@ const NotificationCard = ({
   const { sendSol } = useDoTnx();
 
   const [personalPin, setPersonalPin] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const path = `/applications/messenger/${notification.sender_uid}`;
 
@@ -65,6 +67,8 @@ const NotificationCard = ({
         process.env.NEXT_PUBLIC_AES_KEY
       ).toString();
 
+      setIsLoading(true);
+
       const response = await axios.post(
         'https://ledger.flitchcoin.com/init/payment/request?solpay=false',
         {
@@ -95,8 +99,6 @@ const NotificationCard = ({
 
       const sign = await sendSol(pub_key, sol);
 
-      console.log({ sign });
-
       const encryptedSign = AES.encrypt(
         sign,
         process.env.NEXT_PUBLIC_AES_KEY
@@ -120,6 +122,7 @@ const NotificationCard = ({
       );
 
       await handleMessageClick(true);
+      setIsLoading(false);
 
       toast.success('Payment successful');
     } catch (err) {
@@ -138,6 +141,7 @@ const NotificationCard = ({
         toast.error('Something went wrong! Transaction failed');
       }
     } finally {
+      setIsLoading(false);
       setPersonalPin('');
       handleClose();
     }
@@ -160,13 +164,16 @@ const NotificationCard = ({
           }
           dialogContentHeader={''}
           dialogContent={
-            <PersonalPin
+            <PersonalPinModal
               personalPin={personalPin}
               setPersonalPin={setPersonalPin}
             />
           }
+          actionCTA="Next"
           handleAction={handleAcceptPayment}
         />
+
+        <LoadingModal isLoading={isLoading} />
       </div>
     );
 

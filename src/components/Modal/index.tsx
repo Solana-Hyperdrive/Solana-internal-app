@@ -14,6 +14,7 @@ function Modal({
   modalHeader,
   dialogContentHeader,
   dialogContent,
+  actionCTA = 'Add',
   handleAction,
   shouldCloseOnDialogClick = false
 }: {
@@ -22,6 +23,7 @@ function Modal({
   modalHeader: React.ReactNode | string;
   dialogContentHeader: React.ReactNode | string;
   dialogContent: React.ReactNode | string;
+  actionCTA?: string;
   handleAction?: () => void;
   shouldCloseOnDialogClick?: boolean;
 }) {
@@ -48,6 +50,7 @@ function Modal({
           )}
         </>
       ) : null}
+
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>{modalHeader}</DialogTitle>
         <DialogContent>
@@ -61,7 +64,9 @@ function Modal({
           </span>
         </DialogContent>
         <DialogActions sx={{ padding: '2rem' }}>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose} color="error">
+            Cancel
+          </Button>
           {handleAction ? (
             <Button
               variant="contained"
@@ -70,7 +75,7 @@ function Modal({
                 handleClose();
               }}
             >
-              Add
+              {actionCTA}
             </Button>
           ) : null}
         </DialogActions>

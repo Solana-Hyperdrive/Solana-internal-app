@@ -1,4 +1,4 @@
-import PersonalPin from '@/components/Modal/PersonalPin';
+import PersonalPinModal from '@/components/Modal/PersonalPinModal';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { Send } from '@mui/icons-material';
 import AddAlertTwoToneIcon from '@mui/icons-material/AddAlertTwoTone';
@@ -171,7 +171,7 @@ function PageHeader() {
               <SendUserSol handleCloseDialog={handleClose} pPin={pPin} />
             ) : (
               <>
-                <PersonalPin personalPin={pPin} setPersonalPin={setPPin} />
+                <PersonalPinModal personalPin={pPin} setPersonalPin={setPPin} />
                 <Button
                   onClick={handleVerifyPPin}
                   sx={{ ml: 'calc(100% - 7rem)', mt: '1rem' }}

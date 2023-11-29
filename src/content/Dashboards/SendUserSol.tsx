@@ -1,3 +1,4 @@
+import LoadingModal from '@/components/Modal/LoadingModal';
 import useDoTnx from '@/hooks/useDoTnx';
 import useIsLoggedIn from '@/hooks/useIsLoggedIn';
 import { Send } from '@mui/icons-material';
@@ -20,7 +21,7 @@ import {
   Typography,
   styled
 } from '@mui/material';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { AES } from 'crypto-js';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
@@ -66,6 +67,7 @@ function SendUserSol({
   const [isSearching, setIsSearching] = useState(false);
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState<'sol' | 'usd'>('sol');
+  const [isSending, setIsSending] = useState(false);
 
   const { data: user } = useIsLoggedIn();
   const {
@@ -107,6 +109,8 @@ function SendUserSol({
       pPin,
       process.env.NEXT_PUBLIC_AES_KEY
     ).toString();
+
+    setIsSending(true);
 
     let sol: number = +amount;
     if (currency === 'usd') {
@@ -164,7 +168,11 @@ function SendUserSol({
     } catch (err) {
       console.log({ err });
 
-      toast.error('Something went wrong! Transaction failed');
+      if (err instanceof AxiosError) {
+        toast.error('Something went wrong! Transaction failed');
+      } else toast.error(`${err}`);
+    } finally {
+      setIsSending(false);
     }
   }
 
@@ -304,6 +312,8 @@ function SendUserSol({
           )
         ) : null}
       </Box>
+
+      <LoadingModal isLoading={isSending} />
     </>
   );
 }
