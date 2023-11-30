@@ -19,7 +19,7 @@ const LoadingModal = ({ isLoading }: { isLoading: boolean }) => {
               alignItems: 'center'
             }}
           >
-            <CircularProgress size={200} />
+            <CircularProgress size={100} />
 
             <DialogContentText>Transaction in progress</DialogContentText>
           </DialogContent>
